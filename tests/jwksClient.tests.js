@@ -1,6 +1,7 @@
 import nock from 'nock';
 import { expect } from 'chai';
 
+import { x5cSingle } from './keys';
 import JwksClient from '../src/JwksClient';
 
 describe('JwksClient', () => {
@@ -209,7 +210,7 @@ describe('JwksClient', () => {
 
       client.getSigningKeys((err) => {
         expect(err).not.to.be.null;
-        expect(err.message).to.equal('The JSON Web Key Set endpoint did not contain any signing keys');
+        expect(err.message).to.equal('The JWKS endpoint did not contain any signing keys');
         done();
       });
     });

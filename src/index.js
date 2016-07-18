@@ -6,6 +6,7 @@ module.exports = (options) => {
 
 module.exports.expressJwtSecretProvider = (options) => {
   const client = new JwksClient(options);
+
   return function secretProvider(req, header, payload, cb) {
     if (header.alg !== 'RS256') {
       return cb(new Error(`Unsupported algorithm '${header.alg}'`));

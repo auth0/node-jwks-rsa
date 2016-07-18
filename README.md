@@ -6,14 +6,57 @@ A library to retrieve RSA public keys from a JWKS (JSON Web Key Set) endpoint.
 
 ## Usage
 
+You'll provide the client with the JWKS endpoint which exposes your public keys. Using the `getSigningKey` you can then get the signing key that matches a specific `kid`.
+
 ```js
 const jwksClient = require('jwksClient');
 
 const client = jwksClient({
-  cache: true, // Default value
+  strictSsl = true, // Default value
+  jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'
+});
+
+const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';
+client.getSigningKey(kid, (err, key) => {
+  const signingKey = key.publicKey || key.rsaPublicKey;
+
+  // Now I can use this to configure my Express or Hapi middleware
+});
+```
+
+### Caching
+
+In order to prevent a call to be made each time a siging key needs to be retrieved you can also configure a cache as follows. If a signing key matching the `kid` is found, this will be cached and the next time this `kid` is requested the signing certificate will be served from the cache instead of calling back to the JWKS endpoint.
+
+```js
+const jwksClient = require('jwksClient');
+
+const client = jwksClient({
+  cache: true,
   cacheMaxEntries: 5, // Default value
   cacheMaxAge = ms('10h'), // Default value
-  strictSsl = true, // Default value
+  jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'
+});
+
+const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';
+client.getSigningKey(kid, (err, key) => {
+  const signingKey = key.publicKey || key.rsaPublicKey;
+
+  // Now I can use this to configure my Express or Hapi middleware
+});
+```
+
+### Rate Limiting
+
+Even if caching is enabled the library will call the JWKS endpoint if the `kid` is not available in the cache, because a key rotation could have taken place. To prevent attackers to send many random `kid`s you can also configure rate limiting. This will allow you to limit the number of calls that are made to the JWKS endpoint per minute (because it would be highly unlikely that signing keys are rotated multiple times per minute).
+
+```js
+const jwksClient = require('jwksClient');
+
+const client = jwksClient({
+  cache: true,
+  rateLimit: true,
+  jwksRequestsPerMinute: 2, // Default value
   jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'
 });
 

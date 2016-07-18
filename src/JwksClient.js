@@ -1,44 +1,26 @@
-import ms from 'ms';
 import debug from 'debug';
 import request from 'request';
-import memoizer from 'lru-memoizer';
 
 import { certToPEM, rsaPublicKeyToPEM } from './lib/utils';
+import { cacheSigningKey, rateLimitSigningKey } from './lib/wrappers';
 
 export default class JwksClient {
-  constructor({ cache = true, cacheMaxEntries = 5, cacheMaxAge = ms('10h'), jwksUri, strictSsl = true } = options) {
+  constructor(options) {
+    this.options = { rateLimit: false, cache: false, strictSsl: true, ...options };
     this.logger = debug('jwks');
-    this.jwksUri = jwksUri;
-    this.strictSsl = strictSsl;
-    this.cacheMaxEntries = cacheMaxEntries;
-    this.cacheMaxAge = cacheMaxAge;
 
-    // Cached version to avoid too many roundtrips to the JWKS endpoint.
-    if (cache) {
-      this.getSigningKey = memoizer({
-        load: (kid, callback) => {
-          this._getSigningKeyInternal(kid, (err, key) => {
-            if (err) {
-              return callback(err);
-            }
-
-            this.logger(`Caching signing key for '${kid}':`, key);
-            return callback(null, key);
-          });
-        },
-        hash: (kid) => kid,
-        maxAge: this.cacheMaxAge,
-        max: this.cacheMaxEntries
-      });
-    } else {
-      this.getSigningKey = this._getSigningKeyInternal;
+    // Initialize wrappers.
+    if (this.options.rateLimit) {
+      this.getSigningKey = rateLimitSigningKey(this.getSigningKey, options);
+    }
+    if (this.options.cache) {
+      this.getSigningKey = cacheSigningKey(this.getSigningKey, options);
     }
   }
 
   getKeys(cb) {
-    this.logger(`Retrieving keys from ${this.jwksUri}`);
-
-    request({ json: true, uri: this.jwksUri, strictSSL: this.strictSsl }, (err, res) => {
+    this.logger(`Fetching keys from '${this.options.jwksUri}'`);
+    request({ json: true, uri: this.options.jwksUri, strictSSL: this.options.strictSsl }, (err, res) => {
       if (err || res.statusCode < 200 || res.statusCode >= 300) {
         this.logger('Failure:', res && res.body || err);
         if (res) {
@@ -59,7 +41,7 @@ export default class JwksClient {
       }
 
       if (!keys || !keys.length) {
-        return cb(new Error('The JSON Web Key Set endpoint did not contain any keys'));
+        return cb(new Error('The JWKS endpoint did not contain any keys'));
       }
 
       const signingKeys = keys
@@ -73,7 +55,7 @@ export default class JwksClient {
         });
 
       if (!signingKeys.length) {
-        return cb(new Error('The JSON Web Key Set endpoint did not contain any signing keys'));
+        return cb(new Error('The JWKS endpoint did not contain any signing keys'));
       }
 
       this.logger('Signing Keys:', signingKeys);
@@ -81,17 +63,18 @@ export default class JwksClient {
     });
   }
 
-  _getSigningKeyInternal(kid, cb) {
+  getSigningKey = (kid, cb) => {
+    this.logger(`Fetching signing key for '${kid}'`);
     this.getSigningKeys((err, keys) => {
       if (err) {
         return cb(err);
       }
 
       const key = keys.find(k => k.kid === kid);
-      if (key && key.length) {
-        cb(null, key[0]);
+      if (key) {
+        return cb(null, key);
       } else {
-        cb(null, null);
+        return cb(new Error(`Unable to find a signing key that matches '${kid}'`));
       }
     });
   }
