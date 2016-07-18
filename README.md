@@ -56,7 +56,7 @@ const jwksClient = require('jwksClient');
 const client = jwksClient({
   cache: true,
   rateLimit: true,
-  jwksRequestsPerMinute: 2, // Default value
+  jwksRequestsPerMinute: 10, // Default value
   jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'
 });
 
