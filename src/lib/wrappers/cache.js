@@ -2,9 +2,9 @@ import ms from 'ms';
 import debug from 'debug';
 import memoizer from 'lru-memoizer';
 
-export default function(fn, { cacheMaxEntries = 5, cacheMaxAge = ms('10h') } = options) {
+export default function(client, { cacheMaxEntries = 5, cacheMaxAge = ms('10h') } = options) {
   const logger = debug('jwks');
-  const getSigningKey = fn;
+  const getSigningKey = client.getSigningKey;
 
   logger(`Configured caching of singing keys. Max: ${cacheMaxEntries} / Age: ${cacheMaxAge}`);
   return memoizer({

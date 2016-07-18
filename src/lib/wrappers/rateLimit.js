@@ -1,9 +1,9 @@
 import debug from 'debug';
 import { RateLimiter } from 'limiter';
 
-export default function(fn, { jwksRequestsPerMinute = 10 } = options) {
+export default function(client, { jwksRequestsPerMinute = 10 } = options) {
   const logger = debug('jwks');
-  const getSigningKey = fn;
+  const getSigningKey = client.getSigningKey;
 
   const limiter = new RateLimiter(jwksRequestsPerMinute, 'minute', true);
   logger(`Configured rate limiting to JWKS endpoint at ${jwksRequestsPerMinute}/minute`);

@@ -11,10 +11,10 @@ export default class JwksClient {
 
     // Initialize wrappers.
     if (this.options.rateLimit) {
-      this.getSigningKey = rateLimitSigningKey(this.getSigningKey, options);
+      this.getSigningKey = rateLimitSigningKey(this, options);
     }
     if (this.options.cache) {
-      this.getSigningKey = cacheSigningKey(this.getSigningKey, options);
+      this.getSigningKey = cacheSigningKey(this, options);
     }
   }
 
