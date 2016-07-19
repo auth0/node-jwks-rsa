@@ -33,17 +33,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sandrinodimattia/node-jwks-rsa.git"
+    "url": "git+https://github.com/auth0/node-jwks-rsa.git"
   },
   "keywords": [
     "jwks",
     "rsa",
     "jwt"
   ],
-  "author": "Sandrino Di Mattia",
+  "author": "Auth0",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sandrinodimattia/node-jwks-rsa/issues"
+    "url": "https://github.com/auth0/node-jwks-rsa/issues"
   },
-  "homepage": "https://github.com/sandrinodimattia/node-jwks-rsa#readme"
+  "homepage": "https://github.com/auth0/node-jwks-rsa#readme"
 }
