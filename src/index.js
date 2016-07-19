@@ -4,7 +4,7 @@ module.exports = (options) => {
   return new JwksClient(options);
 };
 
-module.exports.expressJwtSecretProvider = (options) => {
+module.exports.expressJwtSecret = (options) => {
   const client = new JwksClient(options);
 
   return function secretProvider(req, header, payload, cb) {
@@ -26,7 +26,7 @@ module.exports.expressJwtSecretProvider = (options) => {
   };
 };
 
-module.exports.hapiJwt2KeyProvider = (options) => {
+module.exports.hapiJwt2Key = (options) => {
   const client = new JwksClient(options);
   return function keyProvider(decoded, cb) {
     if (decoded.alg !== 'RS256') {

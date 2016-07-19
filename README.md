@@ -24,6 +24,10 @@ client.getSigningKey(kid, (err, key) => {
 });
 ```
 
+Integrations are also provided with:
+
+ - [express/express-jwt](examples/express-demo)
+
 ### Caching
 
 In order to prevent a call to be made each time a siging key needs to be retrieved you can also configure a cache as follows. If a signing key matching the `kid` is found, this will be cached and the next time this `kid` is requested the signing certificate will be served from the cache instead of calling back to the JWKS endpoint.
