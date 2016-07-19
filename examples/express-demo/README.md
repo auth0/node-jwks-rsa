@@ -35,7 +35,7 @@ DEBUG=express,jwks JWKS_HOST=https://my-authz-server AUDIENCE=urn:my-resource-se
 
 > Tip: You can use Auth0 to test this.
 
-## How this work?
+## How does this work?
 
 When you have the sample running you'll need to get a token from your Authorization Server, which will look like this:
 
