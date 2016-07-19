@@ -1,0 +1,24 @@
+{
+  "name": "hapi-demo",
+  "version": "1.0.0",
+  "description": "Sample that shows how tu use jwks-rsa with Hapi",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "jwks-rsa",
+    "jwt",
+    "rs256",
+    "hapi"
+  ],
+  "author": "Sandrino Di Mattia",
+  "license": "MIT",
+  "dependencies": {
+    "debug": "^2.2.0",
+    "good": "^7.0.1",
+    "good-console": "^6.1.2",
+    "hapi": "^13.5.0",
+    "hapi-auth-jwt2": "^7.0.1"
+  }
+}

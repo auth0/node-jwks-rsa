@@ -17,10 +17,6 @@ module.exports.expressJwtSecret = (options) => {
         return cb(err);
       }
 
-      if (!key) {
-        return cb(new Error(`Unable to find a signing key for '${header.id}'`));
-      }
-
       return cb(null, key.publicKey || key.rsaPublicKey);
     });
   };
@@ -29,20 +25,20 @@ module.exports.expressJwtSecret = (options) => {
 module.exports.hapiJwt2Key = (options) => {
   const client = new JwksClient(options);
   return function keyProvider(decoded, cb) {
-    if (decoded.alg !== 'RS256') {
-      return cb(new Error(`Unsupported algorithm '${header.alg}'`));
+    if (!decoded.header) {
+      return cb(new Error('The decoded token did not contain a header'));
     }
 
-    client.getSigningKey(decoded.kid, (err, key) => {
+    if (decoded.header.alg !== 'RS256') {
+      return cb(new Error(`Unsupported algorithm '${decoded.header.alg}'`));
+    }
+
+    client.getSigningKey(decoded.header.kid, (err, key) => {
       if (err) {
         return cb(err);
       }
 
-      if (!key) {
-        return cb(new Error(`Unable to find a signing key for '${header.id}'`));
-      }
-
-      return decoded(null, key.publicKey || key.rsaPublicKey, key);
+      return cb(null, key.publicKey || key.rsaPublicKey, key);
     });
   };
 };

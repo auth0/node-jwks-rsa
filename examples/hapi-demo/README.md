@@ -1,36 +1,64 @@
-# jwks-rsa - Express Example
+# jwks-rsa - Hapi Example
 
-The `jwks-rsa` library provides a small helper that makes it easy to configure `express-jwt` with the `RS256` algorithm. Using `expressJwtSecret` you can generate a secret provider that will provide the right signing certificate to `express-jwt` based on the `kid` in the JWT header.
+The `jwks-rsa` library provides a small helper that makes it easy to configure `hapi-auth-jwt2` with the `RS256` algorithm. Using `hapiJwt2Key` you can generate a key provider that will provide the right signing certificate to `hapi-auth-jwt2` based on the `kid` in the JWT header.
 
 ```js
-const Express = require('express');
-const jwt = require('express-jwt');
+const Hapi = require('hapi');
+const jwt = require('hapi-auth-jwt2');
 const jwksRsa = require('jwks-rsa');
 
 ...
 
-// Initialize the app.
-const app = new Express();
-app.use(jwt({
-  // Dynamically provide a signing key based on the kid in the header and the singing keys provided by the JWKS endpoint.
-  secret: jwksRsa.expressJwtSecret({
-    cache: true,
-    rateLimit: true,
-    jwksRequestsPerMinute: 5,
-    jwksUri: `https://my-authz-server/.well-known/jwks.json`
-  }),
+// Start the server.
+const server = new Hapi.Server();
+server.connection({ port: 4001 });
+server.register(jwt, (err) => {
+  if (err) {
+    logger(err);
+  }
 
-  // Validate the audience and the issuer.
-  audience: 'urn:my-resource-server',
-  issuer: 'https://my-authz-server/',
-  algorithms: [ 'RS256' ]
-}));
+  server.auth.strategy('jwt', 'jwt', {
+    // Get the complete decoded token, because we need info from the header (the kid)
+    complete: true,
+
+    // Dynamically provide a signing key based on the kid in the header and the singing keys provided by the JWKS endpoint.
+    key: jwksRsa.hapiJwt2Key({
+      cache: true,
+      rateLimit: true,
+      jwksRequestsPerMinute: 2,
+      jwksUri: 'https://my-authz-server/.well-known/jwks.json'
+    }),
+
+    // Your own logic to validate the user.
+    validateFunc: validateUser,
+
+    // Validate the audience and the issuer.
+    verifyOptions: {
+      audience: 'urn:my-resource-server',
+      issuer: 'https://my-authz-server/',
+      algorithms: [ 'RS256' ]
+    }
+  });
+  server.auth.default('jwt');
+
+  server.route([
+    {
+      method: 'GET',
+      path: '/me',
+      config: { auth: 'jwt' },
+      handler: (request, reply) => {
+        // This is the user object
+        reply(request.auth.credentials);
+      }
+    }
+  ]);
+});
 ```
 
 ## Running the sample
 
 ```bash
-DEBUG=express,jwks JWKS_HOST=https://my-authz-server AUDIENCE=urn:my-resource-server ISSUER=https://my-authz-server/ node server.js
+DEBUG=express,hapi JWKS_HOST=https://my-authz-server AUDIENCE=urn:my-resource-server ISSUER=https://my-authz-server/ node server.js
 ```
 
 > Tip: You can use Auth0 to test this.
@@ -75,11 +103,11 @@ request(options, function (error, response, body) {
 
 A few things will happen now:
 
- 1. `express-jwt` will decode the token and pass the request, the header and the payload to `jwksRsa.expressJwtSecret`
+ 1. `hapi-auth-jwt2` will decode the token and pass the request and the decoded token to `jwksRsa.hapiJwt2Key`
  2. `jwks-rsa` will then download all signing keys from the JWKS endpoint and see if a one of the signing keys matches the `kid` in the header of the JWT.
    a. If none of the signing keys match the incoming `kid`, an error will be thrown
-   b. If we have a match, we will pass the right signing key to `express-jwt`
- 3. `express-jwt` will the continue its own logic to validate the signature of the token, the expiration, audience, issuer, ...
+   b. If we have a match, we will pass the right signing key to `hapi-auth-jwt2`
+ 3. `hapi-auth-jwt2` will the continue its own logic to validate the signature of the token, the expiration, audience, issuer, ...
 
 If you repeat this call a few times you'll see in the console output that we're not calling the JWKS endpoint anymore, because caching has been enabled.
 
