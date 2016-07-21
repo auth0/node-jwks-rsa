@@ -1,6 +1,6 @@
 # jwks-rsa - Hapi Example
 
-The `jwks-rsa` library provides a small helper that makes it easy to configure `hapi-auth-jwt2` with the `RS256` algorithm. Using `hapiJwt2Key` you can generate a key provider that will provide the right signing certificate to `hapi-auth-jwt2` based on the `kid` in the JWT header.
+The `jwks-rsa` library provides a small helper that makes it easy to configure `hapi-auth-jwt2` with the `RS256` algorithm. Using `hapiJwt2Key` you can generate a key provider that will provide the right signing key to `hapi-auth-jwt2` based on the `kid` in the JWT header.
 
 ```js
 const Hapi = require('hapi');

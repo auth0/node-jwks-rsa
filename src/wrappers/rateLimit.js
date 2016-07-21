@@ -1,6 +1,8 @@
 import debug from 'debug';
 import { RateLimiter } from 'limiter';
 
+import JwksRateLimitError from '../errors/JwksRateLimitError';
+
 export default function(client, { jwksRequestsPerMinute = 10 } = options) {
   const logger = debug('jwks');
   const getSigningKey = client.getSigningKey;
@@ -16,8 +18,8 @@ export default function(client, { jwksRequestsPerMinute = 10 } = options) {
 
       logger('Requests to the JWKS endpoint available for the next minute:', remaining);
       if (remaining < 0) {
-        logger('Too Many Requests to the JWKS endpoint');
-        return cb(new Error('Too Many Requests to the JWKS endpoint'));
+        logger('Too many requests to the JWKS endpoint');
+        return cb(new JwksRateLimitError('Too many requests to the JWKS endpoint'));
       } else {
         return getSigningKey(kid, cb);
       }

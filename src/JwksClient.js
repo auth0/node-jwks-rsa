@@ -1,8 +1,11 @@
 import debug from 'debug';
 import request from 'request';
 
-import { certToPEM, rsaPublicKeyToPEM } from './lib/utils';
-import { cacheSigningKey, rateLimitSigningKey } from './lib/wrappers';
+import JwksError from './errors/JwksError';
+import SigningKeyNotFoundError from './errors/SigningKeyNotFoundError';
+
+import { certToPEM, rsaPublicKeyToPEM } from './utils';
+import { cacheSigningKey, rateLimitSigningKey } from './wrappers';
 
 export default class JwksClient {
   constructor(options) {
@@ -24,7 +27,7 @@ export default class JwksClient {
       if (err || res.statusCode < 200 || res.statusCode >= 300) {
         this.logger('Failure:', res && res.body || err);
         if (res) {
-          return cb(new Error(res.body && (res.body.message || res.body) || res.statusMessage || `Http Error ${res.statusCode}`));
+          return cb(new JwksError(res.body && (res.body.message || res.body) || res.statusMessage || `Http Error ${res.statusCode}`));
         }
         return cb(err);
       }
@@ -41,7 +44,7 @@ export default class JwksClient {
       }
 
       if (!keys || !keys.length) {
-        return cb(new Error('The JWKS endpoint did not contain any keys'));
+        return cb(new JwksError('The JWKS endpoint did not contain any keys'));
       }
 
       const signingKeys = keys
@@ -55,7 +58,7 @@ export default class JwksClient {
         });
 
       if (!signingKeys.length) {
-        return cb(new Error('The JWKS endpoint did not contain any signing keys'));
+        return cb(new JwksError('The JWKS endpoint did not contain any signing keys'));
       }
 
       this.logger('Signing Keys:', signingKeys);
@@ -76,7 +79,7 @@ export default class JwksClient {
         return cb(null, key);
       } else {
         this.logger(`Unable to find a signing key that matches '${kid}'`);
-        return cb(new Error(`Unable to find a signing key that matches '${kid}'`));
+        return cb(new SigningKeyNotFoundError(`Unable to find a signing key that matches '${kid}'`));
       }
     });
   }

@@ -1,12 +1,12 @@
 # jwks-rsa
 
-A library to retrieve RSA public keys from a JWKS (JSON Web Key Set) endpoint.
+A library to retrieve RSA signing keys from a JWKS (JSON Web Key Set) endpoint.
 
 > npm install --save jwks-rsa
 
 ## Usage
 
-You'll provide the client with the JWKS endpoint which exposes your public keys. Using the `getSigningKey` you can then get the signing key that matches a specific `kid`.
+You'll provide the client with the JWKS endpoint which exposes your signing keys. Using the `getSigningKey` you can then get the signing key that matches a specific `kid`.
 
 ```js
 const jwksClient = require('jwksClient');
@@ -31,7 +31,7 @@ Integrations are also provided with:
 
 ### Caching
 
-In order to prevent a call to be made each time a siging key needs to be retrieved you can also configure a cache as follows. If a signing key matching the `kid` is found, this will be cached and the next time this `kid` is requested the signing certificate will be served from the cache instead of calling back to the JWKS endpoint.
+In order to prevent a call to be made each time a signing key needs to be retrieved you can also configure a cache as follows. If a signing key matching the `kid` is found, this will be cached and the next time this `kid` is requested the signing key will be served from the cache instead of calling back to the JWKS endpoint.
 
 ```js
 const jwksClient = require('jwksClient');

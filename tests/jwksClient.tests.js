@@ -1,7 +1,7 @@
 import nock from 'nock';
 import { expect } from 'chai';
 
-import { x5cSingle } from './keys';
+import { x5cMultiple } from './keys';
 import JwksClient from '../src/JwksClient';
 
 describe('JwksClient', () => {
@@ -210,7 +210,26 @@ describe('JwksClient', () => {
 
       client.getSigningKeys((err) => {
         expect(err).not.to.be.null;
+        expect(err.name).to.equal('JwksError');
         expect(err.message).to.equal('The JWKS endpoint did not contain any signing keys');
+        done();
+      });
+    });
+  });
+
+  describe('#getSigningKey', () => {
+    it('should return error if signing key is not found', (done) => {
+      nock(jwksHost)
+        .get('/.well-known/jwks.json')
+        .reply(200, x5cMultiple);
+
+      const client = new JwksClient({
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
+      });
+
+      client.getSigningKey('1234', (err) => {
+        expect(err).not.to.be.null;
+        expect(err.name).to.equal('SigningKeyNotFoundError');
         done();
       });
     });

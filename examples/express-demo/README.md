@@ -1,6 +1,6 @@
 # jwks-rsa - Express Example
 
-The `jwks-rsa` library provides a small helper that makes it easy to configure `express-jwt` with the `RS256` algorithm. Using `expressJwtSecret` you can generate a secret provider that will provide the right signing certificate to `express-jwt` based on the `kid` in the JWT header.
+The `jwks-rsa` library provides a small helper that makes it easy to configure `express-jwt` with the `RS256` algorithm. Using `expressJwtSecret` you can generate a secret provider that will provide the right signing key to `express-jwt` based on the `kid` in the JWT header.
 
 ```js
 const Express = require('express');

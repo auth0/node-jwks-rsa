@@ -26,8 +26,9 @@ app.get('/me', (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  logger(err.message);
+  logger(err.name, err.message);
   res.json({
+    name: err.name,
     message: err.message
   });
 });
