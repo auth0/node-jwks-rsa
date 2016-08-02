@@ -1,13 +1,14 @@
 import debug from 'debug';
 import request from 'request';
 
+import ArgumentError from './errors/ArgumentError';
 import JwksError from './errors/JwksError';
 import SigningKeyNotFoundError from './errors/SigningKeyNotFoundError';
 
 import { certToPEM, rsaPublicKeyToPEM } from './utils';
 import { cacheSigningKey, rateLimitSigningKey } from './wrappers';
 
-export default class JwksClient {
+export class JwksClient {
   constructor(options) {
     this.options = { rateLimit: false, cache: false, strictSsl: true, ...options };
     this.logger = debug('jwks');

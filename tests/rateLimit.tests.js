@@ -2,7 +2,7 @@ import nock from 'nock';
 import { expect } from 'chai';
 
 import { x5cSingle } from './keys';
-import JwksClient from '../src/JwksClient';
+import { JwksClient } from '../src/JwksClient';
 
 describe('JwksClient (cache)', () => {
   const jwksHost = 'http://my-authz-server';

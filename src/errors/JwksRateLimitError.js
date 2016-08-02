@@ -1,13 +1,10 @@
-export default class JwksRateLimitError extends Error {
-  constructor(message) {
-    super(message);
-    Error.captureStackTrace(this, this.constructor);
-
-    this.message = message;
-    this.name = 'JwksRateLimitError';
-  }
-
-  toString () {
-    return `${this.name}: ${this.message}`;
-  }
+function JwksRateLimitError(message) {
+  Error.call(this, message);
+  Error.captureStackTrace(this, this.constructor);
+  this.name = 'JwksRateLimitError';
+  this.message = message;
 }
+
+JwksRateLimitError.prototype = Object.create(Error.prototype);
+JwksRateLimitError.prototype.constructor = JwksRateLimitError;
+module.exports = JwksRateLimitError;

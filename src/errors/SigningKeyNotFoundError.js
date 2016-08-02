@@ -1,13 +1,10 @@
-export default class SigningKeyNotFoundError extends Error {
-  constructor(message) {
-    super(message);
-    Error.captureStackTrace(this, this.constructor);
-
-    this.message = message;
-    this.name = 'SigningKeyNotFoundError';
-  }
-
-  toString () {
-    return `${this.name}: ${this.message}`;
-  }
+function SigningKeyNotFoundError(message) {
+  Error.call(this, message);
+  Error.captureStackTrace(this, this.constructor);
+  this.name = 'SigningKeyNotFoundError';
+  this.message = message;
 }
+
+SigningKeyNotFoundError.prototype = Object.create(Error.prototype);
+SigningKeyNotFoundError.prototype.constructor = SigningKeyNotFoundError;
+module.exports = SigningKeyNotFoundError;

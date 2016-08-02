@@ -27,6 +27,21 @@ app.use(jwt({
 }));
 ```
 
+By default express will return `key or secret has to be provided` if there's no match between the token and one of the signing certificates. To overwrite this behavior and inject your own error you can specify the following option:
+
+```js
+jwksRsa.expressJwtSecret({
+  ...,
+  handleSigningKeyError: (err, cb) => {
+    if (err instanceof jwksRsa.SigningKeyNotFoundError) {
+      return cb(new Error('This is bad'));
+    }
+
+    return cb(err);
+  }
+});
+```
+
 ## Running the sample
 
 ```bash
