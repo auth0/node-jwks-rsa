@@ -1,5 +1,6 @@
 import debug from 'debug';
 import request from 'request';
+import map from 'async/map';
 
 import ArgumentError from './errors/ArgumentError';
 import JwksError from './errors/JwksError';
@@ -24,17 +25,31 @@ export class JwksClient {
 
   getKeys(cb) {
     this.logger(`Fetching keys from '${this.options.jwksUri}'`);
-    request({ json: true, uri: this.options.jwksUri, strictSSL: this.options.strictSsl }, (err, res) => {
-      if (err || res.statusCode < 200 || res.statusCode >= 300) {
-        this.logger('Failure:', res && res.body || err);
-        if (res) {
-          return cb(new JwksError(res.body && (res.body.message || res.body) || res.statusMessage || `Http Error ${res.statusCode}`));
+
+    var jwksUri = Array.isArray(this.options.jwksUri) ? this.options.jwksUri : [this.options.jwksUri];
+    var self = this;
+
+    map(jwksUri, (jwkUri, callback) => {
+      request({ json: true, uri: jwkUri, strictSSL: self.options.strictSsl }, (err, res) => {
+        if (err || res.statusCode < 200 || res.statusCode >= 300) {
+          self.logger('Failure:', res && res.body || err, 'Uri:', jwkUri);
+
+          return callback(null, []);
         }
+
+        self.logger('Keys:', res.body.keys);
+        return callback(null, res.body.keys);
+      });
+    }, (err, results) => {
+      if (err) {
         return cb(err);
       }
 
-      this.logger('Keys:', res.body.keys);
-      return cb(null, res.body.keys);
+      var keys = results.reduce((a, b) => {
+        return a.concat(b);
+      });
+
+      return cb(null, keys);
     });
   }
 

@@ -4,6 +4,7 @@
   "description": "Library to retrieve RSA public keys from a JWKS endpoint",
   "main": "lib/index.js",
   "dependencies": {
+    "async": "^2.1.2",
     "debug": "^2.2.0",
     "limiter": "^1.1.0",
     "lru-memoizer": "^1.6.0",
