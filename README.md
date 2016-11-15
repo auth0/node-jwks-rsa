@@ -9,10 +9,10 @@ A library to retrieve RSA signing keys from a JWKS (JSON Web Key Set) endpoint.
 You'll provide the client with the JWKS endpoint which exposes your signing keys. Using the `getSigningKey` you can then get the signing key that matches a specific `kid`.
 
 ```js
-const jwksClient = require('jwksClient');
+const jwksClient = require('jwks-rsa');
 
 const client = jwksClient({
-  strictSsl = true, // Default value
+  strictSsl: true, // Default value
   jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'
 });
 
@@ -39,7 +39,7 @@ const jwksClient = require('jwksClient');
 const client = jwksClient({
   cache: true,
   cacheMaxEntries: 5, // Default value
-  cacheMaxAge = ms('10h'), // Default value
+  cacheMaxAge: ms('10h'), // Default value
   jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'
 });
 
