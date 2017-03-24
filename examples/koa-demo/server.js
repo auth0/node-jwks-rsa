@@ -16,7 +16,8 @@ app.use((ctx, next) => {
     next();
   } catch(err) {
     const { name, message } = err;
-    ctx.body =  { name, message };
+    ctx.status = err.statusCode || err.status || 500;
+    ctx.body = { name, message };
   }
 });
 
