@@ -1,5 +1,4 @@
 import request from 'supertest';
-import http from 'http';
 import { expect } from 'chai';
 
 import { jwksEndpoint } from './mocks/jwks';
@@ -26,6 +25,7 @@ describe('koaJwtSecret', () => {
 
     it('should accept the secret function', () => {
       koaJwt({
+          debug: true,
         secret: jwksRsa.koaJwtSecret({
           jwksUri: 'http://localhost/.well-known/jwks.json'
         })
@@ -36,6 +36,7 @@ describe('koaJwtSecret', () => {
 
       const app = new Koa();
       app.use(koaJwt({
+          debug: true,
           secret: jwksRsa.koaJwtSecret({
             jwksUri: 'http://localhost/.well-known/jwks.json'
           })
@@ -46,7 +47,7 @@ describe('koaJwtSecret', () => {
           .set('Authorization', 'Bearer abc')
           .expect(401)
           .end((err, res) => {
-            expect(res.text).to.equal('Invalid Token');
+            expect(res.text).to.equal('Invalid token');
             done();
           });
     });
@@ -54,6 +55,7 @@ describe('koaJwtSecret', () => {
     it('should not provide a key if token is HS256', (done) => {
         const app = new Koa();
         app.use(koaJwt({
+            debug: true,
             secret: jwksRsa.koaJwtSecret({
                 jwksUri: 'http://localhost/.well-known/jwks.json'
             })
@@ -66,7 +68,7 @@ describe('koaJwtSecret', () => {
         .set('Authorization', `Bearer ${ token }`)
         .expect(401)
         .end((err, res) => {
-            expect(res.text).to.equal('Invalid Token');
+            expect(res.text).to.equal('Missing / invalid token algorithm');
             done();
         });
     });
@@ -74,12 +76,13 @@ describe('koaJwtSecret', () => {
     it('should not provide a key if token is RS256 and no KID was provided', (done) => {
         const app = new Koa();
         app.use(koaJwt({
+            debug: true,
             secret: jwksRsa.koaJwtSecret({
                 jwksUri: 'http://localhost/.well-known/jwks.json'
             })
         }));
 
-        const token = createSymmetricToken('mykey', { sub: 'john' });
+        const token = createToken(privateKey, null, { sub: 'john' });
         jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' } ]);
 
         request(app.listen())
@@ -87,7 +90,7 @@ describe('koaJwtSecret', () => {
         .set('Authorization', `Bearer ${ token }`)
         .expect(401)
         .end((err, res) => {
-            expect(res.text).to.equal('secret or public key must be provided');
+            expect(res.text).to.equal('Unable to find a signing key that matches \'null\'');
             done();
         });
     });
@@ -95,6 +98,7 @@ describe('koaJwtSecret', () => {
     it('should not provide a key if token is RS256 and invalid KID was provided', (done) => {
         const app = new Koa();
         app.use(koaJwt({
+            debug: true,
             secret: jwksRsa.koaJwtSecret({
                 jwksUri: 'http://localhost/.well-known/jwks.json'
             })
@@ -108,7 +112,7 @@ describe('koaJwtSecret', () => {
         .set('Authorization', `Bearer ${ token }`)
         .expect(401)
         .end((err, res) => {
-            expect(res.text).to.equal('secret or public key must be provided');
+            expect(res.text).to.equal('Unable to find a signing key that matches \'456\'');
             done();
         });
     });
@@ -116,6 +120,7 @@ describe('koaJwtSecret', () => {
     it('should not authenticate the user if KID matches but the keys dont', (done) => {
         const app = new Koa();
         app.use(koaJwt({
+            debug: true,
             secret: jwksRsa.koaJwtSecret({
                 jwksUri: 'http://localhost/.well-known/jwks.json'
             })
@@ -138,11 +143,14 @@ describe('koaJwtSecret', () => {
 
         const app = new Koa();
         app.use(koaJwt({
+            debug: true,
             secret: jwksRsa.koaJwtSecret({
                 jwksUri: 'http://localhost/.well-known/jwks.json',
-                handleSigningKeyError: (err, cb) => {
+                handleSigningKeyError: (err) => {
                     if (err instanceof jwksRsa.SigningKeyNotFoundError) {
-                        cb(new Error('This is bad'));
+                        return Promise.resolve(
+                            new Error('this is bad')
+                        );
                     }
                 }
             })
@@ -164,14 +172,11 @@ describe('koaJwtSecret', () => {
     it('should work if the token matches a signing key', (done) => {
         const app = new Koa();
         app.use(koaJwt({
+            debug: true,
             secret: jwksRsa.koaJwtSecret({
-                jwksUri: 'http://localhost/.well-known/jwks.json',
-                handleSigningKeyError: (err, cb) => {
-                    if (err instanceof jwksRsa.SigningKeyNotFoundError) {
-                        cb(new Error('This is bad'));
-                    }
-                }
-            })
+                jwksUri: 'http://localhost/.well-known/jwks.json'
+            }),
+            algorithms: ['RS256']
         }));
         app.use((ctx) => {
           ctx.body = ctx.state.user;
@@ -179,14 +184,14 @@ describe('koaJwtSecret', () => {
         });
 
         const token = createToken(privateKey, '123', { sub: 'john' });
-        jwksEndpoint('http://localhost', [ { pub: randomPublicKey1, kid: '123' } ]);
+        jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' } ]);
 
         request(app.listen())
         .get('/')
         .set('Authorization', `Bearer ${ token }`)
         .expect(200)
         .end((err, res) => {
-            expect(res.body.sub).to.equal('this is bad');
+            expect(res.body.sub).to.equal('john');
             done();
         });
     });

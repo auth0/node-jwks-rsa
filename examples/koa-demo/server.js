@@ -1,7 +1,6 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 const jwt = require('koa-jwt');
-const logger = require('debug')('koa');
 const jwksRsa = require('../../lib');
 
 const jwksHost = process.env.JWKS_HOST;
@@ -11,16 +10,6 @@ const issuer = process.env.ISSUER;
 // Initialize the app.
 const app = new Koa();
 
-app.use((ctx, next) => {
-  try {
-    next();
-  } catch(err) {
-    const { name, message } = err;
-    ctx.status = err.statusCode || err.status || 500;
-    ctx.body = { name, message };
-  }
-});
-
 app.use(jwt({
   secret: jwksRsa.koaJwtSecret({
     cache: true,
@@ -28,8 +17,8 @@ app.use(jwt({
     jwksRequestsPerMinute: 2,
     jwksUri: `${jwksHost}/.well-known/jwks.json`
   }),
-  audience: audience,
-  issuer: issuer,
+  audience,
+  issuer,
   algorithms: [ 'RS256' ]
 }));
 

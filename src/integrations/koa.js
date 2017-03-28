@@ -20,6 +20,12 @@ module.exports.koaJwtSecret = (options = {}) => {
 
       client.getSigningKey(kid, (err, key) => {
         if (err) {
+
+          if (options.handleSigningKeyError) {
+            return options.handleSigningKeyError(err)
+              .then(reject);
+          }
+
           return reject(err);
         }
 
