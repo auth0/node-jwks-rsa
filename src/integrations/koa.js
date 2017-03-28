@@ -2,6 +2,11 @@ import { ArgumentError } from '../errors';
 import { JwksClient } from '../JwksClient';
 
 module.exports.koaJwtSecret = (options = {}) => {
+
+  if (!options.jwksUri) {
+    throw new ArgumentError('No JWKS URI provided');
+  }
+
   const client = new JwksClient(options);
 
   return function secretProvider({ alg, kid } = {}) {
