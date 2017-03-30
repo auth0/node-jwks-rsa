@@ -117,7 +117,7 @@ describe('koaJwtSecret', () => {
         });
     });
 
-    it('should not authenticate the user if KID matches but the keys dont', (done) => {
+    it('should not authenticate the user if KID matches but the keys don\'t', (done) => {
         const app = new Koa();
         app.use(koaJwt({
             debug: true,
