@@ -1,0 +1,26 @@
+{
+  "name": "koa-demo",
+  "version": "1.0.0",
+  "description": "Sample that shows how tu use jwks-rsa with Koa",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "jwks-rsa",
+    "jwt",
+    "rs256",
+    "koa"
+  ],
+  "author": "Scott Donnelly",
+  "contributors": [
+    "Maxim Vorobjov"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "debug": "^2.2.0",
+    "koa": "^2.2.0",
+    "koa-jwt": "^3.2.1",
+    "koa-router": "^7.1.1"
+  }
+}
