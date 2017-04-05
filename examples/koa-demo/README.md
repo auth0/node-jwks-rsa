@@ -1,4 +1,4 @@
-# jwks-rsa - Hapi Example
+# jwks-rsa - Koa Example
 
 The `jwks-rsa` library provides a small helper that makes it easy to configure `koa-jwt` with the `RS256` algorithm. Using `koaJwtSecret` you can generate a key provider that will provide the right signing key to `koa-jwt` based on the `kid` in the JWT header.
 
