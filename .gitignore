@@ -35,3 +35,7 @@ node_modules
 # Build output
 lib
 !src/lib
+
+# IDE files
+.idea/
+*.iml
