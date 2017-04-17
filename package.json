@@ -12,6 +12,7 @@
     "request": "^2.73.0"
   },
   "devDependencies": {
+    "@types/express-jwt": "0.0.34",
     "babel-cli": "^6.9.0",
     "babel-core": "^6.9.0",
     "babel-eslint": "^6.0.4",
