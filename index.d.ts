@@ -31,7 +31,7 @@ declare module 'jwks-rsa' {
       handleSigningKeyError?(err: Error, cb: (err: Error) => void): any;
     }
 
-    function ExpressJwtSecret(options: JwksRsa.Options): ExpressJwt.SecretCallback;
+    function expressJwtSecret(options: JwksRsa.Options): ExpressJwt.SecretCallback;
 
     function HapiJwt2Key(options: JwksRsa.Options): (name: string, scheme: string, options?: any) => void;
 
