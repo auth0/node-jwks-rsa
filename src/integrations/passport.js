@@ -26,7 +26,7 @@ module.exports.passportJwtSecret = (options) => {
     const decoded = jwt.decode(rawJwtToken, { complete: true })
 
     // Only RS256 is supported.
-    if (!decoded.header || decoded.header.alg !== 'RS256') {
+    if (!decoded || !decoded.header || decoded.header.alg !== 'RS256') {
       return cb(null, null);
     }
 
