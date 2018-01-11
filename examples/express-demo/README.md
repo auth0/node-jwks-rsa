@@ -17,7 +17,8 @@ app.use(jwt({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 5,
-    jwksUri: `https://my-authz-server/.well-known/jwks.json`
+    jwksUri: `https://my-authz-server/.well-known/jwks.json`,
+    defaultJwtKid: `default-kid-abc123`//optional kid to default to if JWT header didn't include a kid
   }),
 
   // Validate the audience and the issuer.

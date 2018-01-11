@@ -18,7 +18,8 @@ app.use(jwt({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 2,
-    jwksUri: `${jwksHost}/.well-known/jwks.json`
+    jwksUri: `${jwksHost}/.well-known/jwks.json`,
+    defaultJwtKid: `default-kid-abc123`, //optional kid to default to if JWT header didn't include a kid
   }),
   audience,
   issuer,

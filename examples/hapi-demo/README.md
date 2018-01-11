@@ -26,7 +26,8 @@ server.register(jwt, (err) => {
       cache: true,
       rateLimit: true,
       jwksRequestsPerMinute: 2,
-      jwksUri: 'https://my-authz-server/.well-known/jwks.json'
+      jwksUri: 'https://my-authz-server/.well-known/jwks.json',
+      defaultJwtKid: `default-kid-abc123` //optional kid to default to if JWT header didn't include a kid
     }),
 
     // Your own logic to validate the user.

@@ -32,7 +32,7 @@ module.exports.hapiJwt2Key = (options) => {
       return cb(null, null, null);
     }
 
-    client.getSigningKey(decoded.header.kid, (err, key) => {
+    client.getSigningKey(decoded.header.kid || options.defaultJwtKid, (err, key) => {
       if (err) {
         return onError(err, (newError) => cb(newError, null, null));
       }

@@ -9,7 +9,7 @@ module.exports.koaJwtSecret = (options = {}) => {
 
   const client = new JwksClient(options);
 
-  return function secretProvider({ alg, kid } = {}) {
+  return function secretProvider({ alg, kid = options.defaultJwtKid } = {}) {
 
     return new Promise((resolve, reject) => {
 
