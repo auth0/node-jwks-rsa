@@ -13,6 +13,23 @@ const handleSigningKeyError = (err, cb) => {
   }
 };
 
+/**
+ * Call hapiJwt2Key as a Promise
+ * @param {object} options 
+ * @returns {Promise}
+ */
+module.exports.hapiJwt2KeyAsync = (options) => {
+  const secretProvider = module.exports.hapiJwt2Key(options);
+  return function(decoded) {
+    return new Promise((resolve, reject) => {
+      const cb = (err, key) => {
+        (!key || err) ? reject(err) : resolve({ key });
+      };
+      secretProvider(decoded, cb);
+    });
+  };
+}; 
+
 module.exports.hapiJwt2Key = (options) => {
   if (options === null || options === undefined) {
     throw new ArgumentError('An options object must be provided when initializing expressJwtSecret');
