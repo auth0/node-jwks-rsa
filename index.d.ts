@@ -35,6 +35,8 @@ declare module 'jwks-rsa' {
 
     function hapiJwt2Key(options: JwksRsa.Options): (name: string, scheme: string, options?: any) => void;
 
+    function hapiJwt2KeyAsync(options: JwksRsa.Options): (name: string, scheme: string, options?: any) => void;
+
     function koaJwtSecret(options: JwksRsa.Options): (name: string, scheme: string, options?: any) => void;
 
     class ArgumentError extends Error {

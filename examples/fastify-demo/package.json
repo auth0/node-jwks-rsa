@@ -1,0 +1,15 @@
+{
+  "name": "fastify-demo",
+  "version": "1.0.0",
+  "description": "A simple example on how to use this with Fastify",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ethan Arrowood",
+  "license": "MIT",
+  "dependencies": {
+    "fastify": "^1.7.0",
+    "fastify-jwt": "^0.3.0"
+  }
+}
