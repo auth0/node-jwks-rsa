@@ -32,7 +32,7 @@ module.exports.hapiJwt2KeyAsync = (options) => {
 
 module.exports.hapiJwt2Key = (options) => {
   if (options === null || options === undefined) {
-    throw new ArgumentError('An options object must be provided when initializing expressJwtSecret');
+    throw new ArgumentError('An options object must be provided when initializing hapiJwt2Key');
   }
 
   const client = new JwksClient(options);
