@@ -41,21 +41,40 @@ module.exports.hapiJwt2Key = (options) => {
   return function secretProvider(decoded, cb) {
     // We cannot find a signing certificate if there is no header (no kid).
     if (!decoded || !decoded.header) {
-      return cb(null, null, null);
+      if (cb) {
+        return cb(null, null, null);
+      }
+      return Promise.resolve();
     }
 
     // Only RS256 is supported.
     if (decoded.header.alg !== 'RS256') {
-      return cb(null, null, null);
+      if (cb) {
+        return cb(null, null, null);
+      }
+      return Promise.resolve();
     }
 
-    client.getSigningKey(decoded.header.kid, (err, key) => {
-      if (err) {
-        return onError(err, (newError) => cb(newError, null, null));
-      }
+    if (cb) {
+      return client.getSigningKey(decoded.header.kid, (err, key) => {
+        if (err) {
+          return onError(err, (newError) => cb(newError, null, null));
+        }
 
-      // Provide the key.
-      return cb(null, key.publicKey || key.rsaPublicKey, key);
+        // Provide the key.
+        return cb(null, key.publicKey || key.rsaPublicKey, key);
+      });
+    }
+
+    return new Promise((resolve, reject) => {
+      client.getSigningKey(decoded.header.kid, (err, key) => {
+        if (err) {
+          return onError(err, reject);
+        }
+
+        // Provide the key.
+        return resolve({ key: key.publicKey || key.rsaPublicKey });
+      });
     });
   };
 };
