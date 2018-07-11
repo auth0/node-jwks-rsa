@@ -22,6 +22,11 @@ server.register(jwt, (err) => {
     complete: true,
 
     // Dynamically provide a signing key based on the kid in the header and the singing keys provided by the JWKS endpoint.
+
+    /* If you're using Hapi 17.x.x you have to use version 8.x.x of hapi-auth-jwt2
+      (https://github.com/dwyl/hapi-auth-jwt2#compatibility) and use the promise based version jwksRsa.hapiJwt2KeyAsync instead of jwksRsa.hapiJwt2Key
+    */
+
     key: jwksRsa.hapiJwt2Key({
       cache: true,
       rateLimit: true,
