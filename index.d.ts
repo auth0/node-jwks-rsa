@@ -1,6 +1,7 @@
 declare module 'jwks-rsa' {
 
   import * as ExpressJwt from "express-jwt";
+  import { OutgoingHttpHeaders } from "http";
 
   function JwksRsa(options: JwksRsa.Options): JwksRsa.JwksClient;
 
@@ -28,6 +29,7 @@ declare module 'jwks-rsa' {
       cacheMaxAge?: number;
       jwksRequestsPerMinute?: number;
       strictSsl?: boolean;
+      headers?: OutgoingHttpHeaders;
       handleSigningKeyError?(err: Error, cb: (err: Error) => void): any;
     }
 

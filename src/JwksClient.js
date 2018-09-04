@@ -10,7 +10,7 @@ import { cacheSigningKey, rateLimitSigningKey } from './wrappers';
 
 export class JwksClient {
   constructor(options) {
-    this.options = { rateLimit: false, cache: false, strictSsl: true, ...options };
+    this.options = { rateLimit: false, cache: false, strictSsl: true, headers: {}, ...options };
     this.logger = debug('jwks');
 
     // Initialize wrappers.
@@ -24,7 +24,7 @@ export class JwksClient {
 
   getKeys(cb) {
     this.logger(`Fetching keys from '${this.options.jwksUri}'`);
-    request({ json: true, uri: this.options.jwksUri, strictSSL: this.options.strictSsl }, (err, res) => {
+    request({ json: true, uri: this.options.jwksUri, strictSSL: this.options.strictSsl, headers: this.options.headers }, (err, res) => {
       if (err || res.statusCode < 200 || res.statusCode >= 300) {
         this.logger('Failure:', res && res.body || err);
         if (res) {
