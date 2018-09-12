@@ -1,6 +1,7 @@
 declare module 'jwks-rsa' {
 
   import * as ExpressJwt from "express-jwt";
+  import * as KoaJwt from "koa-jwt";
 
   function JwksRsa(options: JwksRsa.Options): JwksRsa.JwksClient;
 
@@ -37,7 +38,7 @@ declare module 'jwks-rsa' {
 
     function hapiJwt2KeyAsync(options: JwksRsa.Options): (name: string, scheme: string, options?: any) => void;
 
-    function koaJwtSecret(options: JwksRsa.Options): (name: string, scheme: string, options?: any) => void;
+    function koaJwtSecret(options: JwksRsa.Options): KoaJwt.SecretLoader;
 
     class ArgumentError extends Error {
       constructor(message: string);
