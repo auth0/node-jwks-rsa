@@ -60,14 +60,14 @@ describe('expressJwtSecret', () => {
       });
     });
 
-    it('should not provide a key if token is RS256 and no KID was provided', (done) => {
+    it('should not provide a key if JWKS endpoint returned multiple keys and no KID was provided', (done) => {
       const middleware = expressJwt({
         secret: jwksRsa.expressJwtSecret({
           jwksUri: 'http://localhost/.well-known/jwks.json'
         })
       });
 
-      jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' } ]);
+      jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' }, { pub: publicKey, kid: '456' } ]);
 
       const token = createToken(privateKey, null, { sub: 'john' });
       middleware({ headers: { authorization: `Bearer ${token}` } }, { }, function(err) {
@@ -152,5 +152,27 @@ describe('expressJwtSecret', () => {
       });
     });
 
+    it('should work if the JWKS endpoint returns a single key and no KID is provided', (done) => {
+      const middleware = expressJwt({
+        secret: jwksRsa.expressJwtSecret({
+          jwksUri: 'http://localhost/.well-known/jwks.json',
+          handleSigningKeyError: (err, cb) => {
+            if (err instanceof jwksRsa.SigningKeyNotFoundError) {
+              cb(new Error('This is bad'));
+            }
+          }
+        })
+      });
+
+      jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' } ]);
+
+      const token = createToken(privateKey, undefined, { sub: 'john' });
+      const req = { headers: { authorization: `Bearer ${token}` } };
+      middleware(req, { }, function(err) {
+        expect(err).to.be.undefined;
+        expect(req.user.sub).to.equal('john');
+        done();
+      });
+    });
   });
 });

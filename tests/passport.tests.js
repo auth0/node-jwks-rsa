@@ -115,7 +115,7 @@ describe('passportJwtSecret', () => {
       });
   });
 
-  it('should not provide a key if token is RS256 and no KID was provided', done => {
+  it('should not provide a key if JWKS endpoint returned multiple keys and no KID was provided', done => {
     const app = new Express();
     passport.use(
       new JwtStrategy(
@@ -144,7 +144,7 @@ describe('passportJwtSecret', () => {
     );
 
     const token = createToken(privateKey, null, { sub: 'john' });
-    jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' } ]);
+    jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' }, { pub: publicKey, kid: '456' } ]);
 
     request(app.listen())
       .get('/')
