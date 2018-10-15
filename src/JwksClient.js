@@ -1,7 +1,6 @@
 import debug from 'debug';
 import request from 'request';
 
-import ArgumentError from './errors/ArgumentError';
 import JwksError from './errors/JwksError';
 import SigningKeyNotFoundError from './errors/SigningKeyNotFoundError';
 
@@ -23,6 +22,9 @@ export class JwksClient {
   }
 
   getKeys(cb) {
+    if (this.options.jwksContent) {
+      return cb(null, this.options.jwksContent.keys);
+    }
     this.logger(`Fetching keys from '${this.options.jwksUri}'`);
     request({ json: true, uri: this.options.jwksUri, strictSSL: this.options.strictSsl }, (err, res) => {
       if (err || res.statusCode < 200 || res.statusCode >= 300) {

@@ -64,6 +64,37 @@ describe('JwksClient', () => {
         done();
       });
     });
+
+    it('can work with prefetched key set json', function() {
+      const client = new JwksClient({
+        jwksContent: {
+          keys: [
+            {
+              alg: 'RS256',
+              kty: 'RSA',
+              use: 'sig',
+              x5c: [
+                'pk1'
+              ],
+              kid: 'ABC'
+            },
+            {
+              alg: 'RS256',
+              kty: 'RSA',
+              use: 'sig',
+              x5c: [],
+              kid: '123'
+            }
+          ]
+        }
+      });
+      client.getKeys((err, keys) => {
+        expect(err).to.be.null;
+        expect(keys).not.to.be.null;
+        expect(keys.length).to.equal(2);
+        expect(keys[1].kid).to.equal('123');
+      });
+    });
   });
 
   describe('#getSigningKeys', () => {
