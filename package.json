@@ -5,7 +5,6 @@
   "main": "lib/index.js",
   "types": "index.d.ts",
   "dependencies": {
-    "@types/express-jwt": "0.0.34",
     "debug": "^2.2.0",
     "limiter": "^1.1.0",
     "lru-memoizer": "^1.6.0",
@@ -13,6 +12,7 @@
     "request": "^2.73.0"
   },
   "devDependencies": {
+    "@types/express-jwt": "0.0.34",
     "babel-cli": "^6.9.0",
     "babel-core": "^6.9.0",
     "babel-eslint": "^6.0.4",
