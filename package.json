@@ -6,11 +6,11 @@
   "types": "index.d.ts",
   "dependencies": {
     "@types/express-jwt": "0.0.34",
+    "browser-request": "^0.3.3",
     "debug": "^2.2.0",
     "limiter": "^1.1.0",
     "lru-memoizer": "^1.6.0",
-    "ms": "^2.0.0",
-    "request": "^2.73.0"
+    "ms": "^2.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",
@@ -27,6 +27,7 @@
     "koa-jwt": "^3.2.0",
     "mocha": "^2.5.3",
     "nock": "^8.0.0",
+    "request": "^2.88.0",
     "rimraf": "^2.5.2",
     "supertest": "^3.0.0"
   },
