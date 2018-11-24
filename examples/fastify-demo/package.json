@@ -10,6 +10,6 @@
   "license": "MIT",
   "dependencies": {
     "fastify": "^1.7.0",
-    "fastify-jwt": "^0.3.0"
+    "fastify-jwt": "^0.7.0"
   }
 }
