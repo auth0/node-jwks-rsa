@@ -8,9 +8,9 @@ declare module 'jwks-rsa' {
     class JwksClient {
       constructor(options: Options);
 
-      getKeys: (cb: (err: Error, keys: Jwk[]) => any) => any;
-      getSigningKeys: (cb: (err: Error, keys: Jwk[]) => any) => any;
-      getSigningKey: (kid: string, cb: (err: Error, key: Jwk) => any) => any;
+      getKeys: (cb: (err: Error | null, keys: Jwk[]) => any) => any;
+      getSigningKeys: (cb: (err: Error | null, keys: Jwk[]) => any) => any;
+      getSigningKey: (kid: string, cb: (err: Error | null, key: Jwk) => any) => any;
     }
 
     interface Jwk {
