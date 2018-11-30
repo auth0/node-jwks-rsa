@@ -1,24 +1,28 @@
 const fastify = require('fastify')();
 const fastifyJwt = require('fastify-jwt');
-const jwksRsa = require('../../');
+const JwksClient = require('../../lib/');
 
-fastify.post('/signup', (request, reply) => {
-  reply.jwtSign(request.body, (err, token) => {
-    return reply.send(err || { 'token': token });
-  });
+fastify.get('/auth-required', async request => {
+  try {
+    const decoded = await request.jwtVerify();
+    return { decoded };
+  } catch (err) {
+    return err;
+  }
 });
 
 fastify.register(fastifyJwt, {
-  secret: jwksRsa.fastifyJwtSecret({
+  secret: JwksClient.fastifyJwtSecret({
     jwksUri: 'http://localhost/.well-known/jwks.json'
   }),
-  algorithms: [ 'RS256' ]
+  algorithms: [ 'RS256' ],
+  decode: { complete: true }
 });
 
 const start = async () => {
   try {
-    await fastify.listen(9000);
-    console.log(`server listening on ${fastify.server.address().port}`);
+    const address = await fastify.listen(9000,'0.0.0.0');
+    console.log(`Server running on ${address}`);
   } catch (err) {
     console.error(err);
     process.exit(1);
