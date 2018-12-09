@@ -49,7 +49,7 @@ export class JwksClient {
       }
 
       const signingKeys = keys
-        .filter(key => (key.use === 'sig' || key.use === null) && key.kty === 'RSA' && key.kid && ((key.x5c && key.x5c.length) || (key.n && key.e)))
+        .filter(key => (key.use === 'sig' || !key.use) && key.kty === 'RSA' && key.kid && ((key.x5c && key.x5c.length) || (key.n && key.e)))
         .map(key => {
           if (key.x5c && key.x5c.length) {
             return { kid: key.kid, nbf: key.nbf, publicKey: certToPEM(key.x5c[0]) };
