@@ -67,7 +67,7 @@ export class JwksClient {
     });
   }
 
-  getSigningKey = (kid, cb) => {
+  getSigningKey(kid, cb) {
     this.logger(`Fetching signing key for '${kid}'`);
 
     this.getSigningKeys((err, keys) => {
