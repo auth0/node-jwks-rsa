@@ -21,7 +21,7 @@ declare module 'jwks-rsa' {
     }
 
     interface Headers {
-      [key: string]: any;
+      [key: string]: string;
     }
 
     interface Options {
@@ -32,7 +32,7 @@ declare module 'jwks-rsa' {
       cacheMaxAge?: number;
       jwksRequestsPerMinute?: number;
       strictSsl?: boolean;
-      headers?: Headers;
+      requestHeaders?: Headers;
       handleSigningKeyError?(err: Error, cb: (err: Error) => void): any;
     }
 

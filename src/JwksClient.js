@@ -5,12 +5,23 @@ import ArgumentError from './errors/ArgumentError';
 import JwksError from './errors/JwksError';
 import SigningKeyNotFoundError from './errors/SigningKeyNotFoundError';
 
-import { certToPEM, rsaPublicKeyToPEM } from './utils';
-import { cacheSigningKey, rateLimitSigningKey } from './wrappers';
+import {
+  certToPEM,
+  rsaPublicKeyToPEM
+} from './utils';
+import {
+  cacheSigningKey,
+  rateLimitSigningKey
+} from './wrappers';
 
 export class JwksClient {
   constructor(options) {
-    this.options = { rateLimit: false, cache: false, strictSsl: true, ...options };
+    this.options = {
+      rateLimit: false,
+      cache: false,
+      strictSsl: true,
+      ...options
+    };
     this.logger = debug('jwks');
 
     // Initialize wrappers.
@@ -24,7 +35,12 @@ export class JwksClient {
 
   getKeys(cb) {
     this.logger(`Fetching keys from '${this.options.jwksUri}'`);
-    request({ json: true, uri: this.options.jwksUri, strictSSL: this.options.strictSsl, headers: this.options.headers }, (err, res) => {
+    request({
+      json: true,
+      uri: this.options.jwksUri,
+      strictSSL: this.options.strictSsl,
+      headers: this.options.requestHeaders
+    }, (err, res) => {
       if (err || res.statusCode < 200 || res.statusCode >= 300) {
         this.logger('Failure:', res && res.body || err);
         if (res) {
@@ -52,9 +68,17 @@ export class JwksClient {
         .filter(key => key.use === 'sig' && key.kty === 'RSA' && key.kid && ((key.x5c && key.x5c.length) || (key.n && key.e)))
         .map(key => {
           if (key.x5c && key.x5c.length) {
-            return { kid: key.kid, nbf: key.nbf, publicKey: certToPEM(key.x5c[0]) };
+            return {
+              kid: key.kid,
+              nbf: key.nbf,
+              publicKey: certToPEM(key.x5c[0])
+            };
           } else {
-            return { kid: key.kid, nbf: key.nbf, rsaPublicKey: rsaPublicKeyToPEM(key.n, key.e) };
+            return {
+              kid: key.kid,
+              nbf: key.nbf,
+              rsaPublicKey: rsaPublicKeyToPEM(key.n, key.e)
+            };
           }
         });
 
