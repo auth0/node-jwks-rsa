@@ -1,26 +1,18 @@
 declare module 'jwks-rsa' {
+  import * as ExpressJwt from 'express-jwt';
 
-  import * as ExpressJwt from "express-jwt";
-
-  function JwksRsa(options: JwksRsa.Options): JwksRsa.JwksClient;
+  function JwksRsa(options: JwksRsa.ClientOptions): JwksRsa.JwksClient;
 
   namespace JwksRsa {
     class JwksClient {
-      constructor(options: Options);
+      constructor(options: ClientOptions);
 
-      getKeys: (cb: (err: Error, keys: Jwk[]) => any) => any;
-      getSigningKeys: (cb: (err: Error, keys: Jwk[]) => any) => any;
-      getSigningKey: (kid: string, cb: (err: Error, key: Jwk) => any) => any;
+      getKeys(cb: (err: Error | null, keys: unknown) => void): void;
+      getSigningKeys(cb: (err: Error | null, keys: SigningKey[]) => void): void;
+      getSigningKey(kid: string, cb: (err: Error | null, key: SigningKey) => void): void;
     }
 
-    interface Jwk {
-      kid: string;
-      nbf?: number;
-      publicKey?: string;
-      rsaPublicKey?: string;
-    }
-
-    interface Options {
+    interface ClientOptions {
       jwksUri: string;
       rateLimit?: boolean;
       cache?: boolean;
@@ -28,31 +20,75 @@ declare module 'jwks-rsa' {
       cacheMaxAge?: number;
       jwksRequestsPerMinute?: number;
       strictSsl?: boolean;
-      handleSigningKeyError?(err: Error, cb: (err: Error) => void): any;
     }
 
-    function expressJwtSecret(options: JwksRsa.Options): ExpressJwt.SecretCallback;
+    interface CertSigningKey {
+      kid: string;
+      nbf: string;
+      publicKey: string;
+    }
 
-    function hapiJwt2Key(options: JwksRsa.Options): (name: string, scheme: string, options?: any) => void;
+    interface RsaSigningKey {
+      kid: string;
+      nbf: string;
+      rsaPublicKey;
+    }
 
-    function hapiJwt2KeyAsync(options: JwksRsa.Options): (name: string, scheme: string, options?: any) => void;
+    type SigningKey = CertSigningKey | RsaSigningKey;
 
-    function koaJwtSecret(options: JwksRsa.Options): (name: string, scheme: string, options?: any) => void;
+    function expressJwtSecret(options: ExpressJwtOptions): ExpressJwt.SecretCallbackLong;
+
+    interface ExpressJwtOptions extends ClientOptions {
+      handleSigningKeyError?: (err: Error | null, cb: (err: Error | null) => void) => void;
+    }
+
+    function hapiJwt2Key(options: HapiJwtOptions): (decodedToken: DecodedToken, cb: HapiCallback) => void;
+
+    interface HapiJwtOptions extends ClientOptions {
+      handleSigningKeyError?: (err: Error | null, cb: HapiCallback) => void;
+    }
+
+    type HapiCallback = (err: Error | null, publicKey: string, signingKey: SigningKey) => void;
+
+    interface DecodedToken {
+      header: TokenHeader;
+    }
+
+    interface TokenHeader {
+      alg: string;
+      kid: string;
+    }
+
+    function hapiJwt2KeyAsync(options: HapiJwtOptions): (decodedToken: DecodedToken) => Promise<{ key: SigningKey }>;
+
+    function koaJwtSecret(options: KoaJwtOptions): (header: TokenHeader) => Promise<string>;
+
+    interface KoaJwtOptions extends ClientOptions {
+      handleSigningKeyError?(err: Error | null): Promise<void>;
+    }
 
     class ArgumentError extends Error {
       constructor(message: string);
+
+      name: 'ArgumentError';
     }
 
     class JwksError extends Error {
       constructor(message: string);
+
+      name: 'JwksError';
     }
 
     class JwksRateLimitError extends Error {
       constructor(message: string);
+
+      name: 'JwksRateLimitError';
     }
 
     class SigningKeyNotFoundError extends Error {
       constructor(message: string);
+
+      name: 'SigningKeyNotFoundError';
     }
   }
 
