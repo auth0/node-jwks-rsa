@@ -4,7 +4,7 @@ import { JwksClient } from '../JwksClient';
 const handleSigningKeyError = (err, cb) => {
   // If we didn't find a match, can't provide a key.
   if (err && err.name === 'SigningKeyNotFoundError') {
-    return cb(null, null, null);
+    return cb(err, null, null);
   }
 
   // If an error occured like rate limiting or HTTP issue, we'll bubble up the error.
@@ -41,12 +41,12 @@ module.exports.hapiJwt2Key = (options) => {
   return function secretProvider(decoded, cb) {
     // We cannot find a signing certificate if there is no header (no kid).
     if (!decoded || !decoded.header) {
-      return cb(null, null, null);
+      return cb(new Error('Cannot find a signing certificate if there is no header'), null, null);
     }
 
     // Only RS256 is supported.
     if (decoded.header.alg !== 'RS256') {
-      return cb(null, null, null);
+      return cb(new Error('Unsupported algorithm ' + decoded.header.alg), null, null);
     }
 
     client.getSigningKey(decoded.header.kid, (err, key) => {
