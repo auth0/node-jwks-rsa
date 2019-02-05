@@ -24,7 +24,7 @@ export class JwksClient {
 
   getKeys(cb) {
     this.logger(`Fetching keys from '${this.options.jwksUri}'`);
-    request({ json: true, uri: this.options.jwksUri, strictSSL: this.options.strictSsl, headers: this.options.headers }, (err, res) => {
+    request({ json: true, uri: this.options.jwksUri, strictSSL: this.options.strictSsl, headers: this.options.requestHeaders }, (err, res) => {
       if (err || res.statusCode < 200 || res.statusCode >= 300) {
         this.logger('Failure:', res && res.body || err);
         if (res) {
