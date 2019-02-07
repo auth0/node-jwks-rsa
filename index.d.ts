@@ -7,9 +7,7 @@ declare namespace JwksRsa {
     constructor(options: ClientOptions);
 
     getKeys(cb: (err: Error | null, keys: unknown) => void): void;
-
     getSigningKeys(cb: (err: Error | null, keys: SigningKey[]) => void): void;
-
     getSigningKey: (kid: string, cb: (err: Error | null, key: SigningKey) => void) => void;
   }
 
@@ -70,25 +68,21 @@ declare namespace JwksRsa {
 
   class ArgumentError extends Error {
     name: 'ArgumentError';
-
     constructor(message: string);
   }
 
   class JwksError extends Error {
     name: 'JwksError';
-
     constructor(message: string);
   }
 
   class JwksRateLimitError extends Error {
     name: 'JwksRateLimitError';
-
     constructor(message: string);
   }
 
   class SigningKeyNotFoundError extends Error {
     name: 'SigningKeyNotFoundError';
-
     constructor(message: string);
   }
 }
