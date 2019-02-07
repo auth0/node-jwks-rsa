@@ -31,7 +31,7 @@ declare module 'jwks-rsa' {
     interface RsaSigningKey {
       kid: string;
       nbf: string;
-      rsaPublicKey;
+      rsaPublicKey: string;
     }
 
     type SigningKey = CertSigningKey | RsaSigningKey;
@@ -68,27 +68,23 @@ declare module 'jwks-rsa' {
     }
 
     class ArgumentError extends Error {
-      constructor(message: string);
-
       name: 'ArgumentError';
+      constructor(message: string);
     }
 
     class JwksError extends Error {
-      constructor(message: string);
-
       name: 'JwksError';
+      constructor(message: string);
     }
 
     class JwksRateLimitError extends Error {
-      constructor(message: string);
-
       name: 'JwksRateLimitError';
+      constructor(message: string);
     }
 
     class SigningKeyNotFoundError extends Error {
-      constructor(message: string);
-
       name: 'SigningKeyNotFoundError';
+      constructor(message: string);
     }
   }
 
