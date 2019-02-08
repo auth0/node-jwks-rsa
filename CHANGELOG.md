@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.4.0] - (2019-02-07)
+
+**Added**
+- Allow custom headers in request [\#77](https://github.com/auth0/node-jwks-rsa/pull/77) ([Mutmatt](https://github.com/Mutmatt))
+
 ## [1.3.0] - (2018-06-20)
 
 **Added**
