@@ -11,6 +11,10 @@ declare namespace JwksRsa {
     getSigningKey: (kid: string, cb: (err: Error | null, key: SigningKey) => void) => void;
   }
 
+  interface Headers {
+    [key: string]: string;
+  }
+
   interface ClientOptions {
     jwksUri: string;
     rateLimit?: boolean;
@@ -19,6 +23,7 @@ declare namespace JwksRsa {
     cacheMaxAge?: number;
     jwksRequestsPerMinute?: number;
     strictSsl?: boolean;
+    requestHeaders?: Headers;
   }
 
   interface CertSigningKey {
