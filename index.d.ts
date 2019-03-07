@@ -24,6 +24,10 @@ declare module 'jwks-rsa' {
       [key: string]: string;
     }
 
+    interface AgentOptions {
+      [key: string]: string;
+    }
+
     interface Options {
       jwksUri: string;
       rateLimit?: boolean;
@@ -33,6 +37,7 @@ declare module 'jwks-rsa' {
       jwksRequestsPerMinute?: number;
       strictSsl?: boolean;
       requestHeaders?: Headers;
+      requestAgentOptions?: AgentOptions;
       handleSigningKeyError?(err: Error, cb: (err: Error) => void): any;
     }
 
