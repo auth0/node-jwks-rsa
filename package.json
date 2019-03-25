@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "types": "index.d.ts",
   "dependencies": {
-    "@types/express-jwt": "0.0.34",
+    "@types/express-jwt": "0.0.42",
     "debug": "^2.2.0",
     "limiter": "^1.1.0",
     "lru-memoizer": "^1.6.0",
