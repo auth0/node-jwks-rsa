@@ -20,6 +20,10 @@ declare module 'jwks-rsa' {
       rsaPublicKey?: string;
     }
 
+    interface Headers {
+      [key: string]: string;
+    }
+
     interface Options {
       jwksUri: string;
       rateLimit?: boolean;
@@ -28,6 +32,7 @@ declare module 'jwks-rsa' {
       cacheMaxAge?: number;
       jwksRequestsPerMinute?: number;
       strictSsl?: boolean;
+      requestHeaders?: Headers;
       handleSigningKeyError?(err: Error, cb: (err: Error) => void): any;
     }
 

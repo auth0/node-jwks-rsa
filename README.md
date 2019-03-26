@@ -13,7 +13,8 @@ const jwksClient = require('jwks-rsa');
 
 const client = jwksClient({
   strictSsl: true, // Default value
-  jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'
+  jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
+  requestHeaders: {} // Optional
 });
 
 const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';
@@ -100,3 +101,7 @@ jwks Keys: +8ms [ { alg: 'RS256',
   kid: 'ABC' },
 { alg: 'RS256', kty: 'RSA', use: 'sig', x5c: [], kid: '123' } ]
 ```
+
+## License
+
+This project is licensed under the MIT license. See the [LICENSE](LICENSE) file for more info.
