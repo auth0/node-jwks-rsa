@@ -44,6 +44,8 @@ declare module 'jwks-rsa' {
 
     function koaJwtSecret(options: JwksRsa.Options): (name: string, scheme: string, options?: any) => void;
 
+    function passportJwtSecret(options: JwksRsa.Options): ExpressJwt.SecretCallback;
+
     class ArgumentError extends Error {
       constructor(message: string);
     }
