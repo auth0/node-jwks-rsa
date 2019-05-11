@@ -7,6 +7,7 @@
   "dependencies": {
     "@types/express-jwt": "0.0.34",
     "debug": "^2.2.0",
+    "jsonwebtoken": "^8.5.1",
     "limiter": "^1.1.0",
     "lru-memoizer": "^1.6.0",
     "ms": "^2.0.0",
@@ -23,7 +24,6 @@
     "eslint-plugin-babel": "^3.2.0",
     "express": "^4.16.2",
     "express-jwt": "^3.4.0",
-    "jsonwebtoken": "^7.1.7",
     "koa": "^2.2.0",
     "koa-jwt": "^3.2.0",
     "mocha": "^2.5.3",
