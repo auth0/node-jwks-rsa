@@ -1,4 +1,4 @@
-import { SecretCallbackLong } from 'express-jwt';
+import { SecretCallback, SecretCallbackLong } from 'express-jwt';
 
 declare function JwksRsa(options: JwksRsa.ClientOptions): JwksRsa.JwksClient;
 
@@ -41,6 +41,8 @@ declare namespace JwksRsa {
   type SigningKey = CertSigningKey | RsaSigningKey;
 
   function expressJwtSecret(options: ExpressJwtOptions): SecretCallbackLong;
+
+  function passportJwtSecret(options: ExpressJwtOptions): SecretCallback;
 
   interface ExpressJwtOptions extends ClientOptions {
     handleSigningKeyError?: (err: Error | null, cb: (err: Error | null) => void) => void;

@@ -1,0 +1,25 @@
+{
+  "name": "passport-demo",
+  "version": "1.0.0",
+  "description": "Sample that shows how to use jwks-rsa with Passport.js",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "jwks-rsa",
+    "jwt",
+    "rs256",
+    "express",
+    "passport"
+  ],
+  "author": "Gene Connolly",
+  "license": "MIT",
+  "dependencies": {
+    "debug": "^2.2.0",
+    "express": "^4.14.0",
+    "passport": "^0.4.0",
+    "passport-jwt": "^3.0.0"
+  }
+}
