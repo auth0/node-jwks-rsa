@@ -26,7 +26,7 @@
     "express-jwt": "^3.4.0",
     "koa": "^2.2.0",
     "koa-jwt": "^3.2.0",
-    "mocha": "^2.5.3",
+    "mocha": "^6.1.4",
     "nock": "^10.0.6",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
@@ -37,8 +37,8 @@
     "clean": "rimraf lib/",
     "compile": "babel -d lib/ src/",
     "prepublish": "npm run clean && npm run compile",
-    "test": "NODE_ENV=test mocha --compilers js:babel-core/register --timeout 5000 $(find ./tests -name *.tests.js)",
-    "test-watch": "NODE_ENV=test mocha --compilers js:babel-core/register --timeout 5000 $(find ./tests -name *.tests.js) --watch",
+    "test": "NODE_ENV=test mocha --require babel-core/register --exit --timeout 5000 $(find ./tests -name *.tests.js)",
+    "test-watch": "NODE_ENV=test mocha --require babel-core/register --exit --timeout 5000 $(find ./tests -name *.tests.js) --watch",
     "release": "git tag $npm_package_version && git push && git push --tags && npm publish"
   },
   "repository": {
