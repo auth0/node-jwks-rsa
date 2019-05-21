@@ -46,7 +46,7 @@ module.exports.hapiJwt2Key = (options) => {
 
     // Only RS256 is supported.
     if (decoded.header.alg !== 'RS256') {
-      return cb(new Error('Unsupported algorithm ' + decoded.header.alg), null, null);
+      return cb(new Error('Unsupported algorithm ' + decoded.header.alg + ' supplied. node-jwks-rsa supports only RS256'), null, null);
     }
 
     client.getSigningKey(decoded.header.kid, (err, key) => {

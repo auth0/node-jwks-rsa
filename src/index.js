@@ -4,6 +4,7 @@ import * as errors from './errors';
 import { hapiJwt2Key, hapiJwt2KeyAsync } from './integrations/hapi';
 import { expressJwtSecret } from './integrations/express';
 import { koaJwtSecret } from './integrations/koa';
+import { passportJwtSecret } from './integrations/passport';
 
 module.exports = (options) => {
   return new JwksClient(options);
@@ -18,3 +19,4 @@ module.exports.expressJwtSecret = expressJwtSecret;
 module.exports.hapiJwt2Key = hapiJwt2Key;
 module.exports.hapiJwt2KeyAsync = hapiJwt2KeyAsync;
 module.exports.koaJwtSecret = koaJwtSecret;
+module.exports.passportJwtSecret = passportJwtSecret;

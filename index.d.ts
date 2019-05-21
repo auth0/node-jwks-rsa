@@ -20,6 +20,10 @@ declare module 'jwks-rsa' {
       rsaPublicKey?: string;
     }
 
+    interface Headers {
+      [key: string]: string;
+    }
+
     interface Options {
       jwksUri: string;
       rateLimit?: boolean;
@@ -28,6 +32,7 @@ declare module 'jwks-rsa' {
       cacheMaxAge?: number;
       jwksRequestsPerMinute?: number;
       strictSsl?: boolean;
+      requestHeaders?: Headers;
       handleSigningKeyError?(err: Error, cb: (err: Error) => void): any;
     }
 
@@ -38,6 +43,8 @@ declare module 'jwks-rsa' {
     function hapiJwt2KeyAsync(options: JwksRsa.Options): (name: string, scheme: string, options?: any) => void;
 
     function koaJwtSecret(options: JwksRsa.Options): (name: string, scheme: string, options?: any) => void;
+
+    function passportJwtSecret(options: JwksRsa.Options): ExpressJwt.SecretCallback;
 
     class ArgumentError extends Error {
       constructor(message: string);
