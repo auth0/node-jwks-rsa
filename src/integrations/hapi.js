@@ -41,12 +41,12 @@ module.exports.hapiJwt2Key = (options) => {
   return function secretProvider(decoded, cb) {
     // We cannot find a signing certificate if there is no header (no kid).
     if (!decoded || !decoded.header) {
-      return cb(null, null, null);
+      return cb(new Error('Invalid JWT header'), null, null);
     }
 
     // Only RS256 is supported.
     if (decoded.header.alg !== 'RS256') {
-      return cb(null, null, null);
+      return cb(new Error('An invalid signing algorithm was specified, node-jwks-rsa supports only RS256'), null, null);
     }
 
     client.getSigningKey(decoded.header.kid, (err, key) => {
