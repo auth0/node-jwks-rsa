@@ -65,7 +65,7 @@ declare namespace JwksRsa {
     kid: string;
   }
 
-  function hapiJwt2KeyAsync(options: HapiJwtOptions): (decodedToken: DecodedToken) => Promise<{ key: SigningKey }>;
+  function hapiJwt2KeyAsync(options: HapiJwtOptions): (decodedToken: DecodedToken) => Promise<{ key: string }>;
 
   function koaJwtSecret(options: KoaJwtOptions): (header: TokenHeader) => Promise<string>;
 
