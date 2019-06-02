@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.1] - (2019-05-21)
+
+**Changed**
+- Now includes the jsonwebtoken as a runtime dependency not dev to avoid breaks with 1.5.0 installs
+- Various dependencies in both the library and samples updated
+
 ## [1.5.0] - (2019-05-09)
 
 **Added**

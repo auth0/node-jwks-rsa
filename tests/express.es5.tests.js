@@ -42,7 +42,7 @@ describe('expressJwtSecret', () => {
       });
 
       middleware({ headers: { authorization: 'Bearer abc' } }, { }, function(err) {
-        exprect(err.code).to.equal('invalid_token');
+        expect(err.code).to.equal('invalid_token');
       });
     });
 
