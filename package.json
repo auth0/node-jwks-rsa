@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "types": "index.d.ts",
   "dependencies": {
+    "@types/express-jwt": "0.0.41",
     "debug": "^2.6.9",
     "jsonwebtoken": "^8.5.1",
     "limiter": "^1.1.4",

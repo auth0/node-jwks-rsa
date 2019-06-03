@@ -1,67 +1,97 @@
-declare module 'jwks-rsa' {
+import { SecretCallback, SecretCallbackLong } from 'express-jwt';
 
-  import * as ExpressJwt from "express-jwt";
+declare function JwksRsa(options: JwksRsa.ClientOptions): JwksRsa.JwksClient;
 
-  function JwksRsa(options: JwksRsa.Options): JwksRsa.JwksClient;
+declare namespace JwksRsa {
+  class JwksClient {
+    constructor(options: ClientOptions);
 
-  namespace JwksRsa {
-    class JwksClient {
-      constructor(options: Options);
-
-      getKeys: (cb: (err: Error, keys: Jwk[]) => any) => any;
-      getSigningKeys: (cb: (err: Error, keys: Jwk[]) => any) => any;
-      getSigningKey: (kid: string, cb: (err: Error, key: Jwk) => any) => any;
-    }
-
-    interface Jwk {
-      kid: string;
-      nbf?: number;
-      publicKey?: string;
-      rsaPublicKey?: string;
-    }
-
-    interface Headers {
-      [key: string]: string;
-    }
-
-    interface Options {
-      jwksUri: string;
-      rateLimit?: boolean;
-      cache?: boolean;
-      cacheMaxEntries?: number;
-      cacheMaxAge?: number;
-      jwksRequestsPerMinute?: number;
-      strictSsl?: boolean;
-      requestHeaders?: Headers;
-      handleSigningKeyError?(err: Error, cb: (err: Error) => void): any;
-    }
-
-    function expressJwtSecret(options: JwksRsa.Options): ExpressJwt.SecretCallback;
-
-    function hapiJwt2Key(options: JwksRsa.Options): (name: string, scheme: string, options?: any) => void;
-
-    function hapiJwt2KeyAsync(options: JwksRsa.Options): (name: string, scheme: string, options?: any) => void;
-
-    function koaJwtSecret(options: JwksRsa.Options): (name: string, scheme: string, options?: any) => void;
-
-    function passportJwtSecret(options: JwksRsa.Options): ExpressJwt.SecretCallback;
-
-    class ArgumentError extends Error {
-      constructor(message: string);
-    }
-
-    class JwksError extends Error {
-      constructor(message: string);
-    }
-
-    class JwksRateLimitError extends Error {
-      constructor(message: string);
-    }
-
-    class SigningKeyNotFoundError extends Error {
-      constructor(message: string);
-    }
+    getKeys(cb: (err: Error | null, keys: unknown) => void): void;
+    getSigningKeys(cb: (err: Error | null, keys: SigningKey[]) => void): void;
+    getSigningKey: (kid: string, cb: (err: Error | null, key: SigningKey) => void) => void;
   }
 
-  export = JwksRsa;
+  interface Headers {
+    [key: string]: string;
+  }
+
+  interface ClientOptions {
+    jwksUri: string;
+    rateLimit?: boolean;
+    cache?: boolean;
+    cacheMaxEntries?: number;
+    cacheMaxAge?: number;
+    jwksRequestsPerMinute?: number;
+    strictSsl?: boolean;
+    requestHeaders?: Headers;
+  }
+
+  interface CertSigningKey {
+    kid: string;
+    nbf: string;
+    publicKey: string;
+  }
+
+  interface RsaSigningKey {
+    kid: string;
+    nbf: string;
+    rsaPublicKey: string;
+  }
+
+  type SigningKey = CertSigningKey | RsaSigningKey;
+
+  function expressJwtSecret(options: ExpressJwtOptions): SecretCallbackLong;
+
+  function passportJwtSecret(options: ExpressJwtOptions): SecretCallback;
+
+  interface ExpressJwtOptions extends ClientOptions {
+    handleSigningKeyError?: (err: Error | null, cb: (err: Error | null) => void) => void;
+  }
+
+  function hapiJwt2Key(options: HapiJwtOptions): (decodedToken: DecodedToken, cb: HapiCallback) => void;
+
+  interface HapiJwtOptions extends ClientOptions {
+    handleSigningKeyError?: (err: Error | null, cb: HapiCallback) => void;
+  }
+
+  type HapiCallback = (err: Error | null, publicKey: string, signingKey: SigningKey) => void;
+
+  interface DecodedToken {
+    header: TokenHeader;
+  }
+
+  interface TokenHeader {
+    alg: string;
+    kid: string;
+  }
+
+  function hapiJwt2KeyAsync(options: HapiJwtOptions): (decodedToken: DecodedToken) => Promise<{ key: string }>;
+
+  function koaJwtSecret(options: KoaJwtOptions): (header: TokenHeader) => Promise<string>;
+
+  interface KoaJwtOptions extends ClientOptions {
+    handleSigningKeyError?(err: Error | null): Promise<void>;
+  }
+
+  class ArgumentError extends Error {
+    name: 'ArgumentError';
+    constructor(message: string);
+  }
+
+  class JwksError extends Error {
+    name: 'JwksError';
+    constructor(message: string);
+  }
+
+  class JwksRateLimitError extends Error {
+    name: 'JwksRateLimitError';
+    constructor(message: string);
+  }
+
+  class SigningKeyNotFoundError extends Error {
+    name: 'SigningKeyNotFoundError';
+    constructor(message: string);
+  }
 }
+
+export = JwksRsa;
