@@ -14,7 +14,10 @@
     "request": "^2.88.0"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.7",
     "@types/express-jwt": "0.0.42",
+    "@types/mocha": "^5.2.7",
+    "@types/nock": "^10.0.3",
     "babel-cli": "^6.9.0",
     "babel-core": "^6.9.0",
     "babel-eslint": "^6.0.4",
@@ -32,13 +35,18 @@
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "rimraf": "^2.6.3",
-    "supertest": "^3.4.2"
+    "supertest": "^3.4.2",
+    "ts-node": "^8.2.0",
+    "typescript": "^3.5.1"
   },
   "scripts": {
     "clean": "rimraf lib/",
+    "clean:ts": "rimraf ts-output/",
     "compile": "babel -d lib/ src/",
     "prepublish": "npm run clean && npm run compile",
-    "test": "NODE_ENV=test mocha --require babel-core/register --exit --timeout 5000 $(find ./tests -name *.tests.js)",
+    "test:ts": "npm run clean:ts && tsc && NODE_ENV=test mocha --require babel-core/register --exit --timeout 5000 $(find ./ts-output -name *.tests.js)",
+    "test:js": "NODE_ENV=test mocha --require babel-core/register --exit --timeout 5000 $(find ./tests -name *.tests.js)",
+    "test": "npm run test:js && npm run test:ts",
     "test-watch": "NODE_ENV=test mocha --require babel-core/register --exit --timeout 5000 $(find ./tests -name *.tests.js) --watch",
     "release": "git tag $npm_package_version && git push && git push --tags && npm publish"
   },
