@@ -1,5 +1,5 @@
 import nock from 'nock';
-import * as jwksRsaType from 'jwks-rsa';
+import * as jwksRsaType from '../index';
 import {expect} from 'chai';
 const jwksRsa: typeof jwksRsaType = require('../src');
 
@@ -31,7 +31,6 @@ describe('typescript definition', () => {
       });
       const { key } = await secretProvider({
         header: {
-          'typ': 'JWT',
           'alg': 'RS256',
           'kid': 'someKeyId'
         }
