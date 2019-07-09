@@ -63,6 +63,44 @@ describe("JwksClient", () => {
       });
     });
 
+    it("should set request agentOptions when provided", done => {
+      nock(jwksHost)
+        .get("./well-known/jwks.json")
+        .reply(function() {
+          expect(this.req.agentOptions).not.to.be.null;
+          expect(this.req.agentOptions["ca"]).to.be.equal("loadCA()");
+          return 200;
+        });
+
+      const client = new JwksClient({
+        jwksUri: `${jwksHost}/.well-known/jwks.json`,
+        requestAgentOptions: {
+          ca: "loadCA()"
+        }
+      });
+
+      client.getKeys((err, keys) => {
+        done();
+      });
+    });
+
+    it("should not set request agentOptions by default", done => {
+      nock(jwksHost)
+        .get("/.well-known/jwks.json")
+        .reply(function() {
+          expect(this.req).to.not.have.property("agentOptions");
+          return 200;
+        });
+
+      const client = new JwksClient({
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
+      });
+
+      client.getKeys((err, keys) => {
+        done();
+      });
+    });
+
     it("should send extra header", done => {
       nock(jwksHost)
         .get("/.well-known/jwks.json")

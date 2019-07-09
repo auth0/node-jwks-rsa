@@ -18,7 +18,8 @@ const jwksClient = require('jwks-rsa');
 const client = jwksClient({
   strictSsl: true, // Default value
   jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
-  requestHeaders: {} // Optional
+  requestHeaders: {}, // Optional
+  requestAgentOptions: {} // Optional
 });
 
 const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';
@@ -79,6 +80,27 @@ client.getSigningKey(kid, (err, key) => {
   // Now I can use this to configure my Express or Hapi middleware
 });
 ```
+
+### Using AgentOptions for TLS/SSL Configuration
+
+The `requestAgentOptions` property can be used to configure SSL/TLS options. An
+example use case is providing a trusted private (i.e. enterprise/corporate) root
+certificate authority to establish TLS communication with the `jwks_uri`.
+
+```js
+const jwksClient = require("jwks-rsa");
+const client = jwksClient({
+  strictSsl: true, // Default value
+  jwksUri: 'https://my-enterprise-id-provider/.well-known/jwks.json',
+  requestHeaders: {}, // Optional
+  requestAgentOptions: {
+    ca: fs.readFileSync(caFile)
+  }
+});
+```
+
+For more information, see [the NodeJS request library `agentOptions`
+documentation](https://github.com/request/request#using-optionsagentoptions).
 
 ## Running Tests
 

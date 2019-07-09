@@ -32,6 +32,23 @@ declare namespace JwksRsa {
     publicKey: string;
   }
 
+  interface AgentOptions {
+    [key: string]: string;
+  }
+
+  interface Options {
+    jwksUri: string;
+    rateLimit?: boolean;
+    cache?: boolean;
+    cacheMaxEntries?: number;
+    cacheMaxAge?: number;
+    jwksRequestsPerMinute?: number;
+    strictSsl?: boolean;
+    requestHeaders?: Headers;
+    requestAgentOptions?: AgentOptions;
+    handleSigningKeyError?(err: Error, cb: (err: Error) => void): any;
+  }
+
   interface RsaSigningKey {
     kid: string;
     nbf: string;
