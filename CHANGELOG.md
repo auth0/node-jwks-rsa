@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.6.0] - (2019-07-09)
+
+**Added**
+- Add `agentOptions` to customize `request` [TLS/SSL options](https://www.npmjs.com/package/request#using-optionsagentoptions). https://github.com/auth0/node-jwks-rsa/pull/84
+
 ## [1.5.1] - (2019-05-21)
 
 **Changed**
