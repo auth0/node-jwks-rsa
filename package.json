@@ -1,11 +1,11 @@
 {
   "name": "jwks-rsa",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Library to retrieve RSA public keys from a JWKS endpoint",
   "main": "lib/index.js",
   "types": "index.d.ts",
   "dependencies": {
-    "@types/express-jwt": "0.0.41",
+    "@types/express-jwt": "0.0.42",
     "debug": "^2.6.9",
     "jsonwebtoken": "^8.5.1",
     "limiter": "^1.1.4",
@@ -15,7 +15,6 @@
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
-    "@types/express-jwt": "0.0.42",
     "@types/mocha": "^5.2.7",
     "@types/nock": "^10.0.3",
     "babel-cli": "^6.9.0",
