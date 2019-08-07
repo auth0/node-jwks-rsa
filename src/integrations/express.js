@@ -27,7 +27,7 @@ module.exports.expressJwtSecret = (options) => {
       return cb(null, null);
     }
 
-    client.getSigningKey(header.kid, (err, key) => {
+    client.getSigningKey(header[options.headerKey || 'kid'], (err, key) => {
       if (err) {
         return onError(err, (newError) => cb(newError, null));
       }
