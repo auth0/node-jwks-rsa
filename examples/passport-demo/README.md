@@ -1,36 +1,44 @@
-# jwks-rsa - Express Example
+# jwks-rsa - Passport Example
 
-The `jwks-rsa` library provides a small helper that makes it easy to configure `express-jwt` with the `RS256` algorithm. Using `expressJwtSecret` you can generate a secret provider that will provide the right signing key to `express-jwt` based on the `kid` in the JWT header.
+The `jwks-rsa` library provides a small helper that makes it easy to configure `passport-jwt` with the `RS256` algorithm. Using `passportJwtSecret` you can generate a secret provider that will provide the right signing key to `passport-jwt` based on the `kid` in the JWT header.
 
 ```js
 const Express = require('express');
-const jwt = require('express-jwt');
+const passport = require('passport');
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
 const jwksRsa = require('jwks-rsa');
 
 ...
-
 // Initialize the app.
 const app = new Express();
-app.use(jwt({
-  // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
-  secret: jwksRsa.expressJwtSecret({
-    cache: true,
-    rateLimit: true,
-    jwksRequestsPerMinute: 5,
-    jwksUri: `https://my-authz-server/.well-known/jwks.json`
-  }),
 
-  // Validate the audience and the issuer.
-  audience: 'urn:my-resource-server',
-  issuer: 'https://my-authz-server/',
-  algorithms: [ 'RS256' ]
-}));
+passport.use(
+  new JwtStrategy({
+    // Dynamically provide a signing key based on the kid in the header and the singing keys provided by the JWKS endpoint.
+    secretOrKeyProvider: jwksRsa.passportJwtSecret({
+      cache: true,
+      rateLimit: true,
+      jwksRequestsPerMinute: 5,
+      jwksUri: `https://my-authz-server/.well-known/jwks.json`
+    }),
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+
+    // Validate the audience and the issuer.
+    audience: 'urn:my-resource-server',
+    issuer: 'https://my-authz-server/',
+    algorithms: ['RS256']
+  },
+  verify)
+);
+
+app.use(passport.initialize());
 ```
 
-By default express will return `key or secret has to be provided` if there's no match between the token and one of the signing certificates. To overwrite this behavior and inject your own error you can specify the following option:
+By default passport will return `key or secret has to be provided` if there's no match between the token and one of the signing certificates. To overwrite this behavior and inject your own error you can specify the following option:
 
 ```js
-jwksRsa.expressJwtSecret({
+jwksRsa.passportJwtSecret({
   ...,
   handleSigningKeyError: (err, cb) => {
     if (err instanceof jwksRsa.SigningKeyNotFoundError) {
@@ -90,11 +98,11 @@ request(options, function (error, response, body) {
 
 A few things will happen now:
 
- 1. `express-jwt` will decode the token and pass the request, the header and the payload to `jwksRsa.expressJwtSecret`
+ 1. `passport-jwt` will decode the token and pass the request, the header and the payload to `jwksRsa.passportJwtSecret`
  2. `jwks-rsa` will then download all signing keys from the JWKS endpoint and see if a one of the signing keys matches the `kid` in the header of the JWT.
    a. If none of the signing keys match the incoming `kid`, an error will be thrown
-   b. If we have a match, we will pass the right signing key to `express-jwt`
- 3. `express-jwt` will the continue its own logic to validate the signature of the token, the expiration, audience, issuer, ...
+   b. If we have a match, we will pass the right signing key to `passport-jwt`
+ 3. `passport-jwt` will the continue its own logic to validate the signature of the token, the expiration, audience, issuer, ...
 
 If you repeat this call a few times you'll see in the console output that we're not calling the JWKS endpoint anymore, because caching has been enabled.
 
