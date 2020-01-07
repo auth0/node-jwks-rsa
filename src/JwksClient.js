@@ -36,7 +36,7 @@ export class JwksClient {
   getKeys(cb) {
     this.logger(`Fetching keys from '${this.options.jwksUri}'`);
     got({
-      uri: this.options.jwksUri,
+      url: this.options.jwksUri,
       method: 'get',
       responseType: 'json',
       strictSSL: this.options.strictSsl,
