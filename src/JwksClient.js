@@ -1,5 +1,5 @@
 import debug from 'debug';
-import request from 'request';
+import got from 'got';
 
 import ArgumentError from './errors/ArgumentError';
 import JwksError from './errors/JwksError';
@@ -35,23 +35,22 @@ export class JwksClient {
 
   getKeys(cb) {
     this.logger(`Fetching keys from '${this.options.jwksUri}'`);
-    request({
-      json: true,
+    got({
       uri: this.options.jwksUri,
+      method: 'get',
+      responseType: 'json',
       strictSSL: this.options.strictSsl,
       headers: this.options.requestHeaders,
       agentOptions: this.options.requestAgentOptions
-    }, (err, res) => {
-      if (err || res.statusCode < 200 || res.statusCode >= 300) {
-        this.logger('Failure:', res && res.body || err);
-        if (res) {
-          return cb(new JwksError(res.body && (res.body.message || res.body) || res.statusMessage || `Http Error ${res.statusCode}`));
-        }
-        return cb(err);
-      }
-
+    }).then(res => {
       this.logger('Keys:', res.body.keys);
       return cb(null, res.body.keys);
+    }).catch(err => {
+        this.logger('Failure:', err);
+        if (err.body) {
+          return cb(new JwksError(err.body && (err.body.message || err.body) || err.statusMessage || `Http Error ${err.statusCode}`));
+        }
+        return cb(err);
     });
   }
 

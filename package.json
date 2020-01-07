@@ -7,11 +7,11 @@
   "dependencies": {
     "@types/express-jwt": "0.0.42",
     "debug": "^4.1.0",
+    "got": "^10.2.1",
     "jsonwebtoken": "^8.5.1",
     "limiter": "^1.1.4",
     "lru-memoizer": "^2.0.1",
-    "ms": "^2.1.2",
-    "request": "^2.88.0"
+    "ms": "^2.1.2"
   },
   "devDependencies": {
     "@types/chai": "^4.2.5",
