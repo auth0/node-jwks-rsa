@@ -37,7 +37,6 @@ export class JwksClient {
     this.logger(`Fetching keys from '${this.options.jwksUri}'`);
     got({
       url: this.options.jwksUri,
-      method: 'get',
       responseType: 'json',
       strictSSL: this.options.strictSsl,
       headers: this.options.requestHeaders
@@ -45,10 +44,9 @@ export class JwksClient {
       this.logger('Keys:', res.body.keys);
       return cb(null, res.body.keys);
     }).catch(err => {
-      console.log(err);
         this.logger('Failure:', err);
-        if (err.body) {
-          return cb(new JwksError(err.body && (err.body.message || err.body) || err.statusMessage || `Http Error ${err.statusCode}`));
+        if (err.response) {
+          return cb(new JwksError(err.response.body && (err.response.body.message || err.response.body) || err.statusMessage || `Http Error ${err.statusCode}`));
         }
         return cb(err);
     });

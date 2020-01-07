@@ -14,6 +14,7 @@ describe("JwksClient", () => {
   describe("#getKeys", () => {
     it("should handle errors", done => {
       nock(jwksHost)
+        .persist()
         .get("/.well-known/jwks.json")
         .reply(500, "Unknown Server Error");
 
@@ -69,7 +70,7 @@ describe("JwksClient", () => {
         .reply(function(uri, requestBody) {
           expect(this.req.headers).not.to.be.null;
           expect(this.req.headers["user-agent"]).to.be.equal("My-bot");
-          expect(Object.keys(this.req.headers).length).to.be.equal(3);
+          expect(Object.keys(this.req.headers).length).to.be.equal(4);
           return (
             200,
             {
@@ -112,7 +113,7 @@ describe("JwksClient", () => {
           expect(this.req.headers).not.to.be.null;
           expect(this.req.headers["accept"]).not.to.be.undefined;
           expect(this.req.headers["host"]).not.to.be.undefined;
-          expect(Object.keys(this.req.headers).length).to.be.equal(2);
+          expect(Object.keys(this.req.headers).length).to.be.equal(4);
           return (
             200,
             {
@@ -149,6 +150,7 @@ describe("JwksClient", () => {
   describe("#getSigningKeys", () => {
     it("should handle errors", done => {
       nock(jwksHost)
+        .persist()
         .get("/.well-known/jwks.json")
         .reply(500, "Unknown Server Error");
 
