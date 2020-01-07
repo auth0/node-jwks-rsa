@@ -40,12 +40,12 @@ export class JwksClient {
       method: 'get',
       responseType: 'json',
       strictSSL: this.options.strictSsl,
-      headers: this.options.requestHeaders,
-      agentOptions: this.options.requestAgentOptions
+      headers: this.options.requestHeaders
     }).then(res => {
       this.logger('Keys:', res.body.keys);
       return cb(null, res.body.keys);
     }).catch(err => {
+      console.log(err);
         this.logger('Failure:', err);
         if (err.body) {
           return cb(new JwksError(err.body && (err.body.message || err.body) || err.statusMessage || `Http Error ${err.statusCode}`));
