@@ -26,11 +26,17 @@ declare namespace JwksRsa {
     requestHeaders?: Headers;
   }
 
-  interface CertSigningKey {
+  interface SigningKey {
     kid: string;
     nbf: string;
-    publicKey: string;
+    publicKey?: string;
+    rsaPublicKey?: string;
   }
+
+  // In 1.6.1 and earlier, we had separate CertSigningKey and RsaSigningKey types.
+  // This maintains backwards compatibilty.
+  type CertSigningKey = SigningKey;
+  type RsaSigningKey = SigningKey;
 
   interface AgentOptions {
     [key: string]: string;
@@ -48,14 +54,6 @@ declare namespace JwksRsa {
     requestAgentOptions?: AgentOptions;
     handleSigningKeyError?(err: Error, cb: (err: Error) => void): any;
   }
-
-  interface RsaSigningKey {
-    kid: string;
-    nbf: string;
-    rsaPublicKey: string;
-  }
-
-  type SigningKey = CertSigningKey | RsaSigningKey;
 
   function expressJwtSecret(options: ExpressJwtOptions): SecretCallbackLong;
 
