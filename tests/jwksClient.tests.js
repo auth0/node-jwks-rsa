@@ -282,14 +282,13 @@ describe("JwksClient", () => {
             {
               kid: "IdTokenSigningKeyContainer.v3",
               nbf: 1459289287,
-              use: "",
               kty: "RSA",
               e: "AQAB",
               n:
                 "s4W7xjkQZP3OwG7PfRgcYKn8eRYXHiz1iK503fS-K2FZo-Ublwwa2xFZWpsUU_jtoVCwIkaqZuo6xoKtlMYXXvfVHGuKBHEBVn8b8x_57BQWz1d0KdrNXxuMvtFe6RzMqiMqzqZrzae4UqVCkYqcR9gQx66Ehq7hPmCxJCkg7ajo7fu6E7dPd34KH2HSYRsaaEA_BcKTeb9H1XE_qEKjog68wUU9Ekfl3FBIRN-1Ah_BoktGFoXyi_jt0-L0-gKcL1BLmUlGzMusvRbjI_0-qj-mc0utGdRjY-xIN2yBj8vl4DODO-wMwfp-cqZbCd9TENyHaTb8iA27s-73L3ExOQ"
             },
             {
-              kid: "IdTokenSigningKeyContainer.v3",
+              kid: "IdTokenSigningKeyContainer.v4",
               nbf: 1459289287,
               use: "enc",
               kty: "RSA",
