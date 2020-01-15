@@ -66,7 +66,7 @@ export class JwksClient {
       }
 
       const signingKeys = keys
-        .filter(key => (!key.use || key.use === 'sig') && key.kty === 'RSA' && key.kid && ((key.x5c && key.x5c.length) || (key.n && key.e)))
+        .filter(key => (!key.hasOwnProperty('use') || key.use === 'sig') && key.kty === 'RSA' && key.kid && ((key.x5c && key.x5c.length) || (key.n && key.e)))
         .map(key => {
           if (key.x5c && key.x5c.length) {
             return {
