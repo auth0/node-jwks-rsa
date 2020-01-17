@@ -201,6 +201,55 @@ describe("JwksClient", () => {
       });
     });
 
+    it("should return signing keys (with x5c and mod/exp)", done => {
+      nock(jwksHost)
+        .get("/.well-known/jwks.json")
+        .reply(200, {
+          keys: [
+            {
+              alg: "RS256",
+              kty: "RSA",
+              use: "sig",
+              x5c: [
+                "MIIDDTCCAfWgAwIBAgIJAJVkuSv2H8mDMA0GCSqGSIb3DQEBBQUAMB0xGzAZBgNVBAMMEnNhbmRyaW5vLmF1dGgwLmNvbTAeFw0xNDA1MTQyMTIyMjZaFw0yODAxMjEyMTIyMjZaMB0xGzAZBgNVBAMMEnNhbmRyaW5vLmF1dGgwLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL6jWASkHhXz5Ug6t5BsYBrXDIgrWu05f3oq2fE+5J5REKJiY0Ddc+Kda34ZwOptnUoef3JwKPDAckTJQDugweNNZPwOmFMRKj4xqEpxEkIX8C+zHs41Q6x54ZZy0xU+WvTGcdjzyZTZ/h0iOYisswFQT/s6750tZG0BOBtZ5qS/80tmWH7xFitgewdWteJaASE/eO1qMtdNsp9fxOtN5U/pZDUyFm3YRfOcODzVqp3wOz+dcKb7cdZN11EYGZOkjEekpcedzHCo9H4aOmdKCpytqL/9FXoihcBMg39s1OW3cfwfgf5/kvOJdcqR4PoATQTfsDVoeMWVB4XLGR6SC5kCAwEAAaNQME4wHQYDVR0OBBYEFHDYn9BQdup1CoeoFi0Rmf5xn/W9MB8GA1UdIwQYMBaAFHDYn9BQdup1CoeoFi0Rmf5xn/W9MAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADggEBAGLpQZdd2ICVnGjc6CYfT3VNoujKYWk7E0shGaCXFXptrZ8yaryfo6WAizTfgOpQNJH+Jz+QsCjvkRt6PBSYX/hb5OUDU2zNJN48/VOw57nzWdjI70H2Ar4oJLck36xkIRs/+QX+mSNCjZboRwh0LxanXeALHSbCgJkbzWbjVnfJEQUP9P/7NGf0MkO5I95C/Pz9g91y8gU+R3imGppLy9Zx+OwADFwKAEJak4JrNgcjHBQenakAXnXP6HG4hHH4MzO8LnLiKv8ZkKVL67da/80PcpO0miMNPaqBBMd2Cy6GzQYE0ag6k0nk+DMIFn7K+o21gjUuOEJqIbAvhbf2KcM="
+              ],
+              n:
+                "vqNYBKQeFfPlSDq3kGxgGtcMiCta7Tl_eirZ8T7knlEQomJjQN1z4p1rfhnA6m2dSh5_cnAo8MByRMlAO6DB401k_A6YUxEqPjGoSnESQhfwL7MezjVDrHnhlnLTFT5a9MZx2PPJlNn-HSI5iKyzAVBP-zrvnS1kbQE4G1nmpL_zS2ZYfvEWK2B7B1a14loBIT947Woy102yn1_E603lT-lkNTIWbdhF85w4PNWqnfA7P51wpvtx1k3XURgZk6SMR6Slx53McKj0fho6Z0oKnK2ov_0VeiKFwEyDf2zU5bdx_B-B_n-S84l1ypHg-gBNBN-wNWh4xZUHhcsZHpILmQ",
+              e: "AQAB",
+              kid: "RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg",
+              x5t: "RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg"
+            },
+            {
+              kid: "IdTokenSigningKeyContainer",
+              use: "sig",
+              kty: "RSA",
+              e: "AQAB",
+              n:
+                "tLDZVZ2Eq_DFwNp24yeSq_Ha0MYbYOJs_WXIgVxQGabu5cZ9561OUtYWdB6xXXZLaZxFG02P5U2rC_CT1r0lPfC_KHYrviJ5Y_Ekif7iFV_1omLAiRksQziwA1i-hND32N5kxwEGNmZViVjWMBZ43wbIdWss4IMhrJy1WNQ07Fqp1Ee6o7QM1hTBve7bbkJkUAfjtC7mwIWqZdWoYIWBTZRXvhMgs_Aeb_pnDekosqDoWQ5aMklk3NvaaBBESqlRAJZUUf5WDFoJh7yRELOFF4lWJxtArTEiQPWVTX6PCs0klVPU6SRQqrtc4kKLCp1AC5EJqPYRGiEJpSz2nUhmAQ"
+            }
+          ]
+        });
+
+      const client = new JwksClient({
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
+      });
+
+      client.getSigningKeys((err, keys) => {
+        expect(err).to.be.null;
+        expect(keys).not.to.be.null;
+        expect(keys.length).to.equal(2);
+        const pubkey0 = keys[0].publicKey || keys[0].rsaPublicKey
+        expect(pubkey0).not.to.be.null;
+        expect(keys[0].pem).to.equal(keys[0].publicKey);
+        expect(keys[1].kid).to.equal("IdTokenSigningKeyContainer");
+        expect(keys[0].kid).to.equal("RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg");
+        const pubkey1 = keys[1].publicKey || keys[1].rsaPublicKey
+        expect(pubkey1).not.to.be.null;
+        expect(keys[1].pem).to.equal(keys[1].rsaPublicKey);
+        done();
+      });
+    });
+
     it("should return signing keys (with x5c)", done => {
       nock(jwksHost)
         .get("/.well-known/jwks.json")
@@ -245,6 +294,7 @@ describe("JwksClient", () => {
         expect(keys).not.to.be.null;
         expect(keys.length).to.equal(2);
         expect(keys[0].publicKey).not.to.be.null;
+        expect(keys[0].pem).to.equal(keys[0].publicKey);
         expect(keys[0].kid).to.equal(
           "RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg"
         );
@@ -252,6 +302,7 @@ describe("JwksClient", () => {
           "NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA"
         );
         expect(keys[1].publicKey).not.to.be.null;
+        expect(keys[1].pem).to.equal(keys[1].publicKey);
         expect(keys[1].nbf).to.equal(123);
         done();
       });
@@ -308,11 +359,14 @@ describe("JwksClient", () => {
         expect(keys).not.to.be.null;
         expect(keys.length).to.equal(3);
         expect(keys[0].rsaPublicKey).not.to.be.null;
+        expect(keys[0].pem).to.equal(keys[0].rsaPublicKey);
         expect(keys[0].kid).to.equal("IdTokenSigningKeyContainer");
         expect(keys[1].kid).to.equal("IdTokenSigningKeyContainer.v2");
         expect(keys[1].rsaPublicKey).not.to.be.null;
+        expect(keys[1].pem).to.equal(keys[1].rsaPublicKey);
         expect(keys[1].nbf).to.equal(1459289287);
         expect(keys[2].rsaPublicKey).not.to.be.null;
+        expect(keys[2].pem).to.equal(keys[2].rsaPublicKey);
         done();
       });
     });
