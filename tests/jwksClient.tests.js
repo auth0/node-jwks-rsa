@@ -240,12 +240,12 @@ describe("JwksClient", () => {
         expect(keys.length).to.equal(2);
         const pubkey0 = keys[0].publicKey || keys[0].rsaPublicKey
         expect(pubkey0).not.to.be.null;
-        expect(keys[0].pem).to.equal(keys[0].publicKey);
+        expect(keys[0].getPublicKey()).to.equal(keys[0].publicKey);
         expect(keys[1].kid).to.equal("IdTokenSigningKeyContainer");
         expect(keys[0].kid).to.equal("RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg");
         const pubkey1 = keys[1].publicKey || keys[1].rsaPublicKey
         expect(pubkey1).not.to.be.null;
-        expect(keys[1].pem).to.equal(keys[1].rsaPublicKey);
+        expect(keys[1].getPublicKey()).to.equal(keys[1].rsaPublicKey);
         done();
       });
     });
@@ -294,7 +294,7 @@ describe("JwksClient", () => {
         expect(keys).not.to.be.null;
         expect(keys.length).to.equal(2);
         expect(keys[0].publicKey).not.to.be.null;
-        expect(keys[0].pem).to.equal(keys[0].publicKey);
+        expect(keys[0].getPublicKey()).to.equal(keys[0].publicKey);
         expect(keys[0].kid).to.equal(
           "RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg"
         );
@@ -302,7 +302,7 @@ describe("JwksClient", () => {
           "NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA"
         );
         expect(keys[1].publicKey).not.to.be.null;
-        expect(keys[1].pem).to.equal(keys[1].publicKey);
+        expect(keys[1].getPublicKey()).to.equal(keys[1].publicKey);
         expect(keys[1].nbf).to.equal(123);
         done();
       });
@@ -359,14 +359,14 @@ describe("JwksClient", () => {
         expect(keys).not.to.be.null;
         expect(keys.length).to.equal(3);
         expect(keys[0].rsaPublicKey).not.to.be.null;
-        expect(keys[0].pem).to.equal(keys[0].rsaPublicKey);
+        expect(keys[0].getPublicKey()).to.equal(keys[0].rsaPublicKey);
         expect(keys[0].kid).to.equal("IdTokenSigningKeyContainer");
         expect(keys[1].kid).to.equal("IdTokenSigningKeyContainer.v2");
         expect(keys[1].rsaPublicKey).not.to.be.null;
-        expect(keys[1].pem).to.equal(keys[1].rsaPublicKey);
+        expect(keys[1].getPublicKey()).to.equal(keys[1].rsaPublicKey);
         expect(keys[1].nbf).to.equal(1459289287);
         expect(keys[2].rsaPublicKey).not.to.be.null;
-        expect(keys[2].pem).to.equal(keys[2].rsaPublicKey);
+        expect(keys[2].getPublicKey()).to.equal(keys[2].rsaPublicKey);
         done();
       });
     });
