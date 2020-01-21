@@ -24,7 +24,7 @@ const client = jwksClient({
 
 const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';
 client.getSigningKey(kid, (err, key) => {
-  const signingKey = key.publicKey || key.rsaPublicKey;
+  const signingKey = key.getPublicKey();
 
   // Now I can use this to configure my Express or Hapi middleware
 });
@@ -53,7 +53,7 @@ const client = jwksClient({
 
 const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';
 client.getSigningKey(kid, (err, key) => {
-  const signingKey = key.publicKey || key.rsaPublicKey;
+  const signingKey = key.getPublicKey();
 
   // Now I can use this to configure my Express or Hapi middleware
 });
@@ -75,7 +75,7 @@ const client = jwksClient({
 
 const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';
 client.getSigningKey(kid, (err, key) => {
-  const signingKey = key.publicKey || key.rsaPublicKey;
+  const signingKey = key.getPublicKey();
 
   // Now I can use this to configure my Express or Hapi middleware
 });
