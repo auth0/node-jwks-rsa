@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.6.2] - (2020-01-21)
+This patch release includes an alias for accessing to the Public Key of a given JSON Web Key (JWK). This comes in response to an unintended breaking change that was introduced as part of the last Typescript definitions change, included in the release with version `1.6.0`. 
+
+Now, no matter the Public Key algorithm, you can obtain it like this:
+
+```js
+client.getSigningKey(kid, (err, jwk) => {
+  const publicKey = jwk.getPublicKey();
+});
+```
+
+**Fixed**
+- Add alias for obtaining the public key [\#119](https://github.com/auth0/node-jwks-rsa/pull/119) ([lbalmaceda](https://github.com/lbalmaceda))
+- Handling case when Jwk doesn't have 'use' parameter [\#116](https://github.com/auth0/node-jwks-rsa/pull/116) ([manpreet-compro](https://github.com/manpreet-compro))
+
 ## [1.6.1] - (2020-01-13)
 
 **Changed**
