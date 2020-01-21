@@ -79,24 +79,19 @@ export class JwksClient {
             return ((key.x5c && key.x5c.length) || (key.n && key.e));
         })
           .map(key => {
+            const jwk = {
+              kid: key.kid,
+              nbf: key.nbf
+            };
             const hasCertificateChain = key.x5c && key.x5c.length;
             if (hasCertificateChain){
-              const pem = certToPEM(key.x5c[0]);
-              return {
-                kid: key.kid,
-                nbf: key.nbf,
-                publicKey: pem,
-                getPublicKey: () => pem
-              };
+              jwk.publicKey = certToPEM(key.x5c[0]);
+              jwk.getPublicKey = () => jwk.publicKey;
             } else {
-              const pem = rsaPublicKeyToPEM(key.n, key.e);
-              return {
-                kid: key.kid,
-                nbf: key.nbf,
-                rsaPublicKey: pem,
-                getPublicKey: () => pem
-              };
+              jwk.rsaPublicKey = rsaPublicKeyToPEM(key.n, key.e);
+              jwk.getPublicKey = () => jwk.rsaPublicKey;
             }
+            return jwk;
         });
 
       if (!signingKeys.length) {
