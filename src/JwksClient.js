@@ -18,7 +18,7 @@ export class JwksClient {
   constructor(options) {
     this.options = {
       rateLimit: false,
-      cache: false,
+      cache: true,
       strictSsl: true,
       ...options
     };
