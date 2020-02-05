@@ -14,6 +14,7 @@ describe('JwksClient (cache)', () => {
   describe('#getSigningKeys', () => {
     it('should prevent too many requests', (done) => {
       const client = new JwksClient({
+        cache: false,
         rateLimit: true,
         jwksRequestsPerMinute: 2,
         jwksUri: `${jwksHost}/.well-known/jwks.json`

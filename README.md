@@ -39,15 +39,15 @@ Integrations are also provided with:
 
 ### Caching
 
-In order to prevent a call to be made each time a signing key needs to be retrieved you can also configure a cache as follows. If a signing key matching the `kid` is found, this will be cached and the next time this `kid` is requested the signing key will be served from the cache instead of calling back to the JWKS endpoint.
+By default, signing key verification results are cached in order to prevent excessive HTTP requests to the JWKS endpoint. If a signing key matching the `kid` is found, this will be cached and the next time this `kid` is requested the signing key will be served from the cache.  The caching behavior can be configured as seen below:
 
 ```js
 const jwksClient = require('jwks-rsa');
 
 const client = jwksClient({
-  cache: true,
+  cache: true, // Default Value
   cacheMaxEntries: 5, // Default value
-  cacheMaxAge: ms('10h'), // Default value
+  cacheMaxAge: ms('10m'), // Default value
   jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'
 });
 
@@ -67,7 +67,6 @@ Even if caching is enabled the library will call the JWKS endpoint if the `kid` 
 const jwksClient = require('jwks-rsa');
 
 const client = jwksClient({
-  cache: true,
   rateLimit: true,
   jwksRequestsPerMinute: 10, // Default value
   jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'
