@@ -22,6 +22,7 @@ declare namespace JwksRsa {
     cacheMaxEntries?: number;
     cacheMaxAge?: number;
     jwksRequestsPerMinute?: number;
+    proxy?: string;
     strictSsl?: boolean;
     requestHeaders?: Headers;
   }

@@ -19,7 +19,8 @@ const client = jwksClient({
   strictSsl: true, // Default value
   jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
   requestHeaders: {}, // Optional
-  requestAgentOptions: {} // Optional
+  requestAgentOptions: {}, // Optional
+  proxy: '[protocol]://[username]:[pass]@[address]:[port]', // Optional
 });
 
 const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';

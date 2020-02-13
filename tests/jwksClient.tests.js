@@ -6,6 +6,7 @@ import { JwksClient } from "../src/JwksClient";
 
 describe("JwksClient", () => {
   const jwksHost = "http://my-authz-server";
+  const proxy = "my-proxy-server:2815";
 
   beforeEach(() => {
     nock.cleanAll();
@@ -182,8 +183,51 @@ describe("JwksClient", () => {
         done();
       });
     });
-  });
 
+    it("should add a proxy", done => {
+      nock(jwksHost)
+        .get("/.well-known/jwks.json")
+        .reply(function(uri, requestBody) {
+          expect(this.req.headers).not.to.be.null;
+          expect(this.req.headers["user-agent"]).to.be.equal("My-bot");
+          expect(Object.keys(this.req.headers).length).to.be.equal(3);
+          return (
+            200,
+            {
+              keys: [
+                {
+                  alg: "RS256",
+                  kty: "RSA",
+                  use: "sig",
+                  x5c: ["pk1"],
+                  kid: "ABC"
+                },
+                {
+                  alg: "RS256",
+                  kty: "RSA",
+                  use: "sig",
+                  x5c: [],
+                  kid: "123"
+                }
+              ]
+            }
+          );
+        });
+  
+      const client = new JwksClient({
+        jwksUri: `${jwksHost}/.well-known/jwks.json`,
+        requestHeaders: {
+          "User-Agent": "My-bot"
+        },
+        proxy: `http://username:password@${proxy}`,
+      });
+  
+      client.getKeys((err, keys) => {
+        done();
+      });
+    });
+  });
+  
   describe("#getSigningKeys", () => {
     it("should handle errors", done => {
       nock(jwksHost)
