@@ -31,6 +31,7 @@
     "koa-jwt": "^3.6.0",
     "mocha": "^6.2.2",
     "nock": "^10.0.6",
+    "nyc": "^15.0.0",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "rimraf": "^2.7.1",
@@ -46,6 +47,7 @@
     "test:ts": "npm run clean:ts && tsc && NODE_ENV=test mocha --require babel-core/register --exit --timeout 5000 $(find ./ts-output -name *.tests.js)",
     "test:js": "NODE_ENV=test mocha --require babel-core/register --exit --timeout 5000 $(find ./tests -name *.tests.js)",
     "test": "npm run test:js && npm run test:ts",
+    "test:ci": "nyc --reporter=lcov npm test",
     "test-watch": "NODE_ENV=test mocha --require babel-core/register --exit --timeout 5000 $(find ./tests -name *.tests.js) --watch",
     "release": "git tag $npm_package_version && git push && git push --tags && npm publish"
   },
