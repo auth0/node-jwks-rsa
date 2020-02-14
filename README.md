@@ -1,5 +1,7 @@
 # jwks-rsa
 
+[![CircleCI][circle-image]][circle-url]
+[![codecov][codecov-image]][codecov-url]
 [![NPM version][npm-image]][npm-url]
 [![License][license-image]][license-url]
 [![Downloads][downloads-image]][downloads-url]
@@ -132,6 +134,10 @@ jwks Keys: +8ms [ { alg: 'RS256',
 
 This project is licensed under the MIT license. See the [LICENSE](LICENSE) file for more info.
 
+[circle-image]: https://img.shields.io/circleci/build/github/auth0/node-jwks-rsa/master?style=flat-square
+[circle-url]: https://circleci.com/gh/auth0/node-jwks-rsa/tree/master
+[codecov-image]: https://img.shields.io/codecov/c/github/auth0/node-jwks-rsa?style=flat-square
+[codecov-url]: https://codecov.io/gh/auth0/node-jwks-rsa
 [npm-image]: https://img.shields.io/npm/v/jwks-rsa.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/jwks-rsa
 [license-image]: http://img.shields.io/npm/l/jwks-rsa.svg?style=flat-square
