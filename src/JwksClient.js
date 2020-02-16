@@ -1,7 +1,6 @@
 import debug from 'debug';
 import request from 'request';
 
-import ArgumentError from './errors/ArgumentError';
 import JwksError from './errors/JwksError';
 import SigningKeyNotFoundError from './errors/SigningKeyNotFoundError';
 
@@ -41,7 +40,7 @@ export class JwksClient {
       strictSSL: this.options.strictSsl,
       headers: this.options.requestHeaders,
       agentOptions: this.options.requestAgentOptions,
-      proxy: this.options.proxy,
+      proxy: this.options.proxy
     }, (err, res) => {
       if (err || res.statusCode < 200 || res.statusCode >= 300) {
         this.logger('Failure:', res && res.body || err);
@@ -67,32 +66,32 @@ export class JwksClient {
       }
 
       const signingKeys = keys
-          .filter((key) => {
-            if(key.kty !== 'RSA'){
-              return false;
-            }
-            if(!key.kid){
-              return false;
-            }
-            if(key.hasOwnProperty('use') && key.use !== 'sig'){
-              return false;
-            }  
-            return ((key.x5c && key.x5c.length) || (key.n && key.e));
+        .filter((key) => {
+          if(key.kty !== 'RSA') {
+            return false;
+          }
+          if(!key.kid) {
+            return false;
+          }
+          if(key.hasOwnProperty('use') && key.use !== 'sig') {
+            return false;
+          }  
+          return ((key.x5c && key.x5c.length) || (key.n && key.e));
         })
-          .map(key => {
-            const jwk = {
-              kid: key.kid,
-              nbf: key.nbf
-            };
-            const hasCertificateChain = key.x5c && key.x5c.length;
-            if (hasCertificateChain){
-              jwk.publicKey = certToPEM(key.x5c[0]);
-              jwk.getPublicKey = () => jwk.publicKey;
-            } else {
-              jwk.rsaPublicKey = rsaPublicKeyToPEM(key.n, key.e);
-              jwk.getPublicKey = () => jwk.rsaPublicKey;
-            }
-            return jwk;
+        .map(key => {
+          const jwk = {
+            kid: key.kid,
+            nbf: key.nbf
+          };
+          const hasCertificateChain = key.x5c && key.x5c.length;
+          if (hasCertificateChain) {
+            jwk.publicKey = certToPEM(key.x5c[0]);
+            jwk.getPublicKey = () => jwk.publicKey;
+          } else {
+            jwk.rsaPublicKey = rsaPublicKeyToPEM(key.n, key.e);
+            jwk.getPublicKey = () => jwk.rsaPublicKey;
+          }
+          return jwk;
         });
 
       if (!signingKeys.length) {

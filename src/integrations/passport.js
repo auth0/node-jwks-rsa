@@ -23,7 +23,7 @@ module.exports.passportJwtSecret = (options) => {
   const onError = options.handleSigningKeyError || handleSigningKeyError;
 
   return function secretProvider(req, rawJwtToken, cb) {
-    const decoded = jwt.decode(rawJwtToken, { complete: true })
+    const decoded = jwt.decode(rawJwtToken, { complete: true });
 
     // Only RS256 is supported.
     if (!decoded || !decoded.header || decoded.header.alg !== 'RS256') {
