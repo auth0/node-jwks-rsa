@@ -1,0 +1,34 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:10
+    environment:
+      LANG: en_US.UTF-8
+    steps:
+      - checkout
+      - run:
+          name: Update NPM version
+          command: sudo npm install -g npm@latest
+      - restore-cache:
+          name: Restore NPM Package Cache
+          keys:
+            - npm-packages-{{ checksum "package-lock.json" }}
+            - npm-packages-
+      - run:
+          name: Install Dependencies
+          command: npm install
+      - save-cache:
+          name: Save NPM Package Cache
+          key: npm-packages-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Run Tests
+          command: npm run test:ci
+      - store_artifacts:
+          path: ./coverage/lcov-report
+      - run:
+          name: Upload Coverage
+          when: on_success
+          command: bash <(curl -s https://codecov.io/bash)
