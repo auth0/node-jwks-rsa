@@ -184,35 +184,11 @@ describe("JwksClient", () => {
       });
     });
 
-    it("should add a proxy", done => {
-      nock(jwksHost)
-        .get("/.well-known/jwks.json")
-        .reply(function(uri, requestBody) {
-          expect(this.req.headers).not.to.be.null;
-          expect(this.req.headers["user-agent"]).to.be.equal("My-bot");
-          expect(Object.keys(this.req.headers).length).to.be.equal(3);
-          return (
-            200,
-            {
-              keys: [
-                {
-                  alg: "RS256",
-                  kty: "RSA",
-                  use: "sig",
-                  x5c: ["pk1"],
-                  kid: "ABC"
-                },
-                {
-                  alg: "RS256",
-                  kty: "RSA",
-                  use: "sig",
-                  x5c: [],
-                  kid: "123"
-                }
-              ]
-            }
-          );
-        });
+    it("should use a proxy if specified", done => {
+      const expectedError = { message: 'expectedError' };
+      nock(`http://${proxy}`)
+        .get(() => true)
+        .replyWithError(expectedError);
   
       const client = new JwksClient({
         jwksUri: `${jwksHost}/.well-known/jwks.json`,
@@ -222,7 +198,8 @@ describe("JwksClient", () => {
         proxy: `http://username:password@${proxy}`,
       });
   
-      client.getKeys((err, keys) => {
+      client.getKeys((err) => {
+        expect(err).to.equal(expectedError);
         done();
       });
     });
