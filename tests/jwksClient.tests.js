@@ -6,6 +6,7 @@ import { JwksClient } from "../src/JwksClient";
 
 describe("JwksClient", () => {
   const jwksHost = "http://my-authz-server";
+  const proxy = "my-proxy-server:2815";
 
   beforeEach(() => {
     nock.cleanAll();
@@ -182,8 +183,28 @@ describe("JwksClient", () => {
         done();
       });
     });
-  });
 
+    it("should use a proxy if specified", done => {
+      const expectedError = { message: 'expectedError' };
+      nock(`http://${proxy}`)
+        .get(() => true)
+        .replyWithError(expectedError);
+  
+      const client = new JwksClient({
+        jwksUri: `${jwksHost}/.well-known/jwks.json`,
+        requestHeaders: {
+          "User-Agent": "My-bot"
+        },
+        proxy: `http://username:password@${proxy}`,
+      });
+  
+      client.getKeys((err) => {
+        expect(err).to.equal(expectedError);
+        done();
+      });
+    });
+  });
+  
   describe("#getSigningKeys", () => {
     it("should handle errors", done => {
       nock(jwksHost)
