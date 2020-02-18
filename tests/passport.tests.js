@@ -144,7 +144,7 @@ describe('passportJwtSecret', () => {
     );
 
     const token = createToken(privateKey, null, { sub: 'john' });
-    jwksEndpoint('http://localhost', [{ pub: publicKey, kid: '123' }]);
+    jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' } ]);
 
     request(app.listen())
       .get('/')
@@ -187,7 +187,7 @@ describe('passportJwtSecret', () => {
     );
 
     const token = createToken(privateKey, '456', { sub: 'john' });
-    jwksEndpoint('http://localhost', [{ pub: publicKey, kid: '123' }]);
+    jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' } ]);
 
     request(app.listen())
       .get('/')
@@ -230,7 +230,7 @@ describe('passportJwtSecret', () => {
     );
 
     const token = createToken(privateKey, '123', { sub: 'john' });
-    jwksEndpoint('http://localhost', [{ pub: randomPublicKey1, kid: '123' }]);
+    jwksEndpoint('http://localhost', [ { pub: randomPublicKey1, kid: '123' } ]);
 
     request(app.listen())
       .get('/')
@@ -276,7 +276,7 @@ describe('passportJwtSecret', () => {
     );
 
     const token = createToken(privateKey, '456', { sub: 'john' });
-    jwksEndpoint('http://localhost', [{ pub: randomPublicKey1, kid: '123' }]);
+    jwksEndpoint('http://localhost', [ { pub: randomPublicKey1, kid: '123' } ]);
 
     request(app.listen())
       .get('/')
@@ -297,7 +297,7 @@ describe('passportJwtSecret', () => {
             jwksUri: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-          algorithms: ['RS256']
+          algorithms: [ 'RS256' ]
         },
         (jwt_payload, done) => done(null, jwt_payload)
       )
@@ -312,7 +312,7 @@ describe('passportJwtSecret', () => {
     );
 
     const token = createToken(privateKey, '123', { sub: 'john' });
-    jwksEndpoint('http://localhost', [{ pub: publicKey, kid: '123' }]);
+    jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' } ]);
 
     request(app.listen())
       .get('/')

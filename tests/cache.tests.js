@@ -17,8 +17,8 @@ describe('JwksClient (cache)', () => {
 
       before((done) => {
         nock(jwksHost)
-        .get('/.well-known/jwks.json')
-        .reply(200, x5cSingle);
+          .get('/.well-known/jwks.json')
+          .reply(200, x5cSingle);
 
         client = new JwksClient({
           cache: true,
@@ -33,7 +33,7 @@ describe('JwksClient (cache)', () => {
           nock.cleanAll();
           done();
         });
-      })
+      });
 
       it('should ignore the cache when the KID isnt cached and make a requst', (done) => {
         client.getSigningKey('12345', (err) => {
@@ -41,14 +41,14 @@ describe('JwksClient (cache)', () => {
           expect(err.code).to.equal('ENOTFOUND');
           done();
         });
-      })
+      });
 
       it('should fetch the key from the cache', (done) => {
         client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA', (err, key) => {
           expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
           done();
         });
-      })
+      });
     });
   });
 });

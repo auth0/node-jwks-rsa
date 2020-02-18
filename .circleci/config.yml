@@ -24,6 +24,9 @@ jobs:
           paths:
             - ./node_modules
       - run:
+          name: Run Linter
+          command: npm run lint
+      - run:
           name: Run Tests
           command: npm run test:ci
       - store_artifacts:
