@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.7.0] - (2020-02-18)
+This release includes a change to the default caching mechanism.  Caching is on now by default, with the decrease of the default time of 10hours to 10minutes.  This change introduces better support for signing key rotation.
+
+**Added**
+- Add proxy option to jwksClient [\#125](https://github.com/auth0/node-jwks-rsa/pull/125) ([Ogdentrod](https://github.com/Ogdentrod))
+
+**Changed**
+- [SDK-1221] Modify Cache Defaults [\#123](https://github.com/auth0/node-jwks-rsa/pull/123) ([davidpatrick](https://github.com/davidpatrick))
+
+**Fixed**
+- Add Linter step to CI [\#129](https://github.com/auth0/node-jwks-rsa/pull/129) ([davidpatrick](https://github.com/davidpatrick))
+- Send the explicit commit SHA to Codecov [\#128](https://github.com/auth0/node-jwks-rsa/pull/128) ([lbalmaceda](https://github.com/lbalmaceda))
+
 ## [1.6.2] - (2020-01-21)
 This patch release includes an alias for accessing the public key of a given JSON Web Key (JWK). This is in response to an unintended breaking change that was introduced as part of the last Typescript definitions change, included in the release with version `1.6.0`. 
 
