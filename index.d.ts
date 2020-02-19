@@ -25,6 +25,7 @@ declare namespace JwksRsa {
     proxy?: string;
     strictSsl?: boolean;
     requestHeaders?: Headers;
+    timeout?: number;
   }
 
   interface CertSigningKey {
