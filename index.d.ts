@@ -1,4 +1,5 @@
 import { SecretCallback, SecretCallbackLong } from 'express-jwt';
+import { AxiosRequestConfig } from 'axios';
 
 declare function JwksRsa(options: JwksRsa.ClientOptions): JwksRsa.JwksClient;
 
@@ -22,9 +23,7 @@ declare namespace JwksRsa {
     cacheMaxEntries?: number;
     cacheMaxAge?: number;
     jwksRequestsPerMinute?: number;
-    proxy?: string;
-    strictSsl?: boolean;
-    requestHeaders?: Headers;
+    httpOptions?: AxiosRequestConfig;
   }
 
   interface CertSigningKey {
@@ -36,19 +35,6 @@ declare namespace JwksRsa {
 
   interface AgentOptions {
     [key: string]: string;
-  }
-
-  interface Options {
-    jwksUri: string;
-    rateLimit?: boolean;
-    cache?: boolean;
-    cacheMaxEntries?: number;
-    cacheMaxAge?: number;
-    jwksRequestsPerMinute?: number;
-    strictSsl?: boolean;
-    requestHeaders?: Headers;
-    requestAgentOptions?: AgentOptions;
-    handleSigningKeyError?(err: Error, cb: (err: Error) => void): any;
   }
 
   interface RsaSigningKey {

@@ -6,7 +6,6 @@ import { JwksClient } from '../src/JwksClient';
 
 describe('JwksClient', () => {
   const jwksHost = 'http://my-authz-server';
-  const proxy = 'my-proxy-server:2815';
 
   beforeEach(() => {
     nock.cleanAll();
@@ -16,7 +15,7 @@ describe('JwksClient', () => {
     it('should handle errors', done => {
       nock(jwksHost)
         .get('/.well-known/jwks.json')
-        .reply(500, 'Unknown Server Error');
+        .reply(500, 'Http Error 500');
 
       const client = new JwksClient({
         jwksUri: `${jwksHost}/.well-known/jwks.json`
@@ -24,7 +23,7 @@ describe('JwksClient', () => {
 
       client.getKeys(err => {
         expect(err).not.to.be.null;
-        expect(err.message).to.equal('Unknown Server Error');
+        expect(err.message).to.equal('Http Error 500');
         done();
       });
     });
@@ -64,72 +63,46 @@ describe('JwksClient', () => {
       });
     });
 
-    it('should set request agentOptions when provided', done => {
+    it('should use httpAgent when provided', done => {
+      const requestAgentOptions = {
+        ca: 'loadCA()'
+      };
+
       nock(jwksHost)
-        .get('./well-known/jwks.json')
+        .get('/.well-known/jwks.json')
         .reply(function() {
-          expect(this.req.agentOptions).not.to.be.null;
-          expect(this.req.agentOptions['ca']).to.be.equal('loadCA()');
+          try {
+            expect(this.req.options.agent.options.ca).to.be.equal(requestAgentOptions.ca);
+            done();
+          } catch (error) {
+            done(error);
+          }
+
           return 200;
         });
 
       const client = new JwksClient({
         jwksUri: `${jwksHost}/.well-known/jwks.json`,
-        requestAgentOptions: {
-          ca: 'loadCA()'
-        }
+        requestAgentOptions
       });
 
-      client.getKeys(() => {
-        done();
-      });
-    });
-
-    it('should not set request agentOptions by default', done => {
-      nock(jwksHost)
-        .get('/.well-known/jwks.json')
-        .reply(function() {
-          expect(this.req).to.not.have.property('agentOptions');
-          return 200;
-        });
-
-      const client = new JwksClient({
-        jwksUri: `${jwksHost}/.well-known/jwks.json`
-      });
-
-      client.getKeys(() => {
-        done();
-      });
+      client.getKeys(() => {});
     });
 
     it('should send extra header', done => {
       nock(jwksHost)
         .get('/.well-known/jwks.json')
         .reply(function() {
-          expect(this.req.headers).not.to.be.null;
-          expect(this.req.headers['user-agent']).to.be.equal('My-bot');
-          expect(Object.keys(this.req.headers).length).to.be.equal(3);
-          return (
-            200,
-            {
-              keys: [
-                {
-                  alg: 'RS256',
-                  kty: 'RSA',
-                  use: 'sig',
-                  x5c: [ 'pk1' ],
-                  kid: 'ABC'
-                },
-                {
-                  alg: 'RS256',
-                  kty: 'RSA',
-                  use: 'sig',
-                  x5c: [],
-                  kid: '123'
-                }
-              ]
-            }
-          );
+          try {
+            expect(this.req.headers).not.to.be.null;
+            expect(this.req.headers['user-agent']).to.be.equal('My-bot');
+            expect(Object.keys(this.req.headers).length).to.be.equal(3);
+            done();
+          } catch (error) {
+            done(error);
+          }
+
+          return 200;
         });
 
       const client = new JwksClient({
@@ -139,52 +112,11 @@ describe('JwksClient', () => {
         }
       });
 
-      client.getKeys(() => {
-        done();
-      });
-    });
-
-    it('should not send the extra headers when not provided', done => {
-      nock(jwksHost)
-        .get('/.well-known/jwks.json')
-        .reply(function() {
-          expect(this.req.headers).not.to.be.null;
-          expect(this.req.headers['accept']).not.to.be.undefined;
-          expect(this.req.headers['host']).not.to.be.undefined;
-          expect(Object.keys(this.req.headers).length).to.be.equal(2);
-          return (
-            200,
-            {
-              keys: [
-                {
-                  alg: 'RS256',
-                  kty: 'RSA',
-                  use: 'sig',
-                  x5c: [ 'pk1' ],
-                  kid: 'ABC'
-                },
-                {
-                  alg: 'RS256',
-                  kty: 'RSA',
-                  use: 'sig',
-                  x5c: [],
-                  kid: '123'
-                }
-              ]
-            }
-          );
-        });
-
-      const client = new JwksClient({
-        jwksUri: `${jwksHost}/.well-known/jwks.json`
-      });
-
-      client.getKeys(() => {
-        done();
-      });
+      client.getKeys(() => {});
     });
 
     it('should use a proxy if specified', done => {
+      const proxy = 'my-proxy-server:2815';
       const expectedError = { message: 'expectedError' };
       nock(`http://${proxy}`)
         .get(() => true)
@@ -209,7 +141,7 @@ describe('JwksClient', () => {
     it('should handle errors', done => {
       nock(jwksHost)
         .get('/.well-known/jwks.json')
-        .reply(500, 'Unknown Server Error');
+        .reply(500, 'Http Error 500');
 
       const client = new JwksClient({
         jwksUri: `${jwksHost}/.well-known/jwks.json`
@@ -217,7 +149,7 @@ describe('JwksClient', () => {
 
       client.getSigningKeys(err => {
         expect(err).not.to.be.null;
-        expect(err.message).to.equal('Unknown Server Error');
+        expect(err.message).to.equal('Http Error 500');
         done();
       });
     });

@@ -1,6 +1,5 @@
 import debug from 'debug';
-import request from 'request';
-
+import request from './wrappers/request';
 import JwksError from './errors/JwksError';
 import SigningKeyNotFoundError from './errors/SigningKeyNotFoundError';
 
@@ -50,8 +49,13 @@ export class JwksClient {
         return cb(err);
       }
 
-      this.logger('Keys:', res.body.keys);
-      return cb(null, res.body.keys);
+      try {
+        const { keys } = JSON.parse(res.rawData);
+        this.logger('Keys:', keys);
+        return cb(null, keys);
+      } catch (err) {
+        return cb(err);
+      }
     });
   }
 
