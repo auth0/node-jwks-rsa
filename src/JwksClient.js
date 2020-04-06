@@ -1,6 +1,5 @@
 import debug from 'debug';
-import request from 'request';
-
+import request from './wrappers/request';
 import JwksError from './errors/JwksError';
 import SigningKeyNotFoundError from './errors/SigningKeyNotFoundError';
 
@@ -18,7 +17,6 @@ export class JwksClient {
     this.options = {
       rateLimit: false,
       cache: true,
-      strictSsl: true,
       timeout: 30000,
       ...options
     };
@@ -36,7 +34,6 @@ export class JwksClient {
   getKeys(cb) {
     this.logger(`Fetching keys from '${this.options.jwksUri}'`);
     request({
-      json: true,
       uri: this.options.jwksUri,
       strictSSL: this.options.strictSsl,
       headers: this.options.requestHeaders,
@@ -44,16 +41,17 @@ export class JwksClient {
       proxy: this.options.proxy,
       timeout: this.options.timeout
     }, (err, res) => {
-      if (err || res.statusCode < 200 || res.statusCode >= 300) {
-        this.logger('Failure:', res && res.body || err);
-        if (res) {
-          return cb(new JwksError(res.body && (res.body.message || res.body) || res.statusMessage || `Http Error ${res.statusCode}`));
+      if (err) {
+        const errorResponse = err.response;
+        this.logger('Failure:', errorResponse && errorResponse.data || err);
+        if (errorResponse) {
+          return cb(new JwksError(errorResponse.data || errorResponse.statusText || `Http Error ${errorResponse.status}`));
         }
         return cb(err);
       }
 
-      this.logger('Keys:', res.body.keys);
-      return cb(null, res.body.keys);
+      this.logger('Keys:', res.data.keys);
+      return cb(null, res.data.keys);
     });
   }
 
