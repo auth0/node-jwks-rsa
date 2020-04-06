@@ -22,7 +22,7 @@ const client = jwksClient({
   jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
   requestHeaders: {}, // Optional
   requestAgentOptions: {}, // Optional
-  timeout: ms('10s'), // Defaults to 30s
+  timeout: ms('30s'), // Defaults to 30s
   proxy: '[protocol]://[username]:[pass]@[address]:[port]', // Optional
 });
 
