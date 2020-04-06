@@ -6,7 +6,8 @@ import { request } from 'axios';
 export default function(options, cb) {
   const requestOptions = {
     baseURL: options.uri,
-    headers: options.headers
+    headers: options.headers,
+    timeout: options.timeout
   };
 
   if (options.proxy) {
