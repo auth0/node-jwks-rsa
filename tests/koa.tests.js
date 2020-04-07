@@ -210,7 +210,7 @@ describe('koaJwtSecret', () => {
     });
 
     const token = createToken(privateKey, undefined, { sub: 'john' });
-    jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' } ]);
+    jwksEndpoint('http://localhost', [ { pub: publicKey } ]);
 
     request(app.listen())
       .get('/')

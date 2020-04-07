@@ -164,7 +164,7 @@ describe('expressJwtSecret', () => {
         })
       });
 
-      jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' } ]);
+      jwksEndpoint('http://localhost', [ { pub: publicKey } ]);
 
       const token = createToken(privateKey, undefined, { sub: 'john' });
       const req = { headers: { authorization: `Bearer ${token}` } };
