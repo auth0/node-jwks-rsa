@@ -68,12 +68,9 @@ export class JwksClient {
           if(key.kty !== 'RSA') {
             return false;
           }
-          if(!key.kid) {
-            return false;
-          }
           if(key.hasOwnProperty('use') && key.use !== 'sig') {
             return false;
-          }  
+          }
           return ((key.x5c && key.x5c.length) || (key.n && key.e));
         })
         .map(key => {
@@ -109,7 +106,13 @@ export class JwksClient {
         return cb(err);
       }
 
-      const key = keys.find(k => k.kid === kid);
+      const kidDefined = kid !== undefined && kid !== null;
+      if (!kidDefined && keys.length > 1) {
+        this.logger('No KID specified and JWKS endpoint returned more than 1 key');
+        return cb(new SigningKeyNotFoundError('No KID specified and JWKS endpoint returned more than 1 key'));
+      }
+
+      const key = keys.find(k => !kidDefined || k.kid === kid);
       if (key) {
         return cb(null, key);
       } else {

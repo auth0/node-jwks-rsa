@@ -73,7 +73,7 @@ describe('koaJwtSecret', () => {
       });
   });
 
-  it('should not provide a key if token is RS256 and no KID was provided', (done) => {
+  it('should not provide a key if JWKS endpoint returned multiple keys and no KID was provided', (done) => {
     const app = new Koa();
     app.use(koaJwt({
       debug: true,
@@ -83,14 +83,14 @@ describe('koaJwtSecret', () => {
     }));
 
     const token = createToken(privateKey, null, { sub: 'john' });
-    jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' } ]);
+    jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' }, { pub: publicKey, kid: '456' } ]);
 
     request(app.listen())
       .get('/')
       .set('Authorization', `Bearer ${ token }`)
       .expect(401)
       .end((err, res) => {
-        expect(res.text).to.equal('Unable to find a signing key that matches \'null\'');
+        expect(res.text).to.equal('No KID specified and JWKS endpoint returned more than 1 key');
         done();
       });
   });
@@ -185,6 +185,32 @@ describe('koaJwtSecret', () => {
 
     const token = createToken(privateKey, '123', { sub: 'john' });
     jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' } ]);
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', `Bearer ${ token }`)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.sub).to.equal('john');
+        done();
+      });
+  });
+
+  it('should work if the JWKS endpoint returns a single key and no KID is provided', (done) => {
+    const app = new Koa();
+    app.use(koaJwt({
+      debug: true,
+      secret: jwksRsa.koaJwtSecret({
+        jwksUri: 'http://localhost/.well-known/jwks.json'
+      })
+    }));
+    app.use((ctx) => {
+      ctx.body = ctx.state.user;
+      ctx.status = 200;
+    });
+
+    const token = createToken(privateKey, undefined, { sub: 'john' });
+    jwksEndpoint('http://localhost', [ { pub: publicKey } ]);
 
     request(app.listen())
       .get('/')
