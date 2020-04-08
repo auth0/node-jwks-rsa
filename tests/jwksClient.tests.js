@@ -6,7 +6,6 @@ import { JwksClient } from '../src/JwksClient';
 
 describe('JwksClient', () => {
   const jwksHost = 'http://my-authz-server';
-  const proxy = 'my-proxy-server:2815';
 
   beforeEach(() => {
     nock.cleanAll();
@@ -185,6 +184,7 @@ describe('JwksClient', () => {
     });
 
     it('should use a proxy if specified', done => {
+      const proxy = 'my-proxy-server:2815';
       const expectedError = { message: 'expectedError' };
       nock(`http://${proxy}`)
         .get(() => true)
