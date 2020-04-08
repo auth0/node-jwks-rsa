@@ -115,7 +115,7 @@ describe('passportJwtSecret', () => {
       });
   });
 
-  it('should not provide a key if token is RS256 and no KID was provided', done => {
+  it('should not provide a key if JWKS endpoint returned multiple keys and no KID was provided', done => {
     const app = new Express();
     passport.use(
       new JwtStrategy(
@@ -144,7 +144,7 @@ describe('passportJwtSecret', () => {
     );
 
     const token = createToken(privateKey, null, { sub: 'john' });
-    jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' } ]);
+    jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' }, { pub: publicKey, kid: '456' } ]);
 
     request(app.listen())
       .get('/')
@@ -313,6 +313,42 @@ describe('passportJwtSecret', () => {
 
     const token = createToken(privateKey, '123', { sub: 'john' });
     jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' } ]);
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.sub).to.equal('john');
+        done();
+      });
+  });
+
+  it('should work if the JWKS endpoint returns a single key and no KID is provided', done => {
+    const app = new Express();
+    passport.use(
+      new JwtStrategy(
+        {
+          secretOrKeyProvider: jwksRsa.passportJwtSecret({
+            jwksUri: 'http://localhost/.well-known/jwks.json'
+          }),
+          jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+          algorithms: [ 'RS256' ]
+        },
+        (jwt_payload, done) => done(null, jwt_payload)
+      )
+    );
+
+    app.get(
+      '/',
+      passport.authenticate('jwt', { session: false }),
+      (req, res) => {
+        res.json(req.user);
+      }
+    );
+
+    const token = createToken(privateKey, null, { sub: 'john' });
+    jwksEndpoint('http://localhost', [ { pub: publicKey } ]);
 
     request(app.listen())
       .get('/')
