@@ -17,6 +17,7 @@ export class JwksClient {
     this.options = {
       rateLimit: false,
       cache: true,
+      timeout: 30000,
       ...options
     };
     this.logger = debug('jwks');
@@ -37,7 +38,8 @@ export class JwksClient {
       strictSSL: this.options.strictSsl,
       headers: this.options.requestHeaders,
       agentOptions: this.options.requestAgentOptions,
-      proxy: this.options.proxy
+      proxy: this.options.proxy,
+      timeout: this.options.timeout
     }, (err, res) => {
       if (err) {
         const errorResponse = err.response;
