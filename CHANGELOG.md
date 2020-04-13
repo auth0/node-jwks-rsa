@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.8.0] - (2020-04-12)
+
+**Added**
+- Added timeout with default value of 30s [\#132](https://github.com/auth0/node-jwks-rsa/pull/132) ([Cooke](https://github.com/Cooke))
+
+**Changed**
+- Migrate from Deprecated Request Lib [\#135](https://github.com/auth0/node-jwks-rsa/pull/135) ([davidpatrick](https://github.com/davidpatrick))
+
+**Fixed**
+- Allow JWT to not contain a "kid" value[\#55](https://github.com/auth0/node-jwks-rsa/pull/55) ([dejan9393](https://github.com/dejan9393))
+
 ## [1.7.0] - (2020-02-18)
 This release includes a change to the default caching mechanism.  Caching is on now by default, with the decrease of the default time of 10hours to 10minutes.  This change introduces better support for signing key rotation.
 
