@@ -17,39 +17,52 @@ describe('JwksClient (cache)', () => {
   });
 
   describe('#getSigningKey', () => {
-    describe('should cache requests per kid', () => {
-      let client;
-
-      before((done) => {
-        nock(jwksHost)
-          .get('/.well-known/jwks.json')
-          .reply(200, x5cSingle);
-
-        client = new JwksClient({
-          cache: true,
-          jwksUri: `${jwksHost}/.well-known/jwks.json`
+    describe('with lru-cache', () => {
+      describe('should cache requests per kid', () => {
+        let client;
+  
+        before((done) => {
+          nock(jwksHost)
+            .get('/.well-known/jwks.json')
+            .reply(200, x5cSingle);
+  
+          client = new JwksClient({
+            cache: true,
+            jwksUri: `${jwksHost}/.well-known/jwks.json`
+          });
+  
+          // Cache the Key
+          client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA', (err, key) => {
+            expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+  
+            // Stop the JWKS server
+            nock.cleanAll();
+            done();
+          });
         });
-
-        // Cache the Key
-        client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA', (err, key) => {
-          expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
-
-          // Stop the JWKS server
-          nock.cleanAll();
-          done();
-        });
-      });
-
-      it('should ignore the cache when the KID isnt cached and make a requst', (done) => {
-        client.getSigningKey('12345', (err) => {
-          expect(err).not.to.be.null;
-          expect(err.code).to.equal('ENOTFOUND');
-          done();
-          
+  
+        it('should ignore the cache when the KID isnt cached and make a requst', (done) => {
+          client.getSigningKey('12345', (err) => {
+            expect(err).not.to.be.null;
+            expect(err.code).to.equal('ENOTFOUND');
+            done();
+            
+          })
         })
       })
     })
+    
     describe('with local file cache', () => {
+
+      let client;
+
+      before(() => {
+        client = new JwksClient({
+          cache: true,
+          useTmpFileCache: true,
+          jwksUri: `${jwksHost}/.well-known/jwks.json`
+        });
+      })
 
       it('should cache requests', (done) => {
         mock({
@@ -58,12 +71,6 @@ describe('JwksClient (cache)', () => {
         nock(jwksHost)
           .get('/.well-known/jwks.json')
           .reply(200, x5cSingle);
-
-        const client = new JwksClient({
-          cache: true,
-          useTmpFileCache: true,
-          jwksUri: `${jwksHost}/.well-known/jwks.json`
-        });
 
         client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA', (err, key) => {
           expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
@@ -84,12 +91,6 @@ describe('JwksClient (cache)', () => {
           .get('/.well-known/jwks.json')
           .reply(200, x5cSingle);
 
-        const client = new JwksClient({
-          cache: true,
-          useTmpFileCache: true,
-          jwksUri: `${jwksHost}/.well-known/jwks.json`
-        });
-
         client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA', (err, key) => {
           expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
           nock.cleanAll();
@@ -109,9 +110,8 @@ describe('JwksClient (cache)', () => {
           done();
         });
       });
+
     });
-
-
 
   });
 });
