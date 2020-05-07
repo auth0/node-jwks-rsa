@@ -110,7 +110,22 @@ describe('JwksClient (cache)', () => {
         });
       });
 
-    });
+      it('should fetch from file-cache correctly', (done) => {
+        mock({
+          '/tmp/jwks-cache': JSON.stringify({ '12345678': { kid: '12345678' }, 'other': { kid: 'other' } })
+        }, {});
+        nock(jwksHost)
+          .get('/.well-known/jwks.json')
+          .reply(200, { keys: [] });
 
+        client.getSigningKey('12345678', (err, key) => {
+          expect(err).to.be.null;
+          expect(key.kid).to.equal('12345678');
+          nock.cleanAll();
+          done();
+        });
+      });
+
+    });
   });
 });
