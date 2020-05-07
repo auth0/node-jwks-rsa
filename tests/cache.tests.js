@@ -1,9 +1,9 @@
 import nock from 'nock';
 import { expect } from 'chai';
-const mock = require('mock-fs');
-
 import { x5cSingle } from './keys';
 import { JwksClient } from '../src/JwksClient';
+
+const mock = require('mock-fs');
 
 describe('JwksClient (cache)', () => {
   const jwksHost = 'http://my-authz-server';
@@ -20,38 +20,38 @@ describe('JwksClient (cache)', () => {
     describe('with lru-cache', () => {
       describe('should cache requests per kid', () => {
         let client;
-  
+
         before((done) => {
           nock(jwksHost)
             .get('/.well-known/jwks.json')
             .reply(200, x5cSingle);
-  
+
           client = new JwksClient({
             cache: true,
             jwksUri: `${jwksHost}/.well-known/jwks.json`
           });
-  
+
           // Cache the Key
           client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA', (err, key) => {
             expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
-  
+
             // Stop the JWKS server
             nock.cleanAll();
             done();
           });
         });
-  
+
         it('should ignore the cache when the KID isnt cached and make a requst', (done) => {
           client.getSigningKey('12345', (err) => {
             expect(err).not.to.be.null;
             expect(err.code).to.equal('ENOTFOUND');
             done();
-            
-          })
-        })
-      })
-    })
-    
+
+          });
+        });
+      });
+    });
+
     describe('with local file cache', () => {
 
       let client;
@@ -62,11 +62,11 @@ describe('JwksClient (cache)', () => {
           useTmpFileCache: true,
           jwksUri: `${jwksHost}/.well-known/jwks.json`
         });
-      })
+      });
 
       it('should cache requests', (done) => {
         mock({
-          '/tmp/jwks-cache': JSON.stringify({stuff: "other stuff"})
+          '/tmp/jwks-cache': JSON.stringify({ stuff: 'other stuff' })
         }, {});
         nock(jwksHost)
           .get('/.well-known/jwks.json')
@@ -85,7 +85,7 @@ describe('JwksClient (cache)', () => {
 
       it('should cache requests per kid', (done) => {
         mock({
-          '/tmp/jwks-cache': JSON.stringify({stuff: "other stuff"})
+          '/tmp/jwks-cache': JSON.stringify({ stuff: 'other stuff' })
         }, {});
         nock(jwksHost)
           .get('/.well-known/jwks.json')
