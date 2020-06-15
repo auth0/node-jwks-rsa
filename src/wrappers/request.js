@@ -21,9 +21,9 @@ export default function(options, cb) {
     };
   } 
 
-  if (options.agentOptions || options.strictSSL) {
+  if (options.agentOptions || options.strictSSL != undefined) {
     const agentOptions = {
-      ...(options.strictSSL) && { rejectUnauthorized: options.strictSSL },
+      ...(options.strictSSL != undefined) && { rejectUnauthorized: options.strictSSL },
       ...options.agentOptions
     };
     requestOptions.httpAgent = new http.Agent(agentOptions);
