@@ -1,17 +1,18 @@
 import axios from 'axios';
 import { expect } from 'chai';
 
-const originalAxiosRequest = axios.request;
-const mockedAxiosRequest = (options) => {
-  return Promise.resolve(options);
-};
-axios.request = mockedAxiosRequest;
-
 import request from '../src/wrappers/request';
 
 describe('Request wrapper tests', () => {
   
   const uri = 'https://foo/bar';
+  const originalAxiosRequest = axios.request;
+  const mockedAxiosRequest = (options) => {
+    return Promise.resolve(options);
+  };
+  before(() => {
+    axios.request = mockedAxiosRequest;
+  });
 
   after(() => {
     axios.request = originalAxiosRequest;
