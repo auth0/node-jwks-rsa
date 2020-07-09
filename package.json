@@ -1,6 +1,6 @@
 {
   "name": "jwks-rsa",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "Library to retrieve RSA public keys from a JWKS endpoint",
   "main": "lib/index.js",
   "types": "index.d.ts",
@@ -9,12 +9,12 @@
     "axios": "^0.19.2",
     "debug": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
-    "limiter": "^1.1.4",
-    "lru-memoizer": "^2.0.1",
+    "limiter": "^1.1.5",
+    "lru-memoizer": "^2.1.2",
     "ms": "^2.1.2"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.5",
+    "@types/chai": "^4.2.11",
     "@types/mocha": "^5.2.7",
     "@types/nock": "^10.0.3",
     "babel-cli": "^6.9.0",
@@ -27,18 +27,18 @@
     "eslint-plugin-babel": "^5.3.0",
     "express": "^4.17.1",
     "express-jwt": "^3.4.0",
-    "koa": "^2.11.0",
+    "koa": "^2.12.1",
     "koa-jwt": "^3.6.0",
-    "mocha": "^6.2.2",
+    "mocha": "^6.2.3",
     "mock-fs": "^4.12.0",
     "nock": "^10.0.6",
-    "nyc": "^15.0.0",
-    "passport": "^0.4.0",
+    "nyc": "^15.1.0",
+    "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "rimraf": "^2.7.1",
     "supertest": "^3.4.2",
-    "ts-node": "^8.5.4",
-    "typescript": "^3.7.2"
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5"
   },
   "scripts": {
     "clean": "rimraf lib/",

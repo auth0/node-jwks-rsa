@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.8.1] - (2020-06-18)
+
+**Fixed**
+- Fix #139 strictSsl: false option being ignored [\#146](https://github.com/auth0/node-jwks-rsa/pull/146) ([kopancek](https://github.com/kopancek))
+
+**Security**
+- Update dependencies to latest [\#147](https://github.com/auth0/node-jwks-rsa/pull/147) ([lbalmaceda](https://github.com/lbalmaceda))
+
 ## [1.8.0] - (2020-04-12)
 
 **Added**
