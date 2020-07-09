@@ -1,7 +1,7 @@
 import ms from 'ms';
 import debug from 'debug';
 import memoizer from 'lru-memoizer';
-import { existsSync, readFile, writeFile, writeFileSync } from 'fs';
+import { existsSync, readFile, writeFileSync } from 'fs';
 
 export default function (client, { cacheMaxEntries = 5, cacheMaxAge = ms('10m'), useTmpFileCache = false } = options) {
   const logger = debug('jwks');
@@ -29,7 +29,7 @@ export default function (client, { cacheMaxEntries = 5, cacheMaxAge = ms('10m'),
         }
         logger(`Caching signing key in filesystem for '${kid}':`, key);
         const content = { ...jsonData, [kid]: key };
-        writeFile(filePath, JSON.stringify(content), (err) => {
+        writeFileSync(filePath, JSON.stringify(content), (err) => {
           if (err) {
             return callback(err);
           }
