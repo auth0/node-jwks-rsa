@@ -84,9 +84,9 @@ describe('JwksClient (cache)', () => {
 
           client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA', (err, key) => {
             expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
-            done();
           });
         });
+        done();
       });
 
       it('should cache requests per kid', (done) => {
@@ -105,9 +105,9 @@ describe('JwksClient (cache)', () => {
           client.getSigningKey('12345', (err) => {
             expect(err).not.to.be.null;
             expect(err.code).to.equal('ENOTFOUND');
-            done();
           });
         });
+        done();
       });
 
       it('should fetch from file-cache correctly', (done) => {
