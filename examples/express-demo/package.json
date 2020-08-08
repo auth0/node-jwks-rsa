@@ -18,6 +18,6 @@
   "dependencies": {
     "debug": "^2.6.9",
     "express": "^4.17.0",
-    "express-jwt": "^3.4.0"
+    "express-jwt": "^6.0.0"
   }
 }
