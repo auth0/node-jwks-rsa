@@ -124,36 +124,18 @@ export class JwksClient {
     });
   }
 
-  getKeysAsync = () => {
-    return new Promise((resolve, reject) => {
-      this.getKeys(function(err, keys) {
-        if (err) {
-          reject(err);
-        }
-        resolve(keys);
-      })
-    });
-  }
-
-  getSigningKeysAsync = () => {
-    return new Promise((resolve, reject) => {
-      this.getSigningKeys(function(err, keys) {
-        if (err) {
-          reject(err);
-        }
-        resolve(keys);
-      })
-    });
-  }
-
-  getSigningKeyAsync = (kid) => {
-    return new Promise((resolve, reject) => {
-      this.getSigningKey(kid, function(err, key) {
-        if (err) {
-          reject(err);
-        }
-        resolve(key);
-      })
-    });
-  }
+  getKeysAsync = promisifyIt(this.getKeys, this);
+  getSigningKeysAsync = promisifyIt(this.getSigningKeys, this);
+  getSigningKeyAsync = promisifyIt(this.getSigningKey, this);
 }
+
+const promisifyIt = (fn, ctx) => (...args) => {
+  return new Promise((resolve, reject) => {
+    fn.call(ctx, ...args, (err, data) => {
+      if (err) {
+        reject(err)
+      }
+      resolve(data)
+    });
+  });
+};
