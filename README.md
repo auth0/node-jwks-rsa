@@ -34,6 +34,8 @@ client.getSigningKey(kid, (err, key) => {
 });
 ```
 
+> Note that all methods on the `JwksClient` have asynchronous equivalents, where the promisified name is suffixed with `Async`, e.g., `client.getSigningKeyAsync(kid).then(key => { /* ... */ })`;
+
 Integrations are also provided with:
 
  - [express/express-jwt](examples/express-demo)
