@@ -587,6 +587,6 @@ describe('JwksClient', () => {
           expect(err.message).to.equal('Unknown Server Error');
           done();
         });
-    })
+    });
   });
 });

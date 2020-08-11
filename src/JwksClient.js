@@ -188,9 +188,9 @@ const promisifyIt = (fn, ctx) => (...args) => {
   return new Promise((resolve, reject) => {
     fn.call(ctx, ...args, (err, data) => {
       if (err) {
-        reject(err)
+        reject(err);
       }
-      resolve(data)
+      resolve(data);
     });
   });
 };
