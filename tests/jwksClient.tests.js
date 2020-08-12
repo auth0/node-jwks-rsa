@@ -205,6 +205,63 @@ describe('JwksClient', () => {
     });
   });
   
+  describe('#getKeysAsync', () => {
+    it('should handle errors when async', done => {
+      nock(jwksHost)
+        .get('/.well-known/jwks.json')
+        .reply(500, 'Unknown Server Error');
+
+      const client = new JwksClient({
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
+      });
+
+      client.getKeysAsync()
+        .catch(err => {
+          expect(err).not.to.be.null;
+          expect(err.message).to.equal('Unknown Server Error');
+          done();
+        });
+    });
+
+    it('should return keys when async', function(done) {
+      nock(jwksHost)
+        .get('/.well-known/jwks.json')
+        .reply(200, {
+          keys: [
+            {
+              alg: 'RS256',
+              kty: 'RSA',
+              use: 'sig',
+              x5c: [ 'pk1' ],
+              kid: 'ABC'
+            },
+            {
+              alg: 'RS256',
+              kty: 'RSA',
+              use: 'sig',
+              x5c: [],
+              kid: '123'
+            }
+          ]
+        });
+
+      const client = new JwksClient({
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
+      });
+
+      client.getKeysAsync()
+        .then(keys => {
+          expect(keys).not.to.be.null;
+          expect(keys.length).to.equal(2);
+          expect(keys[1].kid).to.equal('123');
+          done();
+        })
+        .catch(err => {
+          done(err);
+        });
+    });
+  });
+
   describe('#getSigningKeys', () => {
     it('should handle errors', done => {
       nock(jwksHost)
@@ -440,6 +497,62 @@ describe('JwksClient', () => {
     });
   });
 
+  describe('#getSigningKeysAsync', () => {
+    it('should handle errors when async', done => {
+      nock(jwksHost)
+        .get('/.well-known/jwks.json')
+        .reply(500, 'Unknown Server Error');
+
+      const client = new JwksClient({
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
+      });
+
+      client.getSigningKeysAsync()
+        .catch(err => {
+          expect(err).not.to.be.null;
+          expect(err.message).to.equal('Unknown Server Error');
+          done();
+        });
+    });
+
+    it('should return signing keys to promise success handler when async', done => {
+      nock(jwksHost)
+        .get('/.well-known/jwks.json')
+        .reply(200, {
+          keys: [
+            {
+              kid: 'IdTokenSigningKeyContainer',
+              use: 'sig',
+              kty: 'RSA',
+              e: 'AQAB',
+              n:
+                'tLDZVZ2Eq_DFwNp24yeSq_Ha0MYbYOJs_WXIgVxQGabu5cZ9561OUtYWdB6xXXZLaZxFG02P5U2rC_CT1r0lPfC_KHYrviJ5Y_Ekif7iFV_1omLAiRksQziwA1i-hND32N5kxwEGNmZViVjWMBZ43wbIdWss4IMhrJy1WNQ07Fqp1Ee6o7QM1hTBve7bbkJkUAfjtC7mwIWqZdWoYIWBTZRXvhMgs_Aeb_pnDekosqDoWQ5aMklk3NvaaBBESqlRAJZUUf5WDFoJh7yRELOFF4lWJxtArTEiQPWVTX6PCs0klVPU6SRQqrtc4kKLCp1AC5EJqPYRGiEJpSz2nUhmAQ'
+            },
+            {
+              kid: 'IdTokenSigningKeyContainer.v2',
+              nbf: 1459289287,
+              use: 'sig',
+              kty: 'RSA',
+              e: 'AQAB',
+              n:
+                's4W7xjkQZP3OwG7PfRgcYKn8eRYXHiz1iK503fS-K2FZo-Ublwwa2xFZWpsUU_jtoVCwIkaqZuo6xoKtlMYXXvfVHGuKBHEBVn8b8x_57BQWz1d0KdrNXxuMvtFe6RzMqiMqzqZrzae4UqVCkYqcR9gQx66Ehq7hPmCxJCkg7ajo7fu6E7dPd34KH2HSYRsaaEA_BcKTeb9H1XE_qEKjog68wUU9Ekfl3FBIRN-1Ah_BoktGFoXyi_jt0-L0-gKcL1BLmUlGzMusvRbjI_0-qj-mc0utGdRjY-xIN2yBj8vl4DODO-wMwfp-cqZbCd9TENyHaTb8iA27s-73L3ExOQ'
+            }
+          ]
+        });
+
+      const client = new JwksClient({
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
+      });
+
+      client.getSigningKeysAsync()
+        .then(keys => {
+          expect(keys).to.not.be.null;
+          expect(keys.length).to.equal(2);
+          done();
+        });
+    });
+  });
+
   describe('#getSigningKey', () => {
     it('should return error if signing key is not found', done => {
       nock(jwksHost)
@@ -455,6 +568,25 @@ describe('JwksClient', () => {
         expect(err.name).to.equal('SigningKeyNotFoundError');
         done();
       });
+    });
+  });
+
+  describe('#getSigningKeyAsync', () => {
+    it('should handle error when async', done => {
+      nock(jwksHost)
+        .get('/.well-known/jwks.json')
+        .reply(500, 'Unknown Server Error');
+
+      const client = new JwksClient({
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
+      });
+
+      client.getSigningKeyAsync('')
+        .catch(err => {
+          expect(err).not.to.be.null;
+          expect(err.message).to.equal('Unknown Server Error');
+          done();
+        });
     });
   });
 });
