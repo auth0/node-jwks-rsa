@@ -123,4 +123,74 @@ export class JwksClient {
       }
     });
   }
+
+  /**
+   * Get all keys. Use this if you prefer to use Promises or async/await.
+   *
+   * @example
+   * client.getKeysAsync()
+   *   .then(keys => { console.log(`Returned {keys.length} keys`); })
+   *   .catch(err => { console.error('Error getting keys', err); });
+   *
+   * // async/await:
+   * try {
+   *  let keys = await client.getKeysAsync();
+   * } catch (err) {
+   *  console.error('Error getting keys', err);
+   * }
+   *
+   * @return {Promise}
+   */
+  getKeysAsync = promisifyIt(this.getKeys, this);
+
+  /**
+   * Get all signing keys. Use this if you prefer to use Promises or async/await.
+   *
+   * @example
+   * client.getSigningKeysAsync()
+   *   .then(keys => { console.log(`Returned {keys.length} signing keys`); })
+   *   .catch(err => { console.error('Error getting keys', err); });
+   *
+   * // async/await:
+   * try {
+   *  let keys = await client.getSigningKeysAsync();
+   * } catch (err) {
+   *  console.error('Error getting signing keys', err);
+   * }
+   *
+   * @return {Promise}
+   */
+  getSigningKeysAsync = promisifyIt(this.getSigningKeys, this);
+
+  /**
+   * Get a signing key for a specified key ID (kid). Use this if you prefer to use Promises or async/await.
+   *
+   * @example
+   * client.getSigningKeyId('someKid')
+   *   .then(key => { console.log(`Signing key returned is {key.getPublicKey()}`); })
+   *   .catch(err => { console.error('Error getting signing key', err); });
+   *
+   * // async/await:
+   * try {
+   *  let key = await client.getSigningKeyAsync('someKid');
+   * } catch (err) {
+   *  console.error('Error getting signing key', err);
+   * }
+   *
+   * @param {String} kid   The Key ID of the signing key to retrieve.
+   *
+   * @return {Promise}
+   */
+  getSigningKeyAsync = promisifyIt(this.getSigningKey, this);
 }
+
+const promisifyIt = (fn, ctx) => (...args) => {
+  return new Promise((resolve, reject) => {
+    fn.call(ctx, ...args, (err, data) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(data);
+    });
+  });
+};
