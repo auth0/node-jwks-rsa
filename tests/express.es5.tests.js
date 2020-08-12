@@ -30,7 +30,8 @@ describe('expressJwtSecret', () => {
       expressJwt({
         secret: jwksRsa.expressJwtSecret({
           jwksUri: 'http://localhost/.well-known/jwks.json'
-        })
+        }),
+        algorithms: [ 'RS256' ]
       });
     });
 
@@ -38,7 +39,8 @@ describe('expressJwtSecret', () => {
       const middleware = expressJwt({
         secret: jwksRsa.expressJwtSecret({
           jwksUri: 'http://localhost/.well-known/jwks.json'
-        })
+        }),
+        algorithms: [ 'RS256' ]
       });
 
       middleware({ headers: { authorization: 'Bearer abc' } }, { }, function(err) {
@@ -50,7 +52,8 @@ describe('expressJwtSecret', () => {
       const middleware = expressJwt({
         secret: jwksRsa.expressJwtSecret({
           jwksUri: 'http://localhost/.well-known/jwks.json'
-        })
+        }),
+        algorithms: [ 'RS256' ]
       });
 
       const token = createSymmetricToken('mykey', { sub: 'john' });
@@ -64,7 +67,8 @@ describe('expressJwtSecret', () => {
       const middleware = expressJwt({
         secret: jwksRsa.expressJwtSecret({
           jwksUri: 'http://localhost/.well-known/jwks.json'
-        })
+        }),
+        algorithms: [ 'RS256' ]
       });
 
       jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' }, { pub: publicKey, kid: '456' } ]);
@@ -80,7 +84,8 @@ describe('expressJwtSecret', () => {
       const middleware = expressJwt({
         secret: jwksRsa.expressJwtSecret({
           jwksUri: 'http://localhost/.well-known/jwks.json'
-        })
+        }),
+        algorithms: [ 'RS256' ]
       });
 
       jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' } ]);
@@ -96,7 +101,8 @@ describe('expressJwtSecret', () => {
       const middleware = expressJwt({
         secret: jwksRsa.expressJwtSecret({
           jwksUri: 'http://localhost/.well-known/jwks.json'
-        })
+        }),
+        algorithms: [ 'RS256' ]
       });
 
       jwksEndpoint('http://localhost', [ { pub: randomPublicKey1, kid: '123' } ]);
@@ -117,7 +123,8 @@ describe('expressJwtSecret', () => {
               cb(new Error('This is bad'));
             }
           }
-        })
+        }),
+        algorithms: [ 'RS256' ]
       });
 
       jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' } ]);
@@ -138,7 +145,8 @@ describe('expressJwtSecret', () => {
               cb(new Error('This is bad'));
             }
           }
-        })
+        }),
+        algorithms: [ 'RS256' ]
       });
 
       jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' } ]);
@@ -161,7 +169,8 @@ describe('expressJwtSecret', () => {
               cb(new Error('This is bad'));
             }
           }
-        })
+        }),
+        algorithms: [ 'RS256' ]
       });
 
       jwksEndpoint('http://localhost', [ { pub: publicKey } ]);
