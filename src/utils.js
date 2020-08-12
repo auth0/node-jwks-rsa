@@ -33,8 +33,8 @@ function encodeLengthHex(n) {
  * Source: http://stackoverflow.com/questions/18835132/xml-to-pem-in-node-js
  */
 export function rsaPublicKeyToPEM(modulusB64, exponentB64) {
-  const modulus = new Buffer(modulusB64, 'base64');
-  const exponent = new Buffer(exponentB64, 'base64');
+  const modulus = Buffer.from(modulusB64, 'base64');
+  const exponent = Buffer.from(exponentB64, 'base64');
   const modulusHex = prepadSigned(modulus.toString('hex'));
   const exponentHex = prepadSigned(exponent.toString('hex'));
   const modlen = modulusHex.length / 2;
@@ -47,7 +47,7 @@ export function rsaPublicKeyToPEM(modulusB64, exponentB64) {
     '02' + encodedModlen + modulusHex +
     '02' + encodedExplen + exponentHex;
 
-  const der = new Buffer(encodedPubkey, 'hex')
+  const der = Buffer.from(encodedPubkey, 'hex')
     .toString('base64');
 
   let pem = '-----BEGIN RSA PUBLIC KEY-----\n';
