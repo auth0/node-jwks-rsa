@@ -5,7 +5,7 @@ import { request } from 'axios';
 
 export default function(options, cb) {
   const requestOptions = {
-    baseURL: options.uri,
+    url: options.uri,
     headers: options.headers,
     timeout: options.timeout
   };
