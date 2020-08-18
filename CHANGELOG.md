@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.9.0] - (2020-08-18)
+
+**Added**
+- Add promisified methods to JwksClient [\#161](https://github.com/auth0/node-jwks-rsa/pull/161) ([jimmyjames](https://github.com/jimmyjames))
+- Update express-jwt ^6.0.0 [\#157](https://github.com/auth0/node-jwks-rsa/pull/157) ([davidpatrick](https://github.com/davidpatrick))
+
+**Fixed**
+- Update Buffer initialization to non-deprecated method [\#154](https://github.com/auth0/node-jwks-rsa/pull/154) ([cwardcode](https://github.com/cwardcode))
+- Use axios url parameter instead of baseURL [\#153](https://github.com/auth0/node-jwks-rsa/pull/153) ([novascreen](https://github.com/novascreen))
+
+**Security**
+- Bump lodash from 4.17.15 to 4.17.19 [\#152](https://github.com/auth0/node-jwks
+
 ## [1.8.1] - (2020-06-18)
 
 **Fixed**
