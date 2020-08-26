@@ -7,8 +7,11 @@ declare namespace JwksRsa {
     constructor(options: ClientOptions);
 
     getKeys(cb: (err: Error | null, keys: unknown) => void): void;
+    getKeysAsync(): Promise<unknown>;
     getSigningKeys(cb: (err: Error | null, keys: SigningKey[]) => void): void;
-    getSigningKey: (kid: string, cb: (err: Error | null, key: SigningKey) => void) => void;
+    getSigningKeysAsync(): Promise<SigningKey[]>;
+    getSigningKey(kid: string, cb: (err: Error | null, key: SigningKey) => void): void;
+    getSigningKeyAsync(kid: string): Promise<SigningKey>;
   }
 
   interface Headers {
