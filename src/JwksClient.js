@@ -78,6 +78,7 @@ export class JwksClient {
         .map(key => {
           const jwk = {
             kid: key.kid,
+            alg: key.alg,
             nbf: key.nbf
           };
           const hasCertificateChain = key.x5c && key.x5c.length;
