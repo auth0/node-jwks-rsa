@@ -2,7 +2,7 @@ export function certToPEM(cert) {
   cert = cert.match(/.{1,64}/g).join('\n');
   cert = `-----BEGIN CERTIFICATE-----\n${cert}\n-----END CERTIFICATE-----\n`;
   return cert;
-};
+}
 
 function prepadSigned(hexStr) {
   const msb = hexStr[0];
@@ -54,4 +54,4 @@ export function rsaPublicKeyToPEM(modulusB64, exponentB64) {
   pem += `${der.match(/.{1,64}/g).join('\n')}`;
   pem += '\n-----END RSA PUBLIC KEY-----\n';
   return pem;
-};
+}

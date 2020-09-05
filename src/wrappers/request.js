@@ -33,4 +33,4 @@ export default function(options, cb) {
   request(requestOptions)
     .then(response => cb(null, response))
     .catch(err => cb(err));
-};
+}
