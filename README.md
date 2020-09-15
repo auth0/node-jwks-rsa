@@ -23,7 +23,7 @@ const client = jwksClient({
   jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
   requestHeaders: {}, // Optional
   requestAgentOptions: {}, // Optional
-  timeout: ms('30s'), // Defaults to 30s
+  timeout: 30000, // Defaults to 30s
   proxy: '[protocol]://[username]:[pass]@[address]:[port]', // Optional
 });
 
@@ -54,7 +54,7 @@ const jwksClient = require('jwks-rsa');
 const client = jwksClient({
   cache: true, // Default Value
   cacheMaxEntries: 5, // Default value
-  cacheMaxAge: ms('10m'), // Default value
+  cacheMaxAge: 10000, // Defaults to 10s
   jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'
 });
 
