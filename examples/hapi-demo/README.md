@@ -21,7 +21,7 @@ server.register(jwt, (err) => {
     // Get the complete decoded token, because we need info from the header (the kid)
     complete: true,
 
-    // Dynamically provide a signing key based on the kid in the header and the singing keys provided by the JWKS endpoint.
+    // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
 
     /* If you're using Hapi 17.x.x you have to use version 8.x.x of hapi-auth-jwt2
       (https://github.com/dwyl/hapi-auth-jwt2#compatibility) and use the promise based version jwksRsa.hapiJwt2KeyAsync instead of jwksRsa.hapiJwt2Key
@@ -86,7 +86,7 @@ If you then decode this token (using [jwt.io](https://jwt.io)), you'll see the f
 }
 ```
 
-Using this `kid` we will try to find the right signing key in the singing keys provided by the JWKS endpoint you configured.
+Using this `kid` we will try to find the right signing key in the signing keys provided by the JWKS endpoint you configured.
 
 You can then call the sample application like this:
 
