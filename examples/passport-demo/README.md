@@ -15,7 +15,7 @@ const app = new Express();
 
 passport.use(
   new JwtStrategy({
-    // Dynamically provide a signing key based on the kid in the header and the singing keys provided by the JWKS endpoint.
+    // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
     secretOrKeyProvider: jwksRsa.passportJwtSecret({
       cache: true,
       rateLimit: true,
@@ -76,7 +76,7 @@ If you then decode this token (using [jwt.io](https://jwt.io)), you'll see the f
 }
 ```
 
-Using this `kid` we will try to find the right signing key in the singing keys provided by the JWKS endpoint you configured.
+Using this `kid` we will try to find the right signing key in the signing keys provided by the JWKS endpoint you configured.
 
 You can then call the sample application like this:
 

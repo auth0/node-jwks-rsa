@@ -6,7 +6,7 @@ export default function(client, { cacheMaxEntries = 5, cacheMaxAge = ms('10m') }
   const logger = debug('jwks');
   const getSigningKey = client.getSigningKey;
 
-  logger(`Configured caching of singing keys. Max: ${cacheMaxEntries} / Age: ${cacheMaxAge}`);
+  logger(`Configured caching of signing keys. Max: ${cacheMaxEntries} / Age: ${cacheMaxAge}`);
   return memoizer({
     load: (kid, callback) => {
       getSigningKey(kid, (err, key) => {
