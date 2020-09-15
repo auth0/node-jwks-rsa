@@ -24,7 +24,7 @@ const verify = (jwt_payload, done) => {
 const app = new Express();
 passport.use(
   new JwtStrategy({
-    // Dynamically provide a signing key based on the kid in the header and the singing keys provided by the JWKS endpoint.
+    // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
     secretOrKeyProvider: jwksRsa.passportJwtSecret({
       cache: true,
       rateLimit: true,
