@@ -46,13 +46,18 @@ Integrations are also provided with:
 
 ### Caching
 
-By default, signing key verification results are cached in order to prevent excessive HTTP requests to the JWKS endpoint. If a signing key matching the `kid` is found, this will be cached and the next time this `kid` is requested the signing key will be served from the cache.  The caching behavior can be configured as seen below:
+By default, signing key verification results are cached in order to prevent excessive HTTP requests to the JWKS endpoint. If a signing key matching the `kid` is found, this will be cached and the next time this `kid` is requested the signing key will be served from the cache.  
+
+When using this library in a serverless environment like AWS Lambda, the basic caching option (`cache: true`) will not work as expected because of the way caching works in these environments. Some cloud providers provide a local transient file system under `/tmp` directory which can be used for this purpose. Use the `useTmpFileCache: true` together with `cache: true` to use the local filesystem's `/tmp` folder for caching of JWKS data.
+
+The caching behavior can be configured as seen below:
 
 ```js
 const jwksClient = require('jwks-rsa');
 
 const client = jwksClient({
-  cache: true, // Default Value
+  cache: true, // Default value
+  useTmpFileCache: false, // Default value
   cacheMaxEntries: 5, // Default value
   cacheMaxAge: 10000, // Defaults to 10s
   jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'

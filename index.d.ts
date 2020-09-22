@@ -24,6 +24,7 @@ declare namespace JwksRsa {
     cache?: boolean;
     cacheMaxEntries?: number;
     cacheMaxAge?: number;
+    useTmpFileCache?: boolean;
     jwksRequestsPerMinute?: number;
     proxy?: string;
     strictSsl?: boolean;
