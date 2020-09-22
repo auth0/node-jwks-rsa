@@ -40,7 +40,7 @@ describe('JwksClient (cache)', () => {
         });
       });
 
-      it('should ignore the cache when the KID isnt cached and make a requst', (done) => {
+      it('should ignore the cache when the KID isnt cached and make a request', (done) => {
         client.getSigningKey('12345', (err) => {
           expect(err).not.to.be.null;
           expect(err.code).to.equal('ENOTFOUND');
@@ -74,6 +74,7 @@ describe('JwksClient (cache)', () => {
         mock({
           '/tmp/jwks-cache': JSON.stringify({ stuff: 'other stuff' })
         }, {});
+        
         nock(jwksHost)
           .get('/.well-known/jwks.json')
           .reply(200, x5cSingle);

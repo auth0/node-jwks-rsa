@@ -12,7 +12,11 @@ export default function (client, { cacheMaxEntries = 5, cacheMaxAge = ms('10m'),
   const fileCacheGet = (kid, callback) => {
     const filePath = '/tmp/jwks-cache';
     if (!existsSync(filePath)) {
-      writeFileSync(filePath, JSON.stringify({}));
+      try {
+        writeFileSync(filePath, JSON.stringify({}));
+      } catch (e) {
+        return callback(e);
+      }
     }
     readFile(filePath, 'utf8', (err, data) => {
       if (err) {
@@ -29,12 +33,12 @@ export default function (client, { cacheMaxEntries = 5, cacheMaxAge = ms('10m'),
         }
         logger(`Caching signing key in filesystem for '${kid}':`, key);
         const content = { ...jsonData, [kid]: key };
-        writeFileSync(filePath, JSON.stringify(content), (err) => {
-          if (err) {
-            return callback(err);
-          }
-          return callback(null, key);
-        });
+        try {
+          writeFileSync(filePath, JSON.stringify(content));
+        } catch (e) {
+          return callback(e);
+        }
+        return callback(null, key);
       });
     });
   };
