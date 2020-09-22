@@ -1,6 +1,8 @@
 import http from 'http';
 import https from 'https';
-import urlUtil from 'url';
+import url from 'url';
+import httpProxyAgent from 'https-proxy-agent';
+import httpsProxyAgent from 'https-proxy-agent';
 import { request } from 'axios';
 
 export default function(options, cb) {
@@ -10,24 +12,25 @@ export default function(options, cb) {
     timeout: options.timeout
   };
 
-  if (options.proxy) {
-    const proxy = urlUtil.parse(options.proxy);
-    const [ username, password ] = proxy.auth.split(':');
-
-    requestOptions.proxy = {
-      host: proxy.hostname,
-      port: proxy.port,
-      auth: { username, password }
-    };
-  } 
-
-  if (options.agentOptions || options.strictSSL != undefined) {
+  if (options.proxy || options.agentOptions || options.strictSSL != undefined) {
     const agentOptions = {
       ...(options.strictSSL != undefined) && { rejectUnauthorized: options.strictSSL },
+      ...(options.headers && { headers: options.headers }),
       ...options.agentOptions
     };
-    requestOptions.httpAgent = new http.Agent(agentOptions);
-    requestOptions.httpsAgent = new https.Agent(agentOptions);
+
+    if (options.proxy) {
+      // Axios proxy workaround: https://github.com/axios/axios/issues/2072
+      const proxy = url.parse(options.proxy);
+      
+      requestOptions.proxy = false; //proxyParsed
+      const proxyAgentOptions = { ...agentOptions, ...proxy };
+      requestOptions.httpAgent = new httpProxyAgent(proxyAgentOptions);
+      requestOptions.httpsAgent = new httpsProxyAgent(proxyAgentOptions);
+    } else {
+      requestOptions.httpAgent = new http.Agent(agentOptions);
+      requestOptions.httpsAgent = new https.Agent(agentOptions);
+    }
   }
 
   request(requestOptions)
