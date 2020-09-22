@@ -29,7 +29,7 @@ export default function (client, { cacheMaxEntries = 5, cacheMaxAge = ms('10m'),
         }
         logger(`Caching signing key in filesystem for '${kid}':`, key);
         const content = { ...jsonData, [kid]: key };
-        writeFile(filePath, JSON.stringify(content), (err) => {
+        writeFileSync(filePath, JSON.stringify(content), (err) => {
           if (err) {
             return callback(err);
           }
