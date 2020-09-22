@@ -93,6 +93,7 @@ describe('JwksClient (cache)', () => {
         mock({
           '/tmp/jwks-cache': JSON.stringify({ stuff: 'other stuff' })
         }, {});
+
         nock(jwksHost)
           .get('/.well-known/jwks.json')
           .reply(200, x5cSingle);
