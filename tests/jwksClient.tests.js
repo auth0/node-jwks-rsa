@@ -1,3 +1,5 @@
+import http from 'http';
+import Proxy from 'proxy';
 import nock from 'nock';
 import { expect } from 'chai';
 
@@ -183,24 +185,79 @@ describe('JwksClient', () => {
       });
     });
 
-    it('should use a proxy if specified', done => {
-      const proxy = 'my-proxy-server:2815';
-      const expectedError = { message: 'expectedError' };
-      nock(`http://${proxy}`)
-        .get(() => true)
-        .replyWithError(expectedError);
-  
-      const client = new JwksClient({
-        jwksUri: `${jwksHost}/.well-known/jwks.json`,
-        requestHeaders: {
-          'User-Agent': 'My-bot'
-        },
-        proxy: `http://username:password@${proxy}`
+    describe('when using a proxy', () => {
+      let server;
+      let proxy;
+      let proxyPort;
+      let serverPort;
+      let serverAddress;
+      let proxyAddress;
+
+      before((done) => {
+        server = http.createServer();
+        server.listen(() => {
+          serverPort = server.address().port;
+          serverAddress = `http://localhost:${serverPort}`;
+          done();
+        });
       });
-  
-      client.getKeys((err) => {
-        expect(err).to.equal(expectedError);
-        done();
+
+      before((done) => {
+        proxy = Proxy();
+        proxy.listen(() => {
+          proxyPort = proxy.address().port;
+          proxyAddress = `http://localhost:${proxyPort}`;
+          done();
+        });
+      });
+
+      after((done) => {
+        server.once('close', () => done());
+        server.close();
+      });
+
+      after((done) => {
+        proxy.once('close', () => done());
+        proxy.close();
+      });
+
+      it('should properly handle a proxied request', (done) => {
+        const expectedKeys = {
+          keys: [
+            {
+              alg: 'RS256',
+              kty: 'RSA',
+              use: 'sig',
+              x5c: [ 'pk1' ],
+              kid: 'ABC'
+            },
+            {
+              alg: 'RS256',
+              kty: 'RSA',
+              use: 'sig',
+              x5c: [],
+              kid: '123'
+            }
+          ]
+        };
+        server.once('request', (req, res) => res.end(JSON.stringify(expectedKeys)));
+
+        const client = new JwksClient({ jwksUri: serverAddress, proxy: proxyAddress });
+        client.getKeys((err, keys) => {
+          expect(keys).to.eql(expectedKeys.keys);
+          done();
+        });
+      });
+
+      it('should fail when proxy address is not reachable', (done) => {
+        proxyAddress = 'http://wrongAddress';
+        server.once('request', (req, res) => res.end(JSON.stringify(expectedKeys)));
+
+        const client = new JwksClient({ jwksUri: serverAddress, proxy: proxyAddress });
+        client.getKeys((err) => {
+          expect(err.code).to.eql('ENOTFOUND');
+          done();
+        });
       });
     });
   });
