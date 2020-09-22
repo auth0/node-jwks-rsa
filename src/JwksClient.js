@@ -29,6 +29,10 @@ export class JwksClient {
     if (this.options.cache) {
       this.getSigningKey = cacheSigningKey(this, options);
     }
+    
+    if (this.options.rateLimit || this.options.cache) {
+      this.getSigningKeyAsync = promisifyIt(this.getSigningKey, this);
+    }
   }
 
   getKeys(cb) {
