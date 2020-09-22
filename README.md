@@ -5,6 +5,7 @@
 [![NPM version][npm-image]][npm-url]
 [![License][license-image]][license-url]
 [![Downloads][downloads-image]][downloads-url]
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Fnode-jwks-rsa.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fauth0%2Fnode-jwks-rsa?ref=badge_shield)
 
 A library to retrieve RSA signing keys from a JWKS (JSON Web Key Set) endpoint.
 
@@ -22,7 +23,7 @@ const client = jwksClient({
   jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
   requestHeaders: {}, // Optional
   requestAgentOptions: {}, // Optional
-  timeout: ms('30s'), // Defaults to 30s
+  timeout: 30000, // Defaults to 30s
   proxy: '[protocol]://[username]:[pass]@[address]:[port]', // Optional
 });
 
@@ -53,7 +54,7 @@ const jwksClient = require('jwks-rsa');
 const client = jwksClient({
   cache: true, // Default Value
   cacheMaxEntries: 5, // Default value
-  cacheMaxAge: ms('10m'), // Default value
+  cacheMaxAge: 10000, // Defaults to 10s
   jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'
 });
 
@@ -147,3 +148,6 @@ This project is licensed under the MIT license. See the [LICENSE](LICENSE) file 
 [license-url]: #license
 [downloads-image]: http://img.shields.io/npm/dm/jwks-rsa.svg?style=flat-square
 [downloads-url]: https://npmjs.org/package/jwks-rsa
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Fnode-jwks-rsa.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fauth0%2Fnode-jwks-rsa?ref=badge_large)
