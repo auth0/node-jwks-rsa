@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.10.0] - (2020-09-23)
+
+**Added**
+- getSigningKeys return algorithm [\#168](https://github.com/auth0/node-jwks-rsa/pull/168) ([moander](https://github.com/moander))
+
+**Fixed**
+- Add missing async methods to Typescript type definitions [\#163](https://github.com/auth0/node-jwks-rsa/pull/163) ([mwgamble](https://github.com/mwgamble))
+- Fixing proxy on Axios [\#176](https://github.com/auth0/node-jwks-rsa/pull/176) ([davidpatrick](https://github.com/davidpatrick))
+- Fix caching and rateLimiting on getSigningKeyAsync [\#177](https://github.com/auth0/node-jwks-rsa/pull/177) ([davidpatrick](https://github.com/davidpatrick))
+
 ## [1.9.0] - (2020-08-18)
 
 **Added**
