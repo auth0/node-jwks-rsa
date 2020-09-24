@@ -1,7 +1,7 @@
 import http from 'http';
 import https from 'https';
 import url from 'url';
-import httpProxyAgent from 'https-proxy-agent';
+import httpProxyAgent from 'http-proxy-agent';
 import httpsProxyAgent from 'https-proxy-agent';
 import { request } from 'axios';
 
