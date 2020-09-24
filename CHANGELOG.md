@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.10.1] - (2020-09-24)
+
+**Fixed**
+- fix dependencies for --production flag with npm [\#180](https://github.com/auth0/node-jwks-rsa/pull/180) ([alexrqs](https://github.com/alexrqs))
+
 ## [1.10.0] - (2020-09-23)
 
 **Added**
