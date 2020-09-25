@@ -3,6 +3,7 @@
 ## [1.10.1] - (2020-09-24)
 
 **Fixed**
+- fix proxy agent for http [\#182](https://github.com/auth0/node-jwks-rsa/pull/182) ([NShahri](https://github.com/NShahri))
 - fix dependencies for --production flag with npm [\#180](https://github.com/auth0/node-jwks-rsa/pull/180) ([alexrqs](https://github.com/alexrqs))
 
 ## [1.10.0] - (2020-09-23)
