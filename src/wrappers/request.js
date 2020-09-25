@@ -4,6 +4,7 @@ import url from 'url';
 import httpProxyAgent from 'http-proxy-agent';
 import httpsProxyAgent from 'https-proxy-agent';
 import { request } from 'axios';
+import { getProxyForUrl } from 'proxy-from-env';
 
 export default function(options, cb) {
   const requestOptions = {
@@ -12,19 +13,19 @@ export default function(options, cb) {
     timeout: options.timeout
   };
 
-  if (options.proxy || options.agentOptions || options.strictSSL != undefined) {
+  const proxyUrl = options.proxy || getProxyForUrl(options.uri);
+  if (proxyUrl || options.agentOptions || options.strictSSL != undefined) {
     const agentOptions = {
       ...(options.strictSSL != undefined) && { rejectUnauthorized: options.strictSSL },
       ...(options.headers && { headers: options.headers }),
       ...options.agentOptions
     };
 
-    if (options.proxy) {
+    if (proxyUrl) {
       // Axios proxy workaround: https://github.com/axios/axios/issues/2072
-      const proxy = url.parse(options.proxy);
-      
+      const proxyOptions = url.parse(proxyUrl);
       requestOptions.proxy = false; //proxyParsed
-      const proxyAgentOptions = { ...agentOptions, ...proxy };
+      const proxyAgentOptions = { ...agentOptions, ...proxyOptions };
       requestOptions.httpAgent = new httpProxyAgent(proxyAgentOptions);
       requestOptions.httpsAgent = new httpsProxyAgent(proxyAgentOptions);
     } else {

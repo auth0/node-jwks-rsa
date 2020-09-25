@@ -13,7 +13,8 @@
     "jsonwebtoken": "^8.5.1",
     "limiter": "^1.1.5",
     "lru-memoizer": "^2.1.2",
-    "ms": "^2.1.2"
+    "ms": "^2.1.2",
+    "proxy-from-env": "^1.1.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",
