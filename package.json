@@ -50,7 +50,7 @@
     "lint": "eslint ./src ./tests",
     "prepublish": "npm run clean && npm run compile",
     "test:ts": "npm run clean:ts && tsc && NODE_ENV=test mocha --require babel-core/register --exit --timeout 5000 $(find ./ts-output -name *.tests.js)",
-    "test:js": "NODE_ENV=test mocha --require babel-core/register --exit --timeout 5000 $(find ./tests -name express*.tests.js)",
+    "test:js": "NODE_ENV=test mocha --require babel-core/register --exit --timeout 5000 $(find ./tests -name *.tests.js)",
     "test": "npm run test:js && npm run test:ts",
     "test:ci": "nyc --reporter=lcov npm test",
     "test-watch": "NODE_ENV=test mocha --require babel-core/register --exit --timeout 5000 $(find ./tests -name *.tests.js) --watch",

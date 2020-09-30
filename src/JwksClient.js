@@ -1,12 +1,9 @@
 import debug from 'debug';
+import jose from 'jose';
 import request from './wrappers/request';
 import JwksError from './errors/JwksError';
 import SigningKeyNotFoundError from './errors/SigningKeyNotFoundError';
 
-import {
-  certToPEM,
-  rsaPublicKeyToPEM
-} from './utils';
 import {
   cacheSigningKey,
   rateLimitSigningKey
@@ -67,34 +64,23 @@ export class JwksClient {
 
       if (!keys || !keys.length) {
         return cb(new JwksError('The JWKS endpoint did not contain any keys'));
-      }
+      }      
 
-      const signingKeys = keys
-        .filter((key) => {
-          if(key.kty !== 'RSA') {
-            return false;
-          }
-          if(key.hasOwnProperty('use') && key.use !== 'sig') {
-            return false;
-          }
-          return ((key.x5c && key.x5c.length) || (key.n && key.e));
-        })
-        .map(key => {
-          const jwk = {
-            kid: key.kid,
-            alg: key.alg,
-            nbf: key.nbf
-          };
-          const hasCertificateChain = key.x5c && key.x5c.length;
-          if (hasCertificateChain) {
-            jwk.publicKey = certToPEM(key.x5c[0]);
-            jwk.getPublicKey = () => jwk.publicKey;
-          } else {
-            jwk.rsaPublicKey = rsaPublicKeyToPEM(key.n, key.e);
-            jwk.getPublicKey = () => jwk.rsaPublicKey;
-          }
-          return jwk;
-        });
+      let keystore = [];
+      try {
+        keystore = jose.JWKS.asKeyStore({ keys }, { ignoreErrors: true });
+      } catch (err) {
+        return cb(new JwksError(err.message));
+      }
+      let signingKeys = keystore.all({ use: 'sig' }).map((key) => {
+        return {
+          kid: key.kid,
+          alg: key.alg,
+          get publicKey() { return key.toPEM(false); },
+          get rsaPublicKey() { return key.toPEM(false); },
+          getPublicKey() { return key.toPEM(false); }
+        };
+      });
 
       if (!signingKeys.length) {
         return cb(new JwksError('The JWKS endpoint did not contain any signing keys'));
