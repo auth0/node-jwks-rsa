@@ -154,7 +154,6 @@ describe('expressJwtSecret', () => {
       const token = createToken(privateKey, '123', { sub: 'john' });
       const req = { headers: { authorization: `Bearer ${token}` } };
       middleware(req, { }, function(err) {
-        console.log('ERR', err)
         expect(err).to.be.undefined;
         expect(req.user.sub).to.equal('john');
         done();
