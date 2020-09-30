@@ -1,5 +1,6 @@
 import { ArgumentError } from '../errors';
 import { JwksClient } from '../JwksClient';
+import supportedAlg from './config';
 
 const handleSigningKeyError = (err, cb) => {
   // If we didn't find a match, can't provide a key.
@@ -44,9 +45,8 @@ module.exports.hapiJwt2Key = (options) => {
       return cb(new Error('Cannot find a signing certificate if there is no header'), null, null);
     }
 
-    // Only RS256 is supported.
-    if (decoded.header.alg !== 'RS256') {
-      return cb(new Error('Unsupported algorithm ' + decoded.header.alg + ' supplied. node-jwks-rsa supports only RS256'), null, null);
+    if (!supportedAlg.includes(decoded.header.alg)) {
+      return cb(new Error('Unsupported algorithm ' + decoded.header.alg + ' supplied.'), null, null);
     }
 
     client.getSigningKey(decoded.header.kid, (err, key) => {
