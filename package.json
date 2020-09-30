@@ -1,9 +1,12 @@
 {
   "name": "jwks-rsa",
-  "version": "1.10.1",
-  "description": "Library to retrieve RSA public keys from a JWKS endpoint",
+  "version": "2.0.0-beta",
+  "description": "Library to retrieve public keys from a JWKS endpoint",
   "main": "lib/index.js",
   "types": "index.d.ts",
+  "engines": {
+    "node": ">=10.13.0 < 13 || >=13.7.0"
+  },
   "dependencies": {
     "@types/express-jwt": "0.0.42",
     "axios": "^0.19.2",
