@@ -108,6 +108,12 @@ const client = jwksClient({
 For more information, see [the NodeJS request library `agentOptions`
 documentation](https://github.com/request/request#using-optionsagentoptions).
 
+### Proxy configuration
+
+There are two ways to configure the usage of a proxy:
+ - Provide the ```proxy``` option when initialiting the client as shown above
+ - Provide the ```HTTP_PROXY```, ```HTTPS_PROXY``` and ```NO_PROXY``` environment variables
+
 ## Running Tests
 
 ```
