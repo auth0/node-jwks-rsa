@@ -1,3 +1,4 @@
 .babelrc
 .eslintrc
 src/
+examples/
