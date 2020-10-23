@@ -1,4 +1,8 @@
 # Changelog
+## [1.11.0] - (2020-10-23)
+
+**Added**
+- Add ability to configure proxy with env vars [\#188](https://github.com/auth0/node-jwks-rsa/pull/188) ([lubomir-haralampiev](https://github.com/lubomir-haralampiev))
 
 ## [1.10.1] - (2020-09-24)
 
