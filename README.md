@@ -54,7 +54,7 @@ const jwksClient = require('jwks-rsa');
 const client = jwksClient({
   cache: true, // Default Value
   cacheMaxEntries: 5, // Default value
-  cacheMaxAge: 10000, // Defaults to 10s
+  cacheMaxAge: 600000, // Defaults to 10m
   jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'
 });
 
