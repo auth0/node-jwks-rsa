@@ -3,7 +3,7 @@ import { JwksClient } from '../JwksClient';
 
 module.exports.koaJwtSecret = (options = {}) => {
 
-  if (!options.jwksUri) {
+  if (!options.jwks) {
     throw new ArgumentError('No JWKS URI provided');
   }
 
