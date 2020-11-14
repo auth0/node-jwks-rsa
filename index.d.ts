@@ -19,7 +19,7 @@ declare namespace JwksRsa {
   }
 
   interface ClientOptions {
-    jwksUri: string;
+    jwks: string | object[];
     rateLimit?: boolean;
     cache?: boolean;
     cacheMaxEntries?: number;
@@ -43,7 +43,7 @@ declare namespace JwksRsa {
   }
 
   interface Options {
-    jwksUri: string;
+    jwks: string | object[];
     rateLimit?: boolean;
     cache?: boolean;
     cacheMaxEntries?: number;

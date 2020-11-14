@@ -22,7 +22,7 @@ describe('JwksClient (cache)', () => {
 
         client = new JwksClient({
           cache: true,
-          jwksUri: `${jwksHost}/.well-known/jwks.json`
+          jwks: `${jwksHost}/.well-known/jwks.json`
         });
 
         // Cache the Key

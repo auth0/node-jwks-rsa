@@ -11,7 +11,7 @@ const koaJwt = require('koa-jwt');
 const jwksRsa = require('../src');
 
 describe('koaJwtSecret', () => {
-  it('should throw error if options.jwksUri is null', () => {
+  it('should throw error if options.jwks is null', () => {
     let err = null;
 
     try {
@@ -27,7 +27,7 @@ describe('koaJwtSecret', () => {
     koaJwt({
       debug: true,
       secret: jwksRsa.koaJwtSecret({
-        jwksUri: 'http://localhost/.well-known/jwks.json'
+        jwks: 'http://localhost/.well-known/jwks.json'
       })
     });
   });
@@ -38,7 +38,7 @@ describe('koaJwtSecret', () => {
     app.use(koaJwt({
       debug: true,
       secret: jwksRsa.koaJwtSecret({
-        jwksUri: 'http://localhost/.well-known/jwks.json'
+        jwks: 'http://localhost/.well-known/jwks.json'
       })
     }));
 
@@ -57,7 +57,7 @@ describe('koaJwtSecret', () => {
     app.use(koaJwt({
       debug: true,
       secret: jwksRsa.koaJwtSecret({
-        jwksUri: 'http://localhost/.well-known/jwks.json'
+        jwks: 'http://localhost/.well-known/jwks.json'
       })
     }));
 
@@ -78,7 +78,7 @@ describe('koaJwtSecret', () => {
     app.use(koaJwt({
       debug: true,
       secret: jwksRsa.koaJwtSecret({
-        jwksUri: 'http://localhost/.well-known/jwks.json'
+        jwks: 'http://localhost/.well-known/jwks.json'
       })
     }));
 
@@ -100,7 +100,7 @@ describe('koaJwtSecret', () => {
     app.use(koaJwt({
       debug: true,
       secret: jwksRsa.koaJwtSecret({
-        jwksUri: 'http://localhost/.well-known/jwks.json'
+        jwks: 'http://localhost/.well-known/jwks.json'
       })
     }));
 
@@ -122,7 +122,7 @@ describe('koaJwtSecret', () => {
     app.use(koaJwt({
       debug: true,
       secret: jwksRsa.koaJwtSecret({
-        jwksUri: 'http://localhost/.well-known/jwks.json'
+        jwks: 'http://localhost/.well-known/jwks.json'
       })
     }));
 
@@ -145,7 +145,7 @@ describe('koaJwtSecret', () => {
     app.use(koaJwt({
       debug: true,
       secret: jwksRsa.koaJwtSecret({
-        jwksUri: 'http://localhost/.well-known/jwks.json',
+        jwks: 'http://localhost/.well-known/jwks.json',
         handleSigningKeyError: (err) => {
           if (err instanceof jwksRsa.SigningKeyNotFoundError) {
             return Promise.resolve(
@@ -174,7 +174,7 @@ describe('koaJwtSecret', () => {
     app.use(koaJwt({
       debug: true,
       secret: jwksRsa.koaJwtSecret({
-        jwksUri: 'http://localhost/.well-known/jwks.json'
+        jwks: 'http://localhost/.well-known/jwks.json'
       }),
       algorithms: [ 'RS256' ]
     }));
@@ -201,7 +201,7 @@ describe('koaJwtSecret', () => {
     app.use(koaJwt({
       debug: true,
       secret: jwksRsa.koaJwtSecret({
-        jwksUri: 'http://localhost/.well-known/jwks.json'
+        jwks: 'http://localhost/.well-known/jwks.json'
       })
     }));
     app.use((ctx) => {

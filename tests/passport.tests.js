@@ -13,7 +13,7 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const jwksRsa = require('../src');
 
 describe('passportJwtSecret', () => {
-  it('should throw error if options.jwksUri is null', () => {
+  it('should throw error if options.jwks is null', () => {
     let err = null;
 
     try {
@@ -29,7 +29,7 @@ describe('passportJwtSecret', () => {
     new JwtStrategy(
       {
         secretOrKeyProvider: jwksRsa.passportJwtSecret({
-          jwksUri: 'http://localhost/.well-known/jwks.json'
+          jwks: 'http://localhost/.well-known/jwks.json'
         }),
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
       },
@@ -43,7 +43,7 @@ describe('passportJwtSecret', () => {
       new JwtStrategy(
         {
           secretOrKeyProvider: jwksRsa.passportJwtSecret({
-            jwksUri: 'http://localhost/.well-known/jwks.json'
+            jwks: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
         },
@@ -81,7 +81,7 @@ describe('passportJwtSecret', () => {
       new JwtStrategy(
         {
           secretOrKeyProvider: jwksRsa.passportJwtSecret({
-            jwksUri: 'http://localhost/.well-known/jwks.json'
+            jwks: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
         },
@@ -121,7 +121,7 @@ describe('passportJwtSecret', () => {
       new JwtStrategy(
         {
           secretOrKeyProvider: jwksRsa.passportJwtSecret({
-            jwksUri: 'http://localhost/.well-known/jwks.json'
+            jwks: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
         },
@@ -162,7 +162,7 @@ describe('passportJwtSecret', () => {
       new JwtStrategy(
         {
           secretOrKeyProvider: jwksRsa.passportJwtSecret({
-            jwksUri: 'http://localhost/.well-known/jwks.json'
+            jwks: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
         },
@@ -205,7 +205,7 @@ describe('passportJwtSecret', () => {
       new JwtStrategy(
         {
           secretOrKeyProvider: jwksRsa.passportJwtSecret({
-            jwksUri: 'http://localhost/.well-known/jwks.json'
+            jwks: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
         },
@@ -248,7 +248,7 @@ describe('passportJwtSecret', () => {
       new JwtStrategy(
         {
           secretOrKeyProvider: jwksRsa.passportJwtSecret({
-            jwksUri: 'http://localhost/.well-known/jwks.json',
+            jwks: 'http://localhost/.well-known/jwks.json',
             handleSigningKeyError: (err, cb) => {
               if (err instanceof jwksRsa.SigningKeyNotFoundError) {
                 return cb(new Error('this is bad'));
@@ -294,7 +294,7 @@ describe('passportJwtSecret', () => {
       new JwtStrategy(
         {
           secretOrKeyProvider: jwksRsa.passportJwtSecret({
-            jwksUri: 'http://localhost/.well-known/jwks.json'
+            jwks: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
           algorithms: [ 'RS256' ]
@@ -330,7 +330,7 @@ describe('passportJwtSecret', () => {
       new JwtStrategy(
         {
           secretOrKeyProvider: jwksRsa.passportJwtSecret({
-            jwksUri: 'http://localhost/.well-known/jwks.json'
+            jwks: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
           algorithms: [ 'RS256' ]
