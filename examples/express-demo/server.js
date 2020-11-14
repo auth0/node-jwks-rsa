@@ -14,7 +14,7 @@ app.use(jwt({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 2,
-    jwksUri: `${jwksHost}/.well-known/jwks.json`
+    jwks: `${jwksHost}/.well-known/jwks.json`
   }),
   audience: audience,
   issuer: issuer,

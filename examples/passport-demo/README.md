@@ -20,7 +20,7 @@ passport.use(
       cache: true,
       rateLimit: true,
       jwksRequestsPerMinute: 5,
-      jwksUri: `https://my-authz-server/.well-known/jwks.json`
+      jwks: `https://my-authz-server/.well-known/jwks.json`
     }),
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 

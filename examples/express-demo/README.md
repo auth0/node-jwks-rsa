@@ -17,7 +17,7 @@ app.use(jwt({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 5,
-    jwksUri: `https://my-authz-server/.well-known/jwks.json`
+    jwks: `https://my-authz-server/.well-known/jwks.json`
   }),
 
   // Validate the audience and the issuer.

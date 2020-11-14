@@ -31,7 +31,7 @@ server.register(jwt, (err) => {
       cache: true,
       rateLimit: true,
       jwksRequestsPerMinute: 2,
-      jwksUri: 'https://my-authz-server/.well-known/jwks.json'
+      jwks: 'https://my-authz-server/.well-known/jwks.json'
     }),
 
     // Your own logic to validate the user.
