@@ -1,4 +1,5 @@
 import debug from 'debug';
+import fs from 'fs';
 import request from './wrappers/request';
 import JwksError from './errors/JwksError';
 import SigningKeyNotFoundError from './errors/SigningKeyNotFoundError';
@@ -22,6 +23,11 @@ export class JwksClient {
     };
     this.logger = debug('jwks');
 
+    if (this.options.jwksUri) {
+      console.warn('JwksClient jwksUri option has been deprecated -- please use the jwks option');
+      this.options.jwks = this.options.jwksUri;
+    }
+
     // Initialize wrappers.
     if (this.options.rateLimit) {
       this.getSigningKey = rateLimitSigningKey(this, options);
@@ -39,6 +45,13 @@ export class JwksClient {
     if (Array.isArray(this.options.jwks)) {
       this.logger('Returning directly provided keyset.');
       return cb(null, this.options.jwks);
+    }
+
+    if (fs.existsSync(this.options.jwks)) {
+      this.logger(`Loading keys from file: '${this.options.jwks}'`);
+      const rawData = fs.readFileSync(this.options.jwks, 'utf8');
+      const keys = JSON.parse(rawData);
+      return cb(null, keys);
     }
 
     this.logger(`Fetching keys from '${this.options.jwks}'`);
