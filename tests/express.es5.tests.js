@@ -29,7 +29,7 @@ describe('expressJwtSecret', () => {
     it('should accept the secret function', () => {
       expressJwt({
         secret: jwksRsa.expressJwtSecret({
-          jwks: 'http://localhost/.well-known/jwks.json'
+          jwksUri: 'http://localhost/.well-known/jwks.json'
         }),
         algorithms: [ 'RS256' ]
       });
@@ -38,7 +38,7 @@ describe('expressJwtSecret', () => {
     it('should not provide a key if token is invalid', () => {
       const middleware = expressJwt({
         secret: jwksRsa.expressJwtSecret({
-          jwks: 'http://localhost/.well-known/jwks.json'
+          jwksUri: 'http://localhost/.well-known/jwks.json'
         }),
         algorithms: [ 'RS256' ]
       });
@@ -51,7 +51,7 @@ describe('expressJwtSecret', () => {
     it('should not provide a key if token is HS256', (done) => {
       const middleware = expressJwt({
         secret: jwksRsa.expressJwtSecret({
-          jwks: 'http://localhost/.well-known/jwks.json'
+          jwksUri: 'http://localhost/.well-known/jwks.json'
         }),
         algorithms: [ 'RS256' ]
       });
@@ -66,7 +66,7 @@ describe('expressJwtSecret', () => {
     it('should not provide a key if JWKS endpoint returned multiple keys and no KID was provided', (done) => {
       const middleware = expressJwt({
         secret: jwksRsa.expressJwtSecret({
-          jwks: 'http://localhost/.well-known/jwks.json'
+          jwksUri: 'http://localhost/.well-known/jwks.json'
         }),
         algorithms: [ 'RS256' ]
       });
@@ -83,7 +83,7 @@ describe('expressJwtSecret', () => {
     it('should not provide a key if token is RS256 and invalid KID was provided', (done) => {
       const middleware = expressJwt({
         secret: jwksRsa.expressJwtSecret({
-          jwks: 'http://localhost/.well-known/jwks.json'
+          jwksUri: 'http://localhost/.well-known/jwks.json'
         }),
         algorithms: [ 'RS256' ]
       });
@@ -100,7 +100,7 @@ describe('expressJwtSecret', () => {
     it('should not authenticate the user if KID matches but the keys dont', (done) => {
       const middleware = expressJwt({
         secret: jwksRsa.expressJwtSecret({
-          jwks: 'http://localhost/.well-known/jwks.json'
+          jwksUri: 'http://localhost/.well-known/jwks.json'
         }),
         algorithms: [ 'RS256' ]
       });
@@ -117,7 +117,7 @@ describe('expressJwtSecret', () => {
     it('should allow returning an error if key not found', (done) => {
       const middleware = expressJwt({
         secret: jwksRsa.expressJwtSecret({
-          jwks: 'http://localhost/.well-known/jwks.json',
+          jwksUri: 'http://localhost/.well-known/jwks.json',
           handleSigningKeyError: (err, cb) => {
             if (err instanceof jwksRsa.SigningKeyNotFoundError) {
               cb(new Error('This is bad'));
@@ -139,7 +139,7 @@ describe('expressJwtSecret', () => {
     it('should work if the token matches a signing key', (done) => {
       const middleware = expressJwt({
         secret: jwksRsa.expressJwtSecret({
-          jwks: 'http://localhost/.well-known/jwks.json',
+          jwksUri: 'http://localhost/.well-known/jwks.json',
           handleSigningKeyError: (err, cb) => {
             if (err instanceof jwksRsa.SigningKeyNotFoundError) {
               cb(new Error('This is bad'));
@@ -163,7 +163,7 @@ describe('expressJwtSecret', () => {
     it('should work if the JWKS endpoint returns a single key and no KID is provided', (done) => {
       const middleware = expressJwt({
         secret: jwksRsa.expressJwtSecret({
-          jwks: 'http://localhost/.well-known/jwks.json',
+          jwksUri: 'http://localhost/.well-known/jwks.json',
           handleSigningKeyError: (err, cb) => {
             if (err instanceof jwksRsa.SigningKeyNotFoundError) {
               cb(new Error('This is bad'));

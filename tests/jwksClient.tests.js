@@ -22,7 +22,7 @@ describe('JwksClient', () => {
         .reply(500, 'Unknown Server Error');
 
       const client = new JwksClient({
-        jwks: `${jwksHost}/.well-known/jwks.json`
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
       client.getKeys(err => {
@@ -55,7 +55,7 @@ describe('JwksClient', () => {
         });
 
       const client = new JwksClient({
-        jwks: `${jwksHost}/.well-known/jwks.json`
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
       client.getKeys((err, keys) => {
@@ -68,45 +68,14 @@ describe('JwksClient', () => {
     });
 
     it('should return keys that are directly provided', done => {
-      const keys = [
-        {
-          alg: 'RS256',
-          kty: 'RSA',
-          use: 'sig',
-          x5c: [ 'pk1' ],
-          kid: 'ABC'
-        },
-        {
-          alg: 'RS256',
-          kty: 'RSA',
-          use: 'sig',
-          x5c: [],
-          kid: '123'
-        }
-      ];
-
-      const client = new JwksClient({
-        jwks: keys
-      });
+      const jwksObject = path.resolve(__dirname, './mocks/jwks.json');
+      const client = new JwksClient({ jwksObject });
 
       client.getKeys((err, respKeys) => {
         expect(err).to.be.null;
         expect(respKeys).not.to.be.null;
         expect(respKeys.length).to.equal(keys.length);
         expect(respKeys[1].kid).to.equal(keys[1].kid);
-        done();
-      });
-    });
-
-    it('should return keys that are provided through filepath', done => {
-      const jwks = path.resolve(__dirname, './mocks/jwks.json');
-      const client = new JwksClient({ jwks });
-
-      client.getKeys((err, respKeys) => {
-        expect(err).to.be.null;
-        expect(respKeys).not.to.be.null;
-        expect(respKeys.length).to.equal(jwksJson.length);
-        expect(respKeys[1].kid).to.equal(jwksJson[1].kid);
         done();
       });
     });
@@ -121,7 +90,7 @@ describe('JwksClient', () => {
         });
 
       const client = new JwksClient({
-        jwks: `${jwksHost}/.well-known/jwks.json`,
+        jwksUri: `${jwksHost}/.well-known/jwks.json`,
         requestAgentOptions: {
           ca: 'loadCA()'
         }
@@ -141,7 +110,7 @@ describe('JwksClient', () => {
         });
 
       const client = new JwksClient({
-        jwks: `${jwksHost}/.well-known/jwks.json`
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
       client.getKeys(() => {
@@ -180,7 +149,7 @@ describe('JwksClient', () => {
         });
 
       const client = new JwksClient({
-        jwks: `${jwksHost}/.well-known/jwks.json`,
+        jwksUri: `${jwksHost}/.well-known/jwks.json`,
         requestHeaders: {
           'User-Agent': 'My-bot'
         }
@@ -223,7 +192,7 @@ describe('JwksClient', () => {
         });
 
       const client = new JwksClient({
-        jwks: `${jwksHost}/.well-known/jwks.json`
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
       client.getKeys(() => {
@@ -288,7 +257,7 @@ describe('JwksClient', () => {
         };
         server.once('request', (req, res) => res.end(JSON.stringify(expectedKeys)));
 
-        const client = new JwksClient({ jwks: serverAddress, proxy: proxyAddress });
+        const client = new JwksClient({ jwksUri: serverAddress, proxy: proxyAddress });
         client.getKeys((err, keys) => {
           expect(keys).to.eql(expectedKeys.keys);
           done();
@@ -299,7 +268,7 @@ describe('JwksClient', () => {
         proxyAddress = 'http://wrongAddress';
         server.once('request', (req, res) => res.end(JSON.stringify(expectedKeys)));
 
-        const client = new JwksClient({ jwks: serverAddress, proxy: proxyAddress });
+        const client = new JwksClient({ jwksUri: serverAddress, proxy: proxyAddress });
         client.getKeys((err) => {
           expect(err.code).to.eql('ENOTFOUND');
           done();
@@ -315,7 +284,7 @@ describe('JwksClient', () => {
         .reply(500, 'Unknown Server Error');
 
       const client = new JwksClient({
-        jwks: `${jwksHost}/.well-known/jwks.json`
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
       client.getKeysAsync()
@@ -349,7 +318,7 @@ describe('JwksClient', () => {
         });
 
       const client = new JwksClient({
-        jwks: `${jwksHost}/.well-known/jwks.json`
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
       client.getKeysAsync()
@@ -372,7 +341,7 @@ describe('JwksClient', () => {
         .reply(500, 'Unknown Server Error');
 
       const client = new JwksClient({
-        jwks: `${jwksHost}/.well-known/jwks.json`
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
       client.getSigningKeys(err => {
@@ -412,7 +381,7 @@ describe('JwksClient', () => {
         });
 
       const client = new JwksClient({
-        jwks: `${jwksHost}/.well-known/jwks.json`
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
       client.getSigningKeys((err, keys) => {
@@ -467,7 +436,7 @@ describe('JwksClient', () => {
         });
 
       const client = new JwksClient({
-        jwks: `${jwksHost}/.well-known/jwks.json`
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
       client.getSigningKeys((err, keys) => {
@@ -532,7 +501,7 @@ describe('JwksClient', () => {
         });
 
       const client = new JwksClient({
-        jwks: `${jwksHost}/.well-known/jwks.json`
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
       client.getSigningKeys((err, keys) => {
@@ -586,7 +555,7 @@ describe('JwksClient', () => {
         });
 
       const client = new JwksClient({
-        jwks: `${jwksHost}/.well-known/jwks.json`
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
       client.getSigningKeys(err => {
@@ -607,7 +576,7 @@ describe('JwksClient', () => {
         .reply(500, 'Unknown Server Error');
 
       const client = new JwksClient({
-        jwks: `${jwksHost}/.well-known/jwks.json`
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
       client.getSigningKeysAsync()
@@ -644,7 +613,7 @@ describe('JwksClient', () => {
         });
 
       const client = new JwksClient({
-        jwks: `${jwksHost}/.well-known/jwks.json`
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
       client.getSigningKeysAsync()
@@ -663,7 +632,7 @@ describe('JwksClient', () => {
         .reply(200, x5cMultiple);
 
       const client = new JwksClient({
-        jwks: `${jwksHost}/.well-known/jwks.json`
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
       client.getSigningKey('1234', err => {
@@ -681,7 +650,7 @@ describe('JwksClient', () => {
         .reply(500, 'Unknown Server Error');
 
       const client = new JwksClient({
-        jwks: `${jwksHost}/.well-known/jwks.json`
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
       client.getSigningKeyAsync('')

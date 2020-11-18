@@ -13,7 +13,7 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const jwksRsa = require('../src');
 
 describe('passportJwtSecret', () => {
-  it('should throw error if options.jwks is null', () => {
+  it('should throw error if options is null', () => {
     let err = null;
 
     try {
@@ -25,11 +25,23 @@ describe('passportJwtSecret', () => {
     expect(err instanceof jwksRsa.ArgumentError).to.be.true;
   });
 
+  it('should throw error if options.jwksUri and options.jwksObject is null', () => {
+    let err = null;
+
+    try {
+      new jwksRsa.passportJwtSecret({});
+    } catch (e) {
+      err = e;
+    }
+
+    expect(err instanceof jwksRsa.ArgumentError).to.be.true;
+  });
+
   it('should accept the secret function', () => {
     new JwtStrategy(
       {
         secretOrKeyProvider: jwksRsa.passportJwtSecret({
-          jwks: 'http://localhost/.well-known/jwks.json'
+          jwksUri: 'http://localhost/.well-known/jwks.json'
         }),
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
       },
@@ -43,7 +55,7 @@ describe('passportJwtSecret', () => {
       new JwtStrategy(
         {
           secretOrKeyProvider: jwksRsa.passportJwtSecret({
-            jwks: 'http://localhost/.well-known/jwks.json'
+            jwksUri: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
         },
@@ -81,7 +93,7 @@ describe('passportJwtSecret', () => {
       new JwtStrategy(
         {
           secretOrKeyProvider: jwksRsa.passportJwtSecret({
-            jwks: 'http://localhost/.well-known/jwks.json'
+            jwksUri: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
         },
@@ -121,7 +133,7 @@ describe('passportJwtSecret', () => {
       new JwtStrategy(
         {
           secretOrKeyProvider: jwksRsa.passportJwtSecret({
-            jwks: 'http://localhost/.well-known/jwks.json'
+            jwksUri: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
         },
@@ -162,7 +174,7 @@ describe('passportJwtSecret', () => {
       new JwtStrategy(
         {
           secretOrKeyProvider: jwksRsa.passportJwtSecret({
-            jwks: 'http://localhost/.well-known/jwks.json'
+            jwksUri: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
         },
@@ -205,7 +217,7 @@ describe('passportJwtSecret', () => {
       new JwtStrategy(
         {
           secretOrKeyProvider: jwksRsa.passportJwtSecret({
-            jwks: 'http://localhost/.well-known/jwks.json'
+            jwksUri: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
         },
@@ -248,7 +260,7 @@ describe('passportJwtSecret', () => {
       new JwtStrategy(
         {
           secretOrKeyProvider: jwksRsa.passportJwtSecret({
-            jwks: 'http://localhost/.well-known/jwks.json',
+            jwksUri: 'http://localhost/.well-known/jwks.json',
             handleSigningKeyError: (err, cb) => {
               if (err instanceof jwksRsa.SigningKeyNotFoundError) {
                 return cb(new Error('this is bad'));
@@ -294,7 +306,7 @@ describe('passportJwtSecret', () => {
       new JwtStrategy(
         {
           secretOrKeyProvider: jwksRsa.passportJwtSecret({
-            jwks: 'http://localhost/.well-known/jwks.json'
+            jwksUri: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
           algorithms: [ 'RS256' ]
@@ -330,7 +342,7 @@ describe('passportJwtSecret', () => {
       new JwtStrategy(
         {
           secretOrKeyProvider: jwksRsa.passportJwtSecret({
-            jwks: 'http://localhost/.well-known/jwks.json'
+            jwksUri: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
           algorithms: [ 'RS256' ]

@@ -17,7 +17,7 @@ describe('JwksClient (cache)', () => {
         cache: false,
         rateLimit: true,
         jwksRequestsPerMinute: 2,
-        jwks: `${jwksHost}/.well-known/jwks.json`
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
       nock(jwksHost)
@@ -49,7 +49,7 @@ describe('JwksClient (cache)', () => {
         cache: true,
         rateLimit: true,
         jwksRequestsPerMinute: 2,
-        jwks: `${jwksHost}/.well-known/jwks.json`
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
       nock(jwksHost)

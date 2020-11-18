@@ -27,7 +27,7 @@ describe('typescript definition', () => {
       givenPublicCertOnAuthzServer('someKeyId', 'pk1');
 
       const secretProvider = jwksRsa.hapiJwt2KeyAsync({
-        jwks: `${jwksHost}/.well-known/jwks.json`
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
       const { key } = await secretProvider({
         header: {

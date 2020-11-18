@@ -33,7 +33,7 @@ server.register(jwt, (err) => {
       cache: true,
       rateLimit: true,
       jwksRequestsPerMinute: 2,
-      jwks: `${jwksHost}/.well-known/jwks.json`
+      jwksUri: `${jwksHost}/.well-known/jwks.json`
     }),
     validateFunc: validateUser,
     verifyOptions: {

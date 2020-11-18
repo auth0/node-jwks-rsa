@@ -20,7 +20,7 @@ const jwksClient = require('jwks-rsa');
 
 const client = jwksClient({
   strictSsl: true, // Default value
-  jwks: 'https://sandrino.auth0.com/.well-known/jwks.json',
+  jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
   requestHeaders: {}, // Optional
   requestAgentOptions: {}, // Optional
   timeout: 30000, // Defaults to 30s
@@ -55,7 +55,7 @@ const client = jwksClient({
   cache: true, // Default Value
   cacheMaxEntries: 5, // Default value
   cacheMaxAge: 600000, // Defaults to 10m
-  jwks: 'https://sandrino.auth0.com/.well-known/jwks.json'
+  jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'
 });
 
 const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';
@@ -76,7 +76,7 @@ const jwksClient = require('jwks-rsa');
 const client = jwksClient({
   rateLimit: true,
   jwksRequestsPerMinute: 10, // Default value
-  jwks: 'https://sandrino.auth0.com/.well-known/jwks.json'
+  jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'
 });
 
 const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';
@@ -97,7 +97,7 @@ certificate authority to establish TLS communication with the `jwks_uri`.
 const jwksClient = require("jwks-rsa");
 const client = jwksClient({
   strictSsl: true, // Default value
-  jwks: 'https://my-enterprise-id-provider/.well-known/jwks.json',
+  jwksUri: 'https://my-enterprise-id-provider/.well-known/jwks.json',
   requestHeaders: {}, // Optional
   requestAgentOptions: {
     ca: fs.readFileSync(caFile)

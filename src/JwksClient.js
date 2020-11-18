@@ -23,11 +23,6 @@ export class JwksClient {
     };
     this.logger = debug('jwks');
 
-    if (this.options.jwksUri) {
-      console.warn('JwksClient jwksUri option has been deprecated -- please use the jwks option');
-      this.options.jwks = this.options.jwksUri;
-    }
-
     // Initialize wrappers.
     if (this.options.rateLimit) {
       this.getSigningKey = rateLimitSigningKey(this, options);
@@ -42,21 +37,14 @@ export class JwksClient {
   }
 
   getKeys(cb) {
-    if (Array.isArray(this.options.jwks)) {
+    if (this.options.jwksObject) {
       this.logger('Returning directly provided keyset.');
-      return cb(null, this.options.jwks);
+      return cb(null, this.options.jwksObject.keys);
     }
 
-    if (fs.existsSync(this.options.jwks)) {
-      this.logger(`Loading keys from file: '${this.options.jwks}'`);
-      const rawData = fs.readFileSync(this.options.jwks, 'utf8');
-      const keys = JSON.parse(rawData);
-      return cb(null, keys);
-    }
-
-    this.logger(`Fetching keys from '${this.options.jwks}'`);
+    this.logger(`Fetching keys from '${this.options.jwksUri}'`);
     request({
-      uri: this.options.jwks,
+      uri: this.options.jwksUri,
       strictSSL: this.options.strictSsl,
       headers: this.options.requestHeaders,
       agentOptions: this.options.requestAgentOptions,

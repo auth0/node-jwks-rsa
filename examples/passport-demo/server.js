@@ -29,7 +29,7 @@ passport.use(
       cache: true,
       rateLimit: true,
       jwksRequestsPerMinute: 5,
-      jwks: `${jwksHost}/.well-known/jwks.json`
+      jwksUri: `${jwksHost}/.well-known/jwks.json`
     }),
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 
