@@ -3,8 +3,8 @@ import { JwksClient } from '../JwksClient';
 
 module.exports.koaJwtSecret = (options = {}) => {
 
-  if (!options.jwksUri) {
-    throw new ArgumentError('No JWKS URI provided');
+  if (!options.jwksUri && !options.jwksObject) {
+    throw new ArgumentError('No JWKS provided. Please provide a jwksUri or jwksObject');
   }
 
   const client = new JwksClient(options);

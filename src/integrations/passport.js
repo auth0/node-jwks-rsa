@@ -19,6 +19,10 @@ module.exports.passportJwtSecret = (options) => {
     throw new ArgumentError('An options object must be provided when initializing passportJwtSecret');
   }
 
+  if (!options.jwksUri && !options.jwksObject) {
+    throw new ArgumentError('No JWKS provided. Please provide a jwksUri or jwksObject');
+  }
+
   const client = new JwksClient(options);
   const onError = options.handleSigningKeyError || handleSigningKeyError;
 

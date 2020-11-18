@@ -5,6 +5,7 @@ import { expect } from 'chai';
 
 import { x5cMultiple } from './keys';
 import { JwksClient } from '../src/JwksClient';
+import jwksObject from './mocks/jwks.json';
 
 describe('JwksClient', () => {
   const jwksHost = 'http://my-authz-server';
@@ -61,6 +62,18 @@ describe('JwksClient', () => {
         expect(keys).not.to.be.null;
         expect(keys.length).to.equal(2);
         expect(keys[1].kid).to.equal('123');
+        done();
+      });
+    });
+
+    it('should return keys that are directly provided', done => {
+      const client = new JwksClient({ jwksObject });
+
+      client.getKeys((err, respKeys) => {
+        expect(err).to.be.null;
+        expect(respKeys).not.to.be.null;
+        expect(respKeys.length).to.equal(jwksObject.keys.length);
+        expect(respKeys[1].kid).to.equal(jwksObject.keys[1].kid);
         done();
       });
     });

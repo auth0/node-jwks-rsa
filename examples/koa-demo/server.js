@@ -25,7 +25,7 @@ app.use(jwt({
 const router = new Router();
 
 router.get('/me', ctx => {
-  ctx.body = ctx.state.user
+  ctx.body = ctx.state.user;
 });
 
 app.use(router.middleware());

@@ -13,11 +13,23 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const jwksRsa = require('../src');
 
 describe('passportJwtSecret', () => {
-  it('should throw error if options.jwksUri is null', () => {
+  it('should throw error if options is null', () => {
     let err = null;
 
     try {
       new jwksRsa.passportJwtSecret();
+    } catch (e) {
+      err = e;
+    }
+
+    expect(err instanceof jwksRsa.ArgumentError).to.be.true;
+  });
+
+  it('should throw error if options.jwksUri and options.jwksObject is null', () => {
+    let err = null;
+
+    try {
+      new jwksRsa.passportJwtSecret({});
     } catch (e) {
       err = e;
     }

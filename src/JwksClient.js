@@ -36,6 +36,11 @@ export class JwksClient {
   }
 
   getKeys(cb) {
+    if (this.options.jwksObject) {
+      this.logger('Returning directly provided keyset.');
+      return cb(null, this.options.jwksObject.keys);
+    }
+
     this.logger(`Fetching keys from '${this.options.jwksUri}'`);
     request({
       uri: this.options.jwksUri,

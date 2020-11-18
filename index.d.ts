@@ -4,7 +4,7 @@ declare function JwksRsa(options: JwksRsa.ClientOptions): JwksRsa.JwksClient;
 
 declare namespace JwksRsa {
   class JwksClient {
-    constructor(options: ClientOptions);
+    constructor(options: ClientOptions | ClientOptionsWithObject);
 
     getKeys(cb: (err: Error | null, keys: unknown) => void): void;
     getKeysAsync(): Promise<unknown>;
@@ -29,6 +29,10 @@ declare namespace JwksRsa {
     strictSsl?: boolean;
     requestHeaders?: Headers;
     timeout?: number;
+  }
+
+  interface ClientOptionsWithObject extends Omit<ClientOptions, 'jwksUri'> {
+    jwksObject: { keys: SigningKey[] };
   }
 
   interface CertSigningKey {
