@@ -2,11 +2,10 @@ import http from 'http';
 import Proxy from 'proxy';
 import nock from 'nock';
 import { expect } from 'chai';
-import path from 'path';
 
 import { x5cMultiple } from './keys';
 import { JwksClient } from '../src/JwksClient';
-import jwksJson from './mocks/jwks.json';
+import jwksObject from './mocks/jwks.json';
 
 describe('JwksClient', () => {
   const jwksHost = 'http://my-authz-server';
@@ -68,14 +67,13 @@ describe('JwksClient', () => {
     });
 
     it('should return keys that are directly provided', done => {
-      const jwksObject = path.resolve(__dirname, './mocks/jwks.json');
       const client = new JwksClient({ jwksObject });
 
       client.getKeys((err, respKeys) => {
         expect(err).to.be.null;
         expect(respKeys).not.to.be.null;
-        expect(respKeys.length).to.equal(keys.length);
-        expect(respKeys[1].kid).to.equal(keys[1].kid);
+        expect(respKeys.length).to.equal(jwksObject.keys.length);
+        expect(respKeys[1].kid).to.equal(jwksObject.keys[1].kid);
         done();
       });
     });

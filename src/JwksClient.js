@@ -1,5 +1,4 @@
 import debug from 'debug';
-import fs from 'fs';
 import request from './wrappers/request';
 import JwksError from './errors/JwksError';
 import SigningKeyNotFoundError from './errors/SigningKeyNotFoundError';
