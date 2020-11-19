@@ -66,6 +66,20 @@ client.getSigningKey(kid, (err, key) => {
 });
 ```
 
+### Custom Caching
+
+The built-in caching uses in-memory memoization, however at times this strategy isn't flexible enough for certain use-cases.  To cover these scenarios you can supply a `customCache` to the client to cover your use-case.
+
+The only requirement of the `customCache` is that it has a `get` method with two arguments `(kid, getSigningKey)` and returns a promise.  You can review the [mock CustomCache](/tests/mocks/customCache.js) for an idea on a custom cache implementation.
+
+```js
+  client = new JwksClient({
+    jwksUri: `${jwksHost}/.well-known/jwks.json`,
+    cache: true,
+    customCache: new CustomCache()
+  });
+```
+
 ### Rate Limiting
 
 Even if caching is enabled the library will call the JWKS endpoint if the `kid` is not available in the cache, because a key rotation could have taken place. To prevent attackers to send many random `kid`s you can also configure rate limiting. This will allow you to limit the number of calls that are made to the JWKS endpoint per minute (because it would be highly unlikely that signing keys are rotated multiple times per minute).
