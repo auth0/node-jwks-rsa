@@ -80,7 +80,7 @@ describe('JwksClient', () => {
 
     it('should set request agentOptions when provided', done => {
       nock(jwksHost)
-        .get('./well-known/jwks.json')
+        .get('/.well-known/jwks.json')
         .reply(function() {
           expect(this.req.agentOptions).not.to.be.null;
           expect(this.req.agentOptions['ca']).to.be.equal('loadCA()');
