@@ -4,7 +4,7 @@ import JwksError from './errors/JwksError';
 import SigningKeyNotFoundError from './errors/SigningKeyNotFoundError';
 
 import {
-  retieveSigningKeys
+  retrieveSigningKeys
 } from './utils';
 import {
   cacheSigningKey,
@@ -79,7 +79,7 @@ export class JwksClient {
         return cb(new JwksError('The JWKS endpoint did not contain any keys'));
       }
 
-      const signingKeys = retieveSigningKeys(keys);
+      const signingKeys = retrieveSigningKeys(keys);
 
       if (!signingKeys.length) {
         return cb(new JwksError('The JWKS endpoint did not contain any signing keys'));

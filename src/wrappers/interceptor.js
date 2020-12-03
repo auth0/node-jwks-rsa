@@ -1,4 +1,4 @@
-import { retieveSigningKeys } from '../utils';
+import { retrieveSigningKeys } from '../utils';
 
 /**
  * Uses getKeysInterceptor to allow users to retrieve keys from a file,
@@ -15,7 +15,7 @@ export default function(client, { getKeysInterceptor } = options) {
 
       let signingKeys;
       if (keys && keys.length) {
-        signingKeys = retieveSigningKeys(keys);
+        signingKeys = retrieveSigningKeys(keys);
       }
 
       if (signingKeys && signingKeys.length) {

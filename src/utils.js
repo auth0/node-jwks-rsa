@@ -56,7 +56,7 @@ export function rsaPublicKeyToPEM(modulusB64, exponentB64) {
   return pem;
 }
 
-export function retieveSigningKeys(keys) {
+export function retrieveSigningKeys(keys) {
   return keys
     .filter((key) => {
       if(key.kty !== 'RSA') {
