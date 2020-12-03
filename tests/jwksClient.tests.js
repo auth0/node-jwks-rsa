@@ -599,7 +599,7 @@ describe('JwksClient', () => {
 
         const client = new JwksClient({ 
           jwksUri: `${jwksHost}/.well-known/jwks.json`,
-          getKeysInterceptor: (cb) => cb(null, [])
+          getKeysInterceptor: (cb) => cb(null, jwksObject.keys)
         });
   
         client.getSigningKey('nonExistentKid', (err, key) => {
