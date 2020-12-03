@@ -55,3 +55,32 @@ export function rsaPublicKeyToPEM(modulusB64, exponentB64) {
   pem += '\n-----END RSA PUBLIC KEY-----\n';
   return pem;
 }
+
+export function retieveSigningKeys(keys) {
+  return keys
+    .filter((key) => {
+      if(key.kty !== 'RSA') {
+        return false;
+      }
+      if(key.hasOwnProperty('use') && key.use !== 'sig') {
+        return false;
+      }
+      return ((key.x5c && key.x5c.length) || (key.n && key.e));
+    })
+    .map(key => {
+      const jwk = {
+        kid: key.kid,
+        alg: key.alg,
+        nbf: key.nbf
+      };
+      const hasCertificateChain = key.x5c && key.x5c.length;
+      if (hasCertificateChain) {
+        jwk.publicKey = certToPEM(key.x5c[0]);
+        jwk.getPublicKey = () => jwk.publicKey;
+      } else {
+        jwk.rsaPublicKey = rsaPublicKeyToPEM(key.n, key.e);
+        jwk.getPublicKey = () => jwk.rsaPublicKey;
+      }
+      return jwk;
+    });
+}

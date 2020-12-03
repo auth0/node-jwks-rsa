@@ -565,6 +565,65 @@ describe('JwksClient', () => {
         done();
       });
     });
+  
+    describe('#getKeysInterceptor', () => {
+      it('should return a matching key provided from the interceptor', done => {
+        const client = new JwksClient({ 
+          jwksUri: 'http://invalidUri',
+          getKeysInterceptor: (cb) => cb(null, jwksObject.keys)
+        });
+  
+        client.getSigningKey('abc', (err, key) => {
+          expect(err).to.be.null;
+          expect(key).not.to.be.null;
+          expect(key.kid).to.equal(jwksObject.keys[0].kid);
+          done();
+        });
+      });
+  
+      it('should fallback to using the jwksUri when key is not found in the interceptor', done => {
+        nock(jwksHost)
+          .get('/.well-known/jwks.json')
+          .reply(200, {
+            keys: [
+              {
+                kid: 'nonExistentKid',
+                use: 'sig',
+                kty: 'RSA',
+                e: 'AQAB',
+                n:
+                  'tLDZVZ2Eq_DFwNp24yeSq_Ha0MYbYOJs_WXIgVxQGabu5cZ9561OUtYWdB6xXXZLaZxFG02P5U2rC_CT1r0lPfC_KHYrviJ5Y_Ekif7iFV_1omLAiRksQziwA1i-hND32N5kxwEGNmZViVjWMBZ43wbIdWss4IMhrJy1WNQ07Fqp1Ee6o7QM1hTBve7bbkJkUAfjtC7mwIWqZdWoYIWBTZRXvhMgs_Aeb_pnDekosqDoWQ5aMklk3NvaaBBESqlRAJZUUf5WDFoJh7yRELOFF4lWJxtArTEiQPWVTX6PCs0klVPU6SRQqrtc4kKLCp1AC5EJqPYRGiEJpSz2nUhmAQ'
+              }
+            ]
+          });
+
+        const client = new JwksClient({ 
+          jwksUri: `${jwksHost}/.well-known/jwks.json`,
+          getKeysInterceptor: (cb) => cb(null, [])
+        });
+  
+        client.getSigningKey('nonExistentKid', (err, key) => {
+          expect(err).to.be.null;
+          expect(key).not.to.be.null;
+          expect(key.kid).to.equal('nonExistentKid');
+          done();
+        });
+      });
+    });
+
+    it('should handle errors passed from the interceptor', done => {
+      const error = new Error('interceptor error');
+      const client = new JwksClient({ 
+        jwksUri: 'http://invalidUri',
+        getKeysInterceptor: (cb) => cb(error)
+      });
+
+      client.getSigningKey('abc', (err) => {
+        expect(err).not.to.be.null;
+        expect(err).to.equal(error);
+        done();
+      });
+    });
   });
 
   describe('#getSigningKeysAsync', () => {
