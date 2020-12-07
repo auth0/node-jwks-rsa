@@ -29,9 +29,13 @@ declare namespace JwksRsa {
     strictSsl?: boolean;
     requestHeaders?: Headers;
     timeout?: number;
+    getKeysInterceptor?(cb: (err: Error | null, keys: SigningKey[]) => void): void;
   }
 
   interface ClientOptionsWithObject extends Omit<ClientOptions, 'jwksUri'> {
+    /**
+     * @deprecated jwksObject should not be used. Use getKeysInterceptor as a replacement
+      */
     jwksObject: { keys: SigningKey[] };
   }
 

@@ -4,12 +4,12 @@ import JwksError from './errors/JwksError';
 import SigningKeyNotFoundError from './errors/SigningKeyNotFoundError';
 
 import {
-  certToPEM,
-  rsaPublicKeyToPEM
+  retrieveSigningKeys
 } from './utils';
 import {
   cacheSigningKey,
-  rateLimitSigningKey
+  rateLimitSigningKey,
+  getKeysInterceptor
 } from './wrappers';
 
 export class JwksClient {
@@ -23,6 +23,10 @@ export class JwksClient {
     this.logger = debug('jwks');
 
     // Initialize wrappers.
+    if (this.options.getKeysInterceptor) {
+      this.getSigningKey = getKeysInterceptor(this, options);
+    }
+
     if (this.options.rateLimit) {
       this.getSigningKey = rateLimitSigningKey(this, options);
     }
@@ -37,6 +41,7 @@ export class JwksClient {
 
   getKeys(cb) {
     if (this.options.jwksObject) {
+      this.logger('DEPRECATED: jwksObject is deprecated -- use getKeysInterceptor');
       this.logger('Returning directly provided keyset.');
       return cb(null, this.options.jwksObject.keys);
     }
@@ -74,32 +79,7 @@ export class JwksClient {
         return cb(new JwksError('The JWKS endpoint did not contain any keys'));
       }
 
-      const signingKeys = keys
-        .filter((key) => {
-          if(key.kty !== 'RSA') {
-            return false;
-          }
-          if(key.hasOwnProperty('use') && key.use !== 'sig') {
-            return false;
-          }
-          return ((key.x5c && key.x5c.length) || (key.n && key.e));
-        })
-        .map(key => {
-          const jwk = {
-            kid: key.kid,
-            alg: key.alg,
-            nbf: key.nbf
-          };
-          const hasCertificateChain = key.x5c && key.x5c.length;
-          if (hasCertificateChain) {
-            jwk.publicKey = certToPEM(key.x5c[0]);
-            jwk.getPublicKey = () => jwk.publicKey;
-          } else {
-            jwk.rsaPublicKey = rsaPublicKeyToPEM(key.n, key.e);
-            jwk.getPublicKey = () => jwk.rsaPublicKey;
-          }
-          return jwk;
-        });
+      const signingKeys = retrieveSigningKeys(keys);
 
       if (!signingKeys.length) {
         return cb(new JwksError('The JWKS endpoint did not contain any signing keys'));
@@ -112,7 +92,6 @@ export class JwksClient {
 
   getSigningKey = (kid, cb) => {
     this.logger(`Fetching signing key for '${kid}'`);
-
     this.getSigningKeys((err, keys) => {
       if (err) {
         return cb(err);

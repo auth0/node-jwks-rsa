@@ -114,6 +114,20 @@ There are two ways to configure the usage of a proxy:
  - Provide the ```proxy``` option when initialiting the client as shown above
  - Provide the ```HTTP_PROXY```, ```HTTPS_PROXY``` and ```NO_PROXY``` environment variables
 
+### Loading keys from local file, environment variable, or other externals
+
+The `getKeysInterceptor` property can be used to fetch keys before sending a request to the `jwksUri` endpoint.  This can be helpful when wanting to load keys from a file, env variable, or an external cache. If a KID cannot be found in the keys returned from the interceptor, it will fallback to the `jwksUri` endpoint. This property will continue to work with the provided LRU cache, if the cache is enabled.
+
+```js
+  const client = new JwksClient({ 
+    jwksUri: 'https://my-enterprise-id-provider/.well-known/jwks.json',
+    getKeysInterceptor: (cb) => {
+      const file = fs.readFileSync(jwksFile);
+      return cb(null, file.keys);
+    }
+  });
+```
+
 ## Running Tests
 
 ```
