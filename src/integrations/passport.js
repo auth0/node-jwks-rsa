@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import { JWT } from 'jose';
 import { ArgumentError } from '../errors';
 import { JwksClient } from '../JwksClient';
 import supportedAlg from './config';
@@ -28,9 +28,12 @@ module.exports.passportJwtSecret = (options) => {
   const onError = options.handleSigningKeyError || handleSigningKeyError;
 
   return function secretProvider(req, rawJwtToken, cb) {
-    const decoded = jwt.decode(rawJwtToken, { complete: true });
+    let decoded;
+    try {
+      decoded = JWT.decode(rawJwtToken, { complete: true });
+    } catch (err) {}
 
-    if (!decoded || !decoded.header || !supportedAlg.includes(decoded.header.alg)) {
+    if (!decoded || !supportedAlg.includes(decoded.header.alg)) {
       return cb(null, null);
     }
 

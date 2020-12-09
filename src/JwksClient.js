@@ -1,8 +1,11 @@
 import debug from 'debug';
-import jose from 'jose';
 import request from './wrappers/request';
 import JwksError from './errors/JwksError';
 import SigningKeyNotFoundError from './errors/SigningKeyNotFoundError';
+
+import {
+  retrieveSigningKeys,
+} from './utils';
 
 import {
   cacheSigningKey,
@@ -77,21 +80,7 @@ export class JwksClient {
         return cb(new JwksError('The JWKS endpoint did not contain any keys'));
       }
 
-      let keystore = [];
-      try {
-        keystore = jose.JWKS.asKeyStore({ keys }, { ignoreErrors: true });
-      } catch (err) {
-        return cb(new JwksError(err.message));
-      }
-      let signingKeys = keystore.all({ use: 'sig' }).map((key) => {
-        return {
-          kid: key.kid,
-          alg: key.alg,
-          get publicKey() { return key.toPEM(false); },
-          get rsaPublicKey() { return key.toPEM(false); },
-          getPublicKey() { return key.toPEM(false); }
-        };
-      });
+      const signingKeys = retrieveSigningKeys(keys)
 
       if (!signingKeys.length) {
         return cb(new JwksError('The JWKS endpoint did not contain any signing keys'));
