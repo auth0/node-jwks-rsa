@@ -1,4 +1,6 @@
 import { SecretCallback, SecretCallbackLong } from 'express-jwt';
+import { AgentOptions as HttpAgentOptions } from 'http';
+import { AgentOptions as HttpsAgentOptions } from 'https';
 
 declare function JwksRsa(options: JwksRsa.ClientOptions): JwksRsa.JwksClient;
 
@@ -29,6 +31,7 @@ declare namespace JwksRsa {
     strictSsl?: boolean;
     requestHeaders?: Headers;
     timeout?: number;
+    requestAgentOptions?: HttpAgentOptions | HttpsAgentOptions;
     getKeysInterceptor?(cb: (err: Error | null, keys: SigningKey[]) => void): void;
   }
 
@@ -46,10 +49,6 @@ declare namespace JwksRsa {
     publicKey: string;
   }
 
-  interface AgentOptions {
-    [key: string]: string;
-  }
-
   interface Options {
     jwksUri: string;
     rateLimit?: boolean;
@@ -59,7 +58,7 @@ declare namespace JwksRsa {
     jwksRequestsPerMinute?: number;
     strictSsl?: boolean;
     requestHeaders?: Headers;
-    requestAgentOptions?: AgentOptions;
+    requestAgentOptions?: HttpAgentOptions | HttpsAgentOptions;
     handleSigningKeyError?(err: Error, cb: (err: Error) => void): any;
   }
 
