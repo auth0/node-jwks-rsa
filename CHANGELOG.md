@@ -2,10 +2,10 @@
 ## [1.12.0] - (2020-12-08)
 
 **Added**
-- Provide an alternative source for supplying keysets [\#292](https://github.com/auth0/node-jwks-rsa/pull/292) ([davidpatrick](https://github.com/davidpatrick))
+- Provide an alternative source for supplying keysets [\#202](https://github.com/auth0/node-jwks-rsa/pull/202) ([davidpatrick](https://github.com/davidpatrick))
 
 **Deprecation**
-We are deprecating passing in a `jwksObject` to the client for reasons laid out in [\#292](https://github.com/auth0/node-jwks-rsa/pull/292).  In order to load keys from anything other than the `jwksUri`, please use the `getKeysInterceptor`.
+We are deprecating passing in a `jwksObject` to the client for reasons laid out in [\#202](https://github.com/auth0/node-jwks-rsa/pull/202).  In order to load keys from anything other than the `jwksUri`, please use the `getKeysInterceptor`.
 
 ```js
   const client = new JwksClient({ 
