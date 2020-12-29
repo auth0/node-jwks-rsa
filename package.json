@@ -6,7 +6,7 @@
   "types": "index.d.ts",
   "dependencies": {
     "@types/express-jwt": "0.0.42",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "debug": "^4.1.0",
     "http-proxy-agent": "^4.0.1",
     "https-proxy-agent": "^5.0.0",
