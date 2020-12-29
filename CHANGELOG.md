@@ -1,4 +1,10 @@
 # Changelog
+
+## [1.12.1] - (2020-12-29)
+
+**Security**
+- Bump Axios to ^0.21.1 [\#208](https://github.com/auth0/node-jwks-rsa/pull/208) ([72636c](https://github.com/72636c))
+
 ## [1.12.0] - (2020-12-08)
 
 **Added**
