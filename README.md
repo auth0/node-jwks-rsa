@@ -7,7 +7,7 @@
 [![Downloads][downloads-image]][downloads-url]
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Fnode-jwks-rsa.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fauth0%2Fnode-jwks-rsa?ref=badge_shield)
 
-A library to retrieve RSA signing keys from a JWKS (JSON Web Key Set) endpoint.
+A library to retrieve signing keys from a JWKS (JSON Web Key Set) endpoint.
 
 > npm install --save jwks-rsa
 

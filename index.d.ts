@@ -44,7 +44,6 @@ declare namespace JwksRsa {
 
   interface CertSigningKey {
     kid: string;
-    nbf: string;
     getPublicKey(): string;
     publicKey: string;
   }
@@ -64,7 +63,6 @@ declare namespace JwksRsa {
 
   interface RsaSigningKey {
     kid: string;
-    nbf: string;
     getPublicKey(): string;
     rsaPublicKey: string;
   }
