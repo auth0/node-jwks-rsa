@@ -1,4 +1,13 @@
 version: 2
+workflows:
+  matrix-tests:
+    jobs:
+      - node/test:
+          version: 14.15.4
+      - node/test:
+          version: 12.20.1
+      - node/test:
+          version: 10.13.0
 jobs:
   build:
     docker:
