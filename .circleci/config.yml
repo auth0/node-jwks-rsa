@@ -1,17 +1,26 @@
-version: 2
+version: 2.1
+
 workflows:
-  matrix-tests:
+  version: 2
+  test:
     jobs:
-      - node/test:
-          version: 14.15.4
-      - node/test:
-          version: 12.20.1
-      - node/test:
-          version: 10.13.0
+      - test:
+          name: test_node10
+          v: "10"
+      - test:
+          name: test_node12
+          v: "12"
+      - test:
+          name: test_node14
+          v: "14"
 jobs:
-  build:
+  test:
+    parameters:
+      v:
+        type: string
+        default: "12"
     docker:
-      - image: circleci/node:10
+      - image: circleci/node:<< parameters.v >>
     environment:
       LANG: en_US.UTF-8
     steps:
@@ -19,7 +28,7 @@ jobs:
       - run:
           name: Update NPM version
           command: sudo npm install -g npm@latest
-      - restore-cache:
+      - restore_cache:
           name: Restore NPM Package Cache
           keys:
             - npm-packages-{{ checksum "package-lock.json" }}
@@ -27,7 +36,7 @@ jobs:
       - run:
           name: Install Dependencies
           command: npm install
-      - save-cache:
+      - save_cache:
           name: Save NPM Package Cache
           key: npm-packages-{{ checksum "package-lock.json" }}
           paths:
