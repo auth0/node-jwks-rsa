@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.12.2] - (2021-01-07)
+
+**Fixed**
+- Added coverage folders to .npmignore
+
+
 ## [1.12.1] - (2020-12-29)
 
 **Security**
