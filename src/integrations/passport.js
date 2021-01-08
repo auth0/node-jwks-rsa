@@ -1,6 +1,7 @@
-import jwt from 'jsonwebtoken';
+import { JWT } from 'jose';
 import { ArgumentError } from '../errors';
 import { JwksClient } from '../JwksClient';
+import supportedAlg from './config';
 
 const handleSigningKeyError = (err, cb) => {
   // If we didn't find a match, can't provide a key.
@@ -27,10 +28,12 @@ module.exports.passportJwtSecret = (options) => {
   const onError = options.handleSigningKeyError || handleSigningKeyError;
 
   return function secretProvider(req, rawJwtToken, cb) {
-    const decoded = jwt.decode(rawJwtToken, { complete: true });
+    let decoded;
+    try {
+      decoded = JWT.decode(rawJwtToken, { complete: true });
+    } catch (err) {}
 
-    // Only RS256 is supported.
-    if (!decoded || !decoded.header || decoded.header.alg !== 'RS256') {
+    if (!decoded || !supportedAlg.includes(decoded.header.alg)) {
       return cb(null, null);
     }
 

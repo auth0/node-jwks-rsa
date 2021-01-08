@@ -1,5 +1,6 @@
 import { ArgumentError } from '../errors';
 import { JwksClient } from '../JwksClient';
+import supportedAlg from './config';
 
 const handleSigningKeyError = (err, cb) => {
   // If we didn't find a match, can't provide a key.
@@ -22,8 +23,7 @@ module.exports.expressJwtSecret = (options) => {
   const onError = options.handleSigningKeyError || handleSigningKeyError;
 
   return function secretProvider(req, header, payload, cb) {
-    // Only RS256 is supported.
-    if (!header || header.alg !== 'RS256') {
+    if (!header || !supportedAlg.includes(header.alg)) {
       return cb(null, null);
     }
 

@@ -1,5 +1,6 @@
 import { ArgumentError } from '../errors';
 import { JwksClient } from '../JwksClient';
+import supportedAlg from './config';
 
 module.exports.koaJwtSecret = (options = {}) => {
 
@@ -13,8 +14,7 @@ module.exports.koaJwtSecret = (options = {}) => {
 
     return new Promise((resolve, reject) => {
 
-      // Only RS256 is supported.
-      if (alg !== 'RS256') {
+      if (!supportedAlg.includes(alg)) {
         return reject(new Error('Missing / invalid token algorithm'));
       }
 
