@@ -63,11 +63,12 @@ describe('passportJwtSecret', () => {
       )
     );
 
+    let expectedFlashMessage;
     app.get(
       '/',
       (req, res, next) => {
         req.flash = (type, msg) => {
-          res.send(msg);
+          expectedFlashMessage = msg;
         };
         next();
       },
@@ -81,8 +82,8 @@ describe('passportJwtSecret', () => {
       .get('/')
       .set('Authorization', 'Bearer abc')
       .expect(401)
-      .end((err, res) => {
-        expect(res.text).to.equal('jwt malformed');
+      .end(() => {
+        expect(expectedFlashMessage).to.equal('jwt malformed');
         done();
       });
   });
@@ -101,11 +102,12 @@ describe('passportJwtSecret', () => {
       )
     );
 
+    let expectedFlashMessage;
     app.get(
       '/',
       (req, res, next) => {
         req.flash = (type, msg) => {
-          res.send(msg);
+          expectedFlashMessage = msg;
         };
         next();
       },
@@ -121,8 +123,8 @@ describe('passportJwtSecret', () => {
       .get('/')
       .set('Authorization', `Bearer ${token}`)
       .expect(401)
-      .end((err, res) => {
-        expect(res.text).to.equal('secret or public key must be provided');
+      .end(() => {
+        expect(expectedFlashMessage).to.equal('secret or public key must be provided');
         done();
       });
   });
@@ -141,12 +143,13 @@ describe('passportJwtSecret', () => {
       )
     );
 
+    let expectedFlashMessage;
     app.get(
       '/',
       (req, res, next) => {
         req.flash = (type, msg) => {
-          res.send(msg);
-        };
+          expectedFlashMessage = msg;
+        },
         next();
       },
       passport.authenticate('jwt', { session: false, failureFlash: true }),
@@ -162,9 +165,9 @@ describe('passportJwtSecret', () => {
       .get('/')
       .set('Authorization', `Bearer ${token}`)
       .expect(401)
-      .end((err, res) => {
-        expect(res.text).to.equal('secret or public key must be provided');
-        done();
+      .end((err) => {
+        expect(expectedFlashMessage).to.equal('secret or public key must be provided');
+        done(err);
       });
   });
 
@@ -184,11 +187,12 @@ describe('passportJwtSecret', () => {
       )
     );
 
+    let expectedFlashMessage;
     app.get(
       '/',
       (req, res, next) => {
         req.flash = (type, msg) => {
-          res.send(msg);
+          expectedFlashMessage = msg;
         };
         next();
       },
@@ -205,8 +209,8 @@ describe('passportJwtSecret', () => {
       .get('/')
       .set('Authorization', `Bearer ${token}`)
       .expect(401)
-      .end((err, res) => {
-        expect(res.text).to.equal('secret or public key must be provided');
+      .end(() => {
+        expect(expectedFlashMessage).to.equal('secret or public key must be provided');
         done();
       });
   });
@@ -227,11 +231,12 @@ describe('passportJwtSecret', () => {
       )
     );
 
+    let expectedFlashMessage;
     app.get(
       '/',
       (req, res, next) => {
         req.flash = (type, msg) => {
-          res.send(msg);
+          expectedFlashMessage = msg;
         };
         next();
       },
@@ -248,8 +253,8 @@ describe('passportJwtSecret', () => {
       .get('/')
       .set('Authorization', `Bearer ${token}`)
       .expect(401)
-      .end((err, res) => {
-        expect(res.text).to.equal('invalid signature');
+      .end(() => {
+        expect(expectedFlashMessage).to.equal('invalid signature');
         done();
       });
   });
@@ -272,12 +277,13 @@ describe('passportJwtSecret', () => {
         (jwt_payload, done) => done(null, jwt_payload)
       )
     );
-
+    
+    let expectedFlashMessage;
     app.get(
       '/',
       (req, res, next) => {
         req.flash = (type, msg) => {
-          res.send(msg);
+          expectedFlashMessage = msg;
         };
         next();
       },
@@ -294,8 +300,8 @@ describe('passportJwtSecret', () => {
       .get('/')
       .set('Authorization', `Bearer ${token}`)
       .expect(401)
-      .end((err, res) => {
-        expect(res.text).to.equal('this is bad');
+      .end(() => {
+        expect(expectedFlashMessage).to.equal('this is bad');
         done();
       });
   });
