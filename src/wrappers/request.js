@@ -1,40 +1,50 @@
+
 import http from 'http';
 import https from 'https';
-import url from 'url';
-import httpProxyAgent from 'http-proxy-agent';
-import httpsProxyAgent from 'https-proxy-agent';
-import { request } from 'axios';
-import { getProxyForUrl } from 'proxy-from-env';
+import urlUtil from 'url';
 
-export default function(options, cb) {
-  const requestOptions = {
-    url: options.uri,
-    headers: options.headers,
-    timeout: options.timeout
-  };
-
-  const proxyUrl = options.proxy || getProxyForUrl(options.uri);
-  if (proxyUrl || options.agentOptions || options.strictSSL != undefined) {
-    const agentOptions = {
-      ...(options.strictSSL != undefined) && { rejectUnauthorized: options.strictSSL },
-      ...(options.headers && { headers: options.headers }),
-      ...options.agentOptions
-    };
-
-    if (proxyUrl) {
-      // Axios proxy workaround: https://github.com/axios/axios/issues/2072
-      const proxyOptions = url.parse(proxyUrl);
-      requestOptions.proxy = false; //proxyParsed
-      const proxyAgentOptions = { ...agentOptions, ...proxyOptions };
-      requestOptions.httpAgent = new httpProxyAgent(proxyAgentOptions);
-      requestOptions.httpsAgent = new httpsProxyAgent(proxyAgentOptions);
-    } else {
-      requestOptions.httpAgent = new http.Agent(agentOptions);
-      requestOptions.httpsAgent = new https.Agent(agentOptions);
-    }
+export default (options) => {
+  if (options.fetcher) {
+    return options.fetcher(options.uri);
   }
 
-  request(requestOptions)
-    .then(response => cb(null, response))
-    .catch(err => cb(err));
-}
+  return new Promise((resolve, reject) => {
+    const {
+      host,
+      path,
+      port,
+      protocol
+    } = urlUtil.parse(options.uri);
+
+    const requestOptions = {
+      host,
+      path,
+      port,
+      method: 'GET',
+      ...(options.headers && { headers: { ...options.headers } }),
+      ...(options.timeout && { timeout: options.timeout }),
+      ...(options.agent && { agent: options.agent })
+    };
+
+    const httpRequestLib = protocol === 'https:' ? https : http;
+    httpRequestLib.request(requestOptions, (res) => {
+      let rawData = '';
+      res.setEncoding('utf8');
+      res.on('data', (chunk) => { rawData += chunk; });
+      res.on('end', () => {
+        if (res.statusCode < 200 || res.statusCode >= 300) {
+          const errorMsg = res.body && (res.body.message || res.body) || res.statusMessage || `Http Error ${res.statusCode}`;
+          reject({ errorMsg });
+        } else {
+          try {
+            resolve(rawData && JSON.parse(rawData));
+          } catch (error) {
+            reject(error);
+          }
+        }
+      });
+    })
+      .on('error', (e) => reject(e))
+      .end();
+  });
+};

@@ -50,23 +50,17 @@ export class JwksClient {
     this.logger(`Fetching keys from '${this.options.jwksUri}'`);
     request({
       uri: this.options.jwksUri,
-      strictSSL: this.options.strictSsl,
       headers: this.options.requestHeaders,
-      agentOptions: this.options.requestAgentOptions,
-      proxy: this.options.proxy,
-      timeout: this.options.timeout
-    }, (err, res) => {
-      if (err) {
-        const errorResponse = err.response;
-        this.logger('Failure:', errorResponse && errorResponse.data || err);
-        if (errorResponse) {
-          return cb(new JwksError(errorResponse.data || errorResponse.statusText || `Http Error ${errorResponse.status}`));
-        }
-        return cb(err);
-      }
-
-      this.logger('Keys:', res.data.keys);
-      return cb(null, res.data.keys);
+      agent: this.options.requestAgent,
+      timeout: this.options.timeout,
+      fetcher: this.options.fetcher
+    }).then((res) => {
+      this.logger('Keys:', res.keys);
+      return cb(null, res.keys);
+    }).catch((err) => {
+      const { errorMsg } = err;
+      this.logger('Failure:', errorMsg || err);
+      return cb(errorMsg ? new JwksError(errorMsg) : err);
     });
   }
 
