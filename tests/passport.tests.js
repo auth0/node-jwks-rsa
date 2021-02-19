@@ -25,7 +25,7 @@ describe('passportJwtSecret', () => {
     expect(err instanceof jwksRsa.ArgumentError).to.be.true;
   });
 
-  it('should throw error if options.jwksUri and options.jwksObject is null', () => {
+  it('should throw error if options.jwksUri is null', () => {
     let err = null;
 
     try {

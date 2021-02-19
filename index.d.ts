@@ -6,7 +6,7 @@ declare function JwksRsa(options: JwksRsa.Options): JwksRsa.JwksClient;
 
 declare namespace JwksRsa {
   class JwksClient {
-    constructor(options: Options | OptionsWithObject);
+    constructor(options: Options);
 
     getKeys(cb: (err: Error | null, keys: unknown) => void): void;
     getKeysAsync(): Promise<unknown>;
@@ -33,13 +33,6 @@ declare namespace JwksRsa {
     requestAgent?: HttpAgent | HttpsAgent;
     fetcher?(jwksUri: string): Promise<{ keys: SigningKey[] }>;
     getKeysInterceptor?(cb: (err: Error | null, keys: SigningKey[]) => void): void;
-  }
-
-  interface OptionsWithObject extends Omit<Options, 'jwksUri'> {
-    /**
-     * @deprecated jwksObject should not be used. Use getKeysInterceptor as a replacement
-      */
-    jwksObject: { keys: SigningKey[] };
   }
 
   interface CertSigningKey {

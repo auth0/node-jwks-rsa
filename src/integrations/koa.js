@@ -4,8 +4,8 @@ import supportedAlg from './config';
 
 module.exports.koaJwtSecret = (options = {}) => {
 
-  if (!options.jwksUri && !options.jwksObject) {
-    throw new ArgumentError('No JWKS provided. Please provide a jwksUri or jwksObject');
+  if (!options.jwksUri) {
+    throw new ArgumentError('No JWKS provided. Please provide a jwksUri');
   }
 
   const client = new JwksClient(options);
