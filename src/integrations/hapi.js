@@ -49,13 +49,11 @@ module.exports.hapiJwt2Key = (options) => {
       return cb(new Error('Unsupported algorithm ' + decoded.header.alg + ' supplied.'), null, null);
     }
 
-    client.getSigningKey(decoded.header.kid, (err, key) => {
-      if (err) {
+    client.getSigningKey(decoded.header.kid)
+      .then(key => {
+        return cb(null, key.publicKey || key.rsaPublicKey, key);
+      }).catch(err => {
         return onError(err, (newError) => cb(newError, null, null));
-      }
-
-      // Provide the key.
-      return cb(null, key.publicKey || key.rsaPublicKey, key);
-    });
+      });
   };
 };

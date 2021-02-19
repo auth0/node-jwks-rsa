@@ -15,7 +15,7 @@ describe('JwksClient (cache)', () => {
     describe('should cache requests per kid', () => {
       let client;
 
-      before((done) => {
+      before(async () => {
         nock(jwksHost)
           .get('/.well-known/jwks.json')
           .reply(200, x5cSingle);
@@ -26,28 +26,25 @@ describe('JwksClient (cache)', () => {
         });
 
         // Cache the Key
-        client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA', (err, key) => {
-          expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
-
-          // Stop the JWKS server
-          nock.cleanAll();
-          done();
-        });
+        const key = await client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+        expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+        // Stop the JWKS server
+        nock.cleanAll();
       });
 
-      it('should ignore the cache when the KID isnt cached and make a requst', (done) => {
-        client.getSigningKey('12345', (err) => {
+      it('should ignore the cache when the KID isnt cached and make a requst', async () => {
+        try {
+          await client.getSigningKey('12345');
+          throw new Error('should have thrown error');
+        } catch (err) {
           expect(err).not.to.be.null;
-          expect(err.code).to.equal('ENOTFOUND');
-          done();
-        });
+          expect(err.code).to.equal('ENOTFOUND'); 
+        }
       });
 
-      it('should fetch the key from the cache', (done) => {
-        client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA', (err, key) => {
-          expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
-          done();
-        });
+      it('should fetch the key from the cache', async () => {
+        const key = await client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+        expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
       });
     });
   });

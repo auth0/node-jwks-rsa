@@ -12,7 +12,7 @@ describe('JwksClient (cache)', () => {
   });
 
   describe('#getSigningKeys', () => {
-    it('should prevent too many requests', (done) => {
+    it('should prevent too many requests', async () => {
       const client = new JwksClient({
         cache: false,
         rateLimit: true,
@@ -24,27 +24,27 @@ describe('JwksClient (cache)', () => {
         .get('/.well-known/jwks.json')
         .reply(200, x5cSingle);
 
-      client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA', (err, key) => {
-        expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+      const key = await client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+      expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
 
-        nock(jwksHost)
-          .get('/.well-known/jwks.json')
-          .reply(200, x5cSingle);
+      nock(jwksHost)
+        .get('/.well-known/jwks.json')
+        .reply(200, x5cSingle);
 
-        client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA', (err, key) => {
-          expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+      const key2 = await client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+      expect(key2.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
 
-          client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA', (err) => {
-            expect(err).not.to.be.null;
-            expect(err.name).to.equal('JwksRateLimitError');
-            expect(err.message).to.equal('Too many requests to the JWKS endpoint');
-            done();
-          });
-        });
-      });
+      try {
+        await client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+        throw new Error('should have thrown error');
+      } catch (err) {
+        expect(err).not.to.be.null;
+        expect(err.name).to.equal('JwksRateLimitError');
+        expect(err.message).to.equal('Too many requests to the JWKS endpoint'); 
+      }
     });
 
-    it('should not prevent cached requests', (done) => {
+    it('should not prevent cached requests', async () => {
       const client = new JwksClient({
         cache: true,
         rateLimit: true,
@@ -52,43 +52,46 @@ describe('JwksClient (cache)', () => {
         jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
+      // First call.
       nock(jwksHost)
         .get('/.well-known/jwks.json')
         .reply(200, x5cSingle);
+      const key = await client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+      expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
 
-      // First call.
-      client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA', (err, key) => {
-        expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+      // Second call (cached).
+      nock(jwksHost)
+        .get('/.well-known/jwks.json')
+        .reply(200, x5cSingle);
+      const key2 = await client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+      expect(key2.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
 
-        // Second call (cached).
-        client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA', (err, key) => {
-          expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+      // Third call (cached).
+      nock(jwksHost)
+        .get('/.well-known/jwks.json')
+        .reply(200, x5cSingle);
+      const key3 = await client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+      expect(key3.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
 
-          // Third call (cached).
-          client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA', (err, key) => {
-            expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+      // Fourth call.
+      try {
+        await client.getSigningKey('abc');
+        throw new Error('should have thrown error');
+      } catch (err) {
+        expect(err).not.to.be.null;
+        expect(err.name).to.equal('SigningKeyNotFoundError');
+        expect(err.message).to.equal('Unable to find a signing key that matches \'abc\'');
+      }
 
-            nock(jwksHost)
-              .get('/.well-known/jwks.json')
-              .reply(200, x5cSingle);
-
-            // Fourth call.
-            client.getSigningKey('abc', (err) => {
-              expect(err).not.to.be.null;
-              expect(err.name).to.equal('SigningKeyNotFoundError');
-              expect(err.message).to.equal('Unable to find a signing key that matches \'abc\'');
-
-              // Fifth call.
-              client.getSigningKey('def', (err) => {
-                expect(err).not.to.be.null;
-                expect(err.name).to.equal('JwksRateLimitError');
-                expect(err.message).to.equal('Too many requests to the JWKS endpoint');
-                done();
-              });
-            });
-          });
-        });
-      });
+      // Fifth call.
+      try {
+        await client.getSigningKey('def');
+        throw new Error('should have thrown error');
+      } catch (err) {
+        expect(err).not.to.be.null;
+        expect(err.name).to.equal('JwksRateLimitError');
+        expect(err.message).to.equal('Too many requests to the JWKS endpoint');
+      }
     });
   });
 });
