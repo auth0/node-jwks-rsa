@@ -3,8 +3,8 @@ import https from 'https';
 import url from 'url';
 import httpProxyAgent from 'http-proxy-agent';
 import httpsProxyAgent from 'https-proxy-agent';
-import { request } from 'axios';
 import { getProxyForUrl } from 'proxy-from-env';
+const axios = require('axios').default;
 
 export default function(options, cb) {
   const requestOptions = {
@@ -34,7 +34,7 @@ export default function(options, cb) {
     }
   }
 
-  request(requestOptions)
+  axios.request(requestOptions)
     .then(response => cb(null, response))
     .catch(err => cb(err));
 }
