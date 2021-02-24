@@ -1,24 +1,12 @@
-import ms from 'ms';
 import debug from 'debug';
 import memoizer from 'lru-memoizer';
 
-export default function(client, { cacheMaxEntries = 5, cacheMaxAge = ms('10m') } = options) {
+export default function(client, { cacheMaxEntries = 5, cacheMaxAge = 600000 } = options) {
   const logger = debug('jwks');
-  const getSigningKey = client.getSigningKey;
-
   logger(`Configured caching of signing keys. Max: ${cacheMaxEntries} / Age: ${cacheMaxAge}`);
-  return memoizer({
-    load: (kid, callback) => {
-      getSigningKey(kid, (err, key) => {
-        if (err) {
-          return callback(err);
-        }
-
-        logger(`Caching signing key for '${kid}':`, key);
-        return callback(null, key);
-      });
-    },
+  return memoizer.sync({
     hash: (kid) => kid,
+    load: client.getSigningKey.bind(client),
     maxAge: cacheMaxAge,
     max: cacheMaxEntries
   });

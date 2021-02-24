@@ -7,26 +7,22 @@ import { retrieveSigningKeys } from '../utils';
 export default function(client, { getKeysInterceptor } = options) {
   const getSigningKey = client.getSigningKey;
 
-  return (kid, cb) => {
-    getKeysInterceptor((err, keys) => {
-      if (err) {
-        return cb(err);
+  return async (kid) => {
+    const keys = await getKeysInterceptor();
+
+    let signingKeys;
+    if (keys && keys.length) {
+      signingKeys = retrieveSigningKeys(keys);
+    }
+
+    if (signingKeys && signingKeys.length) {
+      const key = signingKeys.find(k => !kid || k.kid === kid);
+
+      if (key) {
+        return key;
       }
+    }
 
-      let signingKeys;
-      if (keys && keys.length) {
-        signingKeys = retrieveSigningKeys(keys);
-      }
-
-      if (signingKeys && signingKeys.length) {
-        const key = signingKeys.find(k => !kid || k.kid === kid);
-
-        if (key) {
-          return cb(null, key);
-        }
-      }
-
-      return getSigningKey(kid, cb);
-    });
+    return getSigningKey(kid);
   };
 }

@@ -1,12 +1,12 @@
 import { SecretCallback, SecretCallbackLong } from 'express-jwt';
-import { AgentOptions as HttpAgentOptions } from 'http';
-import { AgentOptions as HttpsAgentOptions } from 'https';
+import { Agent as HttpAgent } from 'http';
+import { Agent as HttpsAgent } from 'https';
 
-declare function JwksRsa(options: JwksRsa.ClientOptions): JwksRsa.JwksClient;
+declare function JwksRsa(options: JwksRsa.Options): JwksRsa.JwksClient;
 
 declare namespace JwksRsa {
   class JwksClient {
-    constructor(options: ClientOptions | ClientOptionsWithObject);
+    constructor(options: Options);
 
     getKeys(cb: (err: Error | null, keys: unknown) => void): void;
     getKeysAsync(): Promise<unknown>;
@@ -20,35 +20,6 @@ declare namespace JwksRsa {
     [key: string]: string;
   }
 
-  interface ClientOptions {
-    jwksUri: string;
-    rateLimit?: boolean;
-    cache?: boolean;
-    cacheMaxEntries?: number;
-    cacheMaxAge?: number;
-    jwksRequestsPerMinute?: number;
-    proxy?: string;
-    strictSsl?: boolean;
-    requestHeaders?: Headers;
-    timeout?: number;
-    requestAgentOptions?: HttpAgentOptions | HttpsAgentOptions;
-    getKeysInterceptor?(cb: (err: Error | null, keys: SigningKey[]) => void): void;
-  }
-
-  interface ClientOptionsWithObject extends Omit<ClientOptions, 'jwksUri'> {
-    /**
-     * @deprecated jwksObject should not be used. Use getKeysInterceptor as a replacement
-      */
-    jwksObject: { keys: SigningKey[] };
-  }
-
-  interface CertSigningKey {
-    kid: string;
-    alg: string;
-    getPublicKey(): string;
-    publicKey: string;
-  }
-
   interface Options {
     jwksUri: string;
     rateLimit?: boolean;
@@ -56,10 +27,19 @@ declare namespace JwksRsa {
     cacheMaxEntries?: number;
     cacheMaxAge?: number;
     jwksRequestsPerMinute?: number;
-    strictSsl?: boolean;
+    proxy?: string;
     requestHeaders?: Headers;
-    requestAgentOptions?: HttpAgentOptions | HttpsAgentOptions;
-    handleSigningKeyError?(err: Error, cb: (err: Error) => void): any;
+    timeout?: number;
+    requestAgent?: HttpAgent | HttpsAgent;
+    fetcher?(jwksUri: string): Promise<{ keys: SigningKey[] }>;
+    getKeysInterceptor?(cb: (err: Error | null, keys: SigningKey[]) => void): void;
+  }
+
+  interface CertSigningKey {
+    kid: string;
+    alg: string;
+    getPublicKey(): string;
+    publicKey: string;
   }
 
   interface RsaSigningKey {
@@ -75,13 +55,13 @@ declare namespace JwksRsa {
 
   function passportJwtSecret(options: ExpressJwtOptions): SecretCallback;
 
-  interface ExpressJwtOptions extends ClientOptions {
+  interface ExpressJwtOptions extends Options {
     handleSigningKeyError?: (err: Error | null, cb: (err: Error | null) => void) => void;
   }
 
   function hapiJwt2Key(options: HapiJwtOptions): (decodedToken: DecodedToken, cb: HapiCallback) => void;
 
-  interface HapiJwtOptions extends ClientOptions {
+  interface HapiJwtOptions extends Options {
     handleSigningKeyError?: (err: Error | null, cb: HapiCallback) => void;
   }
 
@@ -100,7 +80,7 @@ declare namespace JwksRsa {
 
   function koaJwtSecret(options: KoaJwtOptions): (header: TokenHeader) => Promise<string>;
 
-  interface KoaJwtOptions extends ClientOptions {
+  interface KoaJwtOptions extends Options {
     handleSigningKeyError?(err: Error | null): Promise<void>;
   }
 
