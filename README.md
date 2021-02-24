@@ -26,11 +26,8 @@ const client = jwksClient({
 });
 
 const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';
-client.getSigningKey(kid, (err, key) => {
-  const signingKey = key.getPublicKey();
-
-  // Now I can use this to configure my Express or Hapi middleware
-});
+const key = await client.getSigningKey(kid);
+const signingKey = key.getPublicKey();
 ```
 
 > Note that all methods on the `JwksClient` have asynchronous equivalents, where the promisified name is suffixed with `Async`, e.g., `client.getSigningKeyAsync(kid).then(key => { /* ... */ })`;
@@ -57,11 +54,8 @@ const client = jwksClient({
 });
 
 const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';
-client.getSigningKey(kid, (err, key) => {
-  const signingKey = key.getPublicKey();
-
-  // Now I can use this to configure my Express or Hapi middleware
-});
+const key = await client.getSigningKey(kid);
+const signingKey = key.getPublicKey();
 ```
 
 ### Rate Limiting
@@ -78,11 +72,8 @@ const client = jwksClient({
 });
 
 const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';
-client.getSigningKey(kid, (err, key) => {
-  const signingKey = key.getPublicKey();
-
-  // Now I can use this to configure my Express or Hapi middleware
-});
+const key = await client.getSigningKey(kid);
+const signingKey = key.getPublicKey();
 ```
 
 ### Using Request Agent for TLS/SSL Configuration
@@ -115,9 +106,9 @@ The `getKeysInterceptor` property can be used to fetch keys before sending a req
 ```js
   const client = new JwksClient({ 
     jwksUri: 'https://my-enterprise-id-provider/.well-known/jwks.json',
-    getKeysInterceptor: (cb) => {
+    getKeysInterceptor: () => {
       const file = fs.readFileSync(jwksFile);
-      return cb(null, file.keys);
+      return file.keys;
     }
   });
 ```

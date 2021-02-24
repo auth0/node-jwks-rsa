@@ -3,7 +3,6 @@ import { expect } from 'chai';
 
 import { x5cMultiple } from './keys';
 import { JwksClient } from '../src/JwksClient';
-import jwksObject from './mocks/jwks.json';
 
 describe('JwksClient', () => {
   const jwksHost = 'http://my-authz-server';
@@ -13,7 +12,7 @@ describe('JwksClient', () => {
   });
 
   describe('#getKeys', () => {
-    it('should handle errors', done => {
+    it('should handle errors', async () => {
       nock(jwksHost)
         .get('/.well-known/jwks.json')
         .reply(500);
@@ -22,14 +21,16 @@ describe('JwksClient', () => {
         jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
-      client.getKeys(err => {
+      try {
+        await client.getKeys();
+        throw new Error('should have thrown error');
+      } catch (err) {
         expect(err).not.to.be.null;
         expect(err.message).to.equal('Http Error 500');
-        done();
-      });
+      }
     });
 
-    it('should return keys', done => {
+    it('should return keys', async () => {
       nock(jwksHost)
         .get('/.well-known/jwks.json')
         .reply(200, {
@@ -55,35 +56,21 @@ describe('JwksClient', () => {
         jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
-      client.getKeys((err, keys) => {
-        expect(err).to.be.null;
-        expect(keys).not.to.be.null;
-        expect(keys.length).to.equal(2);
-        expect(keys[1].kid).to.equal('123');
-        done();
-      });
+      const keys = await client.getKeys();
+      expect(keys).not.to.be.null;
+      expect(keys.length).to.equal(2);
+      expect(keys[1].kid).to.equal('123');
     });
 
-    it('should return keys that are directly provided', done => {
-      const client = new JwksClient({ jwksObject });
-
-      client.getKeys((err, respKeys) => {
-        expect(err).to.be.null;
-        expect(respKeys).not.to.be.null;
-        expect(respKeys.length).to.equal(jwksObject.keys.length);
-        expect(respKeys[1].kid).to.equal(jwksObject.keys[1].kid);
-        done();
-      });
-    });
-
-    it('should send extra header', done => {
+    it('should send extra header', async () => {
       nock(jwksHost)
         .get('/.well-known/jwks.json')
         .reply(function() {
           expect(this.req.headers).not.to.be.null;
           expect(this.req.headers['user-agent']).to.be.equal('My-bot');
           expect(Object.keys(this.req.headers).length).to.be.equal(2);
-          return (
+
+          return [
             200,
             {
               keys: [
@@ -102,8 +89,9 @@ describe('JwksClient', () => {
                   kid: '123'
                 }
               ]
-            }
-          );
+            },
+            this.req.headers
+          ];
         });
 
       const client = new JwksClient({
@@ -113,19 +101,17 @@ describe('JwksClient', () => {
         }
       });
 
-      client.getKeys(() => {
-        done();
-      });
+      await client.getKeys();
     });
 
-    it('should not send the extra headers when not provided', done => {
+    it('should not send the extra headers when not provided', async () => {
       nock(jwksHost)
         .get('/.well-known/jwks.json')
         .reply(function() {
           expect(this.req.headers).not.to.be.null;
           expect(this.req.headers['host']).not.to.be.undefined;
           expect(Object.keys(this.req.headers).length).to.be.equal(1);
-          return (
+          return [
             200,
             {
               keys: [
@@ -144,79 +130,21 @@ describe('JwksClient', () => {
                   kid: '123'
                 }
               ]
-            }
-          );
-        });
-
-      const client = new JwksClient({
-        jwksUri: `${jwksHost}/.well-known/jwks.json`
-      });
-
-      client.getKeys(() => {
-        done();
-      });
-    });
-  });
-  
-  describe('#getKeysAsync', () => {
-    it('should handle errors when async', done => {
-      nock(jwksHost)
-        .get('/.well-known/jwks.json')
-        .reply(500);
-
-      const client = new JwksClient({
-        jwksUri: `${jwksHost}/.well-known/jwks.json`
-      });
-
-      client.getKeysAsync()
-        .catch(err => {
-          expect(err).not.to.be.null;
-          expect(err.message).to.equal('Http Error 500');
-          done();
-        });
-    });
-
-    it('should return keys when async', function(done) {
-      nock(jwksHost)
-        .get('/.well-known/jwks.json')
-        .reply(200, {
-          keys: [
-            {
-              alg: 'RS256',
-              kty: 'RSA',
-              use: 'sig',
-              x5c: [ 'pk1' ],
-              kid: 'ABC'
             },
-            {
-              alg: 'RS256',
-              kty: 'RSA',
-              use: 'sig',
-              x5c: [],
-              kid: '123'
-            }
-          ]
+            this.req.headers
+          ];
         });
 
       const client = new JwksClient({
         jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
-      client.getKeysAsync()
-        .then(keys => {
-          expect(keys).not.to.be.null;
-          expect(keys.length).to.equal(2);
-          expect(keys[1].kid).to.equal('123');
-          done();
-        })
-        .catch(err => {
-          done(err);
-        });
+      await client.getKeys();
     });
   });
 
   describe('#getSigningKeys', () => {
-    it('should handle errors', done => {
+    it('should handle errors', async () => {
       nock(jwksHost)
         .get('/.well-known/jwks.json')
         .reply(500);
@@ -225,14 +153,16 @@ describe('JwksClient', () => {
         jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
-      client.getSigningKeys(err => {
+      try {
+        await client.getSigningKeys();
+        throw new Error('should have thrown error');
+      } catch (err) {
         expect(err).not.to.be.null;
         expect(err.message).to.equal('Http Error 500');
-        done();
-      });
+      }
     });
 
-    it('should return signing keys (with x5c and mod/exp)', done => {
+    it('should return signing keys (with x5c and mod/exp)', async () => {
       nock(jwksHost)
         .get('/.well-known/jwks.json')
         .reply(200, {
@@ -265,23 +195,20 @@ describe('JwksClient', () => {
         jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
-      client.getSigningKeys((err, keys) => {
-        expect(err).to.be.null;
-        expect(keys).not.to.be.null;
-        expect(keys.length).to.equal(2);
-        const pubkey0 = keys[0].publicKey || keys[0].rsaPublicKey;
-        expect(pubkey0).not.to.be.null;
-        expect(keys[0].getPublicKey()).to.equal(keys[0].publicKey);
-        expect(keys[1].kid).to.equal('IdTokenSigningKeyContainer');
-        expect(keys[0].kid).to.equal('RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg');
-        const pubkey1 = keys[1].publicKey || keys[1].rsaPublicKey;
-        expect(pubkey1).not.to.be.null;
-        expect(keys[1].getPublicKey()).to.equal(keys[1].rsaPublicKey);
-        done();
-      });
+      const keys = await client.getSigningKeys();
+      expect(keys).not.to.be.null;
+      expect(keys.length).to.equal(2);
+      const pubkey0 = keys[0].publicKey || keys[0].rsaPublicKey;
+      expect(pubkey0).not.to.be.null;
+      expect(keys[0].getPublicKey()).to.equal(keys[0].publicKey);
+      expect(keys[1].kid).to.equal('IdTokenSigningKeyContainer');
+      expect(keys[0].kid).to.equal('RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg');
+      const pubkey1 = keys[1].publicKey || keys[1].rsaPublicKey;
+      expect(pubkey1).not.to.be.null;
+      expect(keys[1].getPublicKey()).to.equal(keys[1].rsaPublicKey);
     });
 
-    it('should return signing keys (with x5c)', done => {
+    it('should return signing keys (with x5c)', async () => {
       nock(jwksHost)
         .get('/.well-known/jwks.json')
         .reply(200, {
@@ -319,25 +246,22 @@ describe('JwksClient', () => {
         jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
-      client.getSigningKeys((err, keys) => {
-        expect(err).to.be.null;
-        expect(keys).not.to.be.null;
-        expect(keys.length).to.equal(2);
-        expect(keys[0].publicKey).not.to.be.null;
-        expect(keys[0].getPublicKey()).to.equal(keys[0].publicKey);
-        expect(keys[0].kid).to.equal(
-          'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg'
-        );
-        expect(keys[1].kid).to.equal(
-          'NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA'
-        );
-        expect(keys[1].publicKey).not.to.be.null;
-        expect(keys[1].getPublicKey()).to.equal(keys[1].publicKey);
-        done();
-      });
+      const keys = await client.getSigningKeys();
+      expect(keys).not.to.be.null;
+      expect(keys.length).to.equal(2);
+      expect(keys[0].publicKey).not.to.be.null;
+      expect(keys[0].getPublicKey()).to.equal(keys[0].publicKey);
+      expect(keys[0].kid).to.equal(
+        'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg'
+      );
+      expect(keys[1].kid).to.equal(
+        'NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA'
+      );
+      expect(keys[1].publicKey).not.to.be.null;
+      expect(keys[1].getPublicKey()).to.equal(keys[1].publicKey);
     });
 
-    it('should return signing keys (mod/exp)', done => {
+    it('should return signing keys (mod/exp)', async () => {
       nock(jwksHost)
         .get('/.well-known/jwks.json')
         .reply(200, {
@@ -380,23 +304,20 @@ describe('JwksClient', () => {
         jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
-      client.getSigningKeys((err, keys) => {
-        expect(err).to.be.null;
-        expect(keys).not.to.be.null;
-        expect(keys.length).to.equal(3);
-        expect(keys[0].rsaPublicKey).not.to.be.null;
-        expect(keys[0].getPublicKey()).to.equal(keys[0].rsaPublicKey);
-        expect(keys[0].kid).to.equal('IdTokenSigningKeyContainer');
-        expect(keys[1].kid).to.equal('IdTokenSigningKeyContainer.v2');
-        expect(keys[1].rsaPublicKey).not.to.be.null;
-        expect(keys[1].getPublicKey()).to.equal(keys[1].rsaPublicKey);
-        expect(keys[2].rsaPublicKey).not.to.be.null;
-        expect(keys[2].getPublicKey()).to.equal(keys[2].rsaPublicKey);
-        done();
-      });
+      const keys = await client.getSigningKeys();
+      expect(keys).not.to.be.null;
+      expect(keys.length).to.equal(3);
+      expect(keys[0].rsaPublicKey).not.to.be.null;
+      expect(keys[0].getPublicKey()).to.equal(keys[0].rsaPublicKey);
+      expect(keys[0].kid).to.equal('IdTokenSigningKeyContainer');
+      expect(keys[1].kid).to.equal('IdTokenSigningKeyContainer.v2');
+      expect(keys[1].rsaPublicKey).not.to.be.null;
+      expect(keys[1].getPublicKey()).to.equal(keys[1].rsaPublicKey);
+      expect(keys[2].rsaPublicKey).not.to.be.null;
+      expect(keys[2].getPublicKey()).to.equal(keys[2].rsaPublicKey);
     });
 
-    it('should only take the signing keys from the keys', done => {
+    it('should only take the signing keys from the keys', async () => {
       nock(jwksHost)
         .get('/.well-known/jwks.json')
         .reply(200, {
@@ -432,133 +353,37 @@ describe('JwksClient', () => {
         jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
-      client.getSigningKeys(err => {
+      try {
+        await client.getSigningKeys();
+        throw new Error('should have thrown error');
+      } catch (err) {
         expect(err).not.to.be.null;
         expect(err.name).to.equal('JwksError');
         expect(err.message).to.equal(
           'The JWKS endpoint did not contain any signing keys'
-        );
-        done();
-      });
-    });
-  
-    describe('#getKeysInterceptor', () => {
-      it('should return a matching key provided from the interceptor', done => {
-        const client = new JwksClient({ 
-          jwksUri: 'http://invalidUri',
-          getKeysInterceptor: (cb) => cb(null, jwksObject.keys)
-        });
-  
-        client.getSigningKey('abc', (err, key) => {
-          expect(err).to.be.null;
-          expect(key).not.to.be.null;
-          expect(key.kid).to.equal(jwksObject.keys[0].kid);
-          done();
-        });
-      });
-  
-      it('should fallback to using the jwksUri when key is not found in the interceptor', done => {
-        nock(jwksHost)
-          .get('/.well-known/jwks.json')
-          .reply(200, {
-            keys: [
-              {
-                kid: 'nonExistentKid',
-                use: 'sig',
-                kty: 'RSA',
-                e: 'AQAB',
-                n:
-                  'tLDZVZ2Eq_DFwNp24yeSq_Ha0MYbYOJs_WXIgVxQGabu5cZ9561OUtYWdB6xXXZLaZxFG02P5U2rC_CT1r0lPfC_KHYrviJ5Y_Ekif7iFV_1omLAiRksQziwA1i-hND32N5kxwEGNmZViVjWMBZ43wbIdWss4IMhrJy1WNQ07Fqp1Ee6o7QM1hTBve7bbkJkUAfjtC7mwIWqZdWoYIWBTZRXvhMgs_Aeb_pnDekosqDoWQ5aMklk3NvaaBBESqlRAJZUUf5WDFoJh7yRELOFF4lWJxtArTEiQPWVTX6PCs0klVPU6SRQqrtc4kKLCp1AC5EJqPYRGiEJpSz2nUhmAQ'
-              }
-            ]
-          });
-
-        const client = new JwksClient({ 
-          jwksUri: `${jwksHost}/.well-known/jwks.json`,
-          getKeysInterceptor: (cb) => cb(null, jwksObject.keys)
-        });
-  
-        client.getSigningKey('nonExistentKid', (err, key) => {
-          expect(err).to.be.null;
-          expect(key).not.to.be.null;
-          expect(key.kid).to.equal('nonExistentKid');
-          done();
-        });
-      });
+        ); 
+      }
     });
 
-    it('should handle errors passed from the interceptor', done => {
+    it('should handle errors passed from the interceptor', async () => {
       const error = new Error('interceptor error');
       const client = new JwksClient({ 
         jwksUri: 'http://invalidUri',
-        getKeysInterceptor: (cb) => cb(error)
+        getKeysInterceptor: () => { throw error; }
       });
 
-      client.getSigningKey('abc', (err) => {
+      try {
+        await client.getSigningKey('abc');
+        throw new Error('should have thrown error');
+      } catch (err) {
         expect(err).not.to.be.null;
         expect(err).to.equal(error);
-        done();
-      });
-    });
-  });
-
-  describe('#getSigningKeysAsync', () => {
-    it('should handle errors when async', done => {
-      nock(jwksHost)
-        .get('/.well-known/jwks.json')
-        .reply(500);
-
-      const client = new JwksClient({
-        jwksUri: `${jwksHost}/.well-known/jwks.json`
-      });
-
-      client.getSigningKeysAsync()
-        .catch(err => {
-          expect(err).not.to.be.null;
-          expect(err.message).to.equal('Http Error 500');
-          done();
-        });
-    });
-
-    it('should return signing keys to promise success handler when async', done => {
-      nock(jwksHost)
-        .get('/.well-known/jwks.json')
-        .reply(200, {
-          keys: [
-            {
-              kid: 'IdTokenSigningKeyContainer',
-              use: 'sig',
-              kty: 'RSA',
-              e: 'AQAB',
-              n:
-                'tLDZVZ2Eq_DFwNp24yeSq_Ha0MYbYOJs_WXIgVxQGabu5cZ9561OUtYWdB6xXXZLaZxFG02P5U2rC_CT1r0lPfC_KHYrviJ5Y_Ekif7iFV_1omLAiRksQziwA1i-hND32N5kxwEGNmZViVjWMBZ43wbIdWss4IMhrJy1WNQ07Fqp1Ee6o7QM1hTBve7bbkJkUAfjtC7mwIWqZdWoYIWBTZRXvhMgs_Aeb_pnDekosqDoWQ5aMklk3NvaaBBESqlRAJZUUf5WDFoJh7yRELOFF4lWJxtArTEiQPWVTX6PCs0klVPU6SRQqrtc4kKLCp1AC5EJqPYRGiEJpSz2nUhmAQ'
-            },
-            {
-              kid: 'IdTokenSigningKeyContainer.v2',
-              use: 'sig',
-              kty: 'RSA',
-              e: 'AQAB',
-              n:
-                's4W7xjkQZP3OwG7PfRgcYKn8eRYXHiz1iK503fS-K2FZo-Ublwwa2xFZWpsUU_jtoVCwIkaqZuo6xoKtlMYXXvfVHGuKBHEBVn8b8x_57BQWz1d0KdrNXxuMvtFe6RzMqiMqzqZrzae4UqVCkYqcR9gQx66Ehq7hPmCxJCkg7ajo7fu6E7dPd34KH2HSYRsaaEA_BcKTeb9H1XE_qEKjog68wUU9Ekfl3FBIRN-1Ah_BoktGFoXyi_jt0-L0-gKcL1BLmUlGzMusvRbjI_0-qj-mc0utGdRjY-xIN2yBj8vl4DODO-wMwfp-cqZbCd9TENyHaTb8iA27s-73L3ExOQ'
-            }
-          ]
-        });
-
-      const client = new JwksClient({
-        jwksUri: `${jwksHost}/.well-known/jwks.json`
-      });
-
-      client.getSigningKeysAsync()
-        .then(keys => {
-          expect(keys).to.not.be.null;
-          expect(keys.length).to.equal(2);
-          done();
-        });
+      }
     });
   });
 
   describe('#getSigningKey', () => {
-    it('should return error if signing key is not found', done => {
+    it('should return error if signing key is not found', async () => {
       nock(jwksHost)
         .get('/.well-known/jwks.json')
         .reply(200, x5cMultiple);
@@ -567,16 +392,18 @@ describe('JwksClient', () => {
         jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
-      client.getSigningKey('1234', err => {
+      try {
+        await client.getSigningKey('1234');
+        throw new Error('should have thrown error');
+      } catch (err) {
         expect(err).not.to.be.null;
         expect(err.name).to.equal('SigningKeyNotFoundError');
-        done();
-      });
+      }
     });
   });
 
   describe('#getSigningKeyAsync', () => {
-    it('should handle error when async', done => {
+    it('should handle error when async', async () => {
       nock(jwksHost)
         .get('/.well-known/jwks.json')
         .reply(500);
@@ -585,12 +412,13 @@ describe('JwksClient', () => {
         jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
-      client.getSigningKeyAsync('')
-        .catch(err => {
-          expect(err).not.to.be.null;
-          expect(err.message).to.equal('Http Error 500');
-          done();
-        });
+      try {
+        await client.getSigningKey('1234');
+        throw new Error('should have thrown error');
+      } catch (err) {
+        expect(err).not.to.be.null;
+        expect(err.message).to.equal('Http Error 500');
+      }
     });
   });
 });

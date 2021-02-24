@@ -27,13 +27,11 @@ module.exports.expressJwtSecret = (options) => {
       return cb(null, null);
     }
 
-    client.getSigningKey(header.kid, (err, key) => {
-      if (err) {
-        return onError(err, (newError) => cb(newError, null));
-      }
-
-      // Provide the key.
-      return cb(null, key.publicKey || key.rsaPublicKey);
-    });
+    client.getSigningKey(header.kid)
+      .then(key => {
+        cb(null, key.publicKey || key.rsaPublicKey);
+      }).catch(err => {
+        onError(err, (newError) => cb(newError, null));
+      });
   };
 };

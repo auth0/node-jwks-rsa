@@ -22,6 +22,7 @@
     "babel-cli": "^6.9.0",
     "babel-core": "^6.9.0",
     "babel-eslint": "^8.2.6",
+    "babel-polyfill": "^6.24.1",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-stage-0": "^6.5.0",
     "chai": "^3.5.0",
@@ -48,11 +49,11 @@
     "compile": "babel -d lib/ src/",
     "lint": "eslint ./src ./tests",
     "prepublish": "npm run clean && npm run compile",
-    "test:ts": "npm run clean:ts && tsc && NODE_ENV=test mocha --require babel-core/register --exit --timeout 5000 $(find ./ts-output -name *.tests.js)",
-    "test:js": "NODE_ENV=test mocha --require babel-core/register --exit --timeout 5000 $(find ./tests -name *.tests.js)",
+    "test:ts": "npm run clean:ts && tsc && NODE_ENV=test mocha --require babel-core/register --require babel-polyfill --exit --timeout 5000 $(find ./ts-output -name *.tests.js)",
+    "test:js": "NODE_ENV=test mocha --require babel-core/register --require babel-polyfill --exit --timeout 5000 $(find ./tests -name *.tests.js)",
     "test": "npm run test:js && npm run test:ts",
     "test:ci": "nyc --reporter=lcov npm test",
-    "test-watch": "NODE_ENV=test mocha --require babel-core/register --exit --timeout 5000 $(find ./tests -name *.tests.js) --watch",
+    "test-watch": "NODE_ENV=test mocha --require babel-core/register --require babel-polyfill --exit --timeout 5000 $(find ./tests -name *.tests.js) --watch",
     "release": "git tag $npm_package_version && git push && git push --tags && npm publish"
   },
   "repository": {
