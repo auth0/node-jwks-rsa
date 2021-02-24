@@ -37,12 +37,14 @@ declare namespace JwksRsa {
 
   interface CertSigningKey {
     kid: string;
+    alg: string;
     getPublicKey(): string;
     publicKey: string;
   }
 
   interface RsaSigningKey {
     kid: string;
+    alg: string;
     getPublicKey(): string;
     rsaPublicKey: string;
   }
