@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.12.3] - (2021-02-25)
+
+**Added**
+- Add alg to SigningKey types [\#220](https://github.com/auth0/node-jwks-rsa/pull/220) ([okko](https://github.com/okko))
+
+**Fixed**
+
+- Fix npmjs resolves [\#221](https://github.com/auth0/node-jwks-rsa/pull/221) ([adamjmcgrath](https://github.com/adamjmcgrath))
+- Fix Import default Axios instance [\#216](https://github.com/auth0/node-jwks-rsa/pull/216) ([dsebastien](https://github.com/dsebastien)) 
+
 ## [1.12.2] - (2021-01-07)
 
 **Fixed**

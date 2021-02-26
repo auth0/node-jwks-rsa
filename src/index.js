@@ -10,6 +10,7 @@ module.exports = (options) => {
   return new JwksClient(options);
 };
 
+module.exports.JwksClient = JwksClient;
 module.exports.ArgumentError = errors.ArgumentError;
 module.exports.JwksError = errors.JwksError;
 module.exports.JwksRateLimitError = errors.JwksRateLimitError;
