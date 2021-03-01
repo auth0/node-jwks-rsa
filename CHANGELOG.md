@@ -1,5 +1,87 @@
 # Changelog
 
+## [2.0.0] - (2021-03-01)
+With version 2 we have added full JWK/JWS support.  With this we have bumped the node version to minimum 10.  We have also removed Axios and exposed a `fetcher` option to allow user's to completely override how the request to the `jwksUri` endpoint is made.
+
+### Breaking Changes
+* Drops support for Node < 10
+* No more callbacks, using async/await(promises)
+* Removed Axios and changed the API to JwksClient
+
+### Changes
+**Added**
+- Full JWK/JWS Support [\#205](https://github.com/auth0/node-jwks-rsa/pull/205) ([panva](https://github.com/panva))
+
+**Changed**
+- Simplify request wrapper [\#218](https://github.com/auth0/node-jwks-rsa/pull/218) ([davidpatrick](https://github.com/davidpatrick))
+- Pins to Node Version 10,12,14 [\#212](https://github.com/auth0/node-jwks-rsa/pull/212) ([davidpatrick](https://github.com/davidpatrick))
+- Migrate from callbacks to async/await [\#222](https://github.com/auth0/node-jwks-rsa/pull/222) ([davidpatrick](https://github.com/davidpatrick))
+
+### Migration Guide from v1 to v2
+#### Proxies
+The proxy option has been removed from the JwksClient.  Support for it was a little spotty through Axios, and we wanted to allow users to have more control over the flow.  Now you can specify your proxy by overriding the `requestAgent` used with an [agent with built-in proxy support](https://github.com/TooTallNate/node-https-proxy-agent), or by completely overriding the request library with the `fetcher` option.
+
+```js
+// OLD
+const oldClient = jwksClient({
+  jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
+  proxy: 'https://username:pass@address:port'
+});
+
+// NEW
+const HttpsProxyAgent = require('https-proxy-agent');
+const newClient = jwksClient({
+  jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
+  requestAgent: new HttpsProxyAgent('https://username:pass@address:port')
+});
+```
+
+#### Request Agent Options
+The library no longer gates what http(s) Agent is used, so we have removed `requestAgentOptions` and now expose the `requestAgent` option when creating a `jwksClient`.
+
+```js
+// OLD
+const oldClient = jwksClient({
+  jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
+  requestAgentOptions: {
+    ca: fs.readFileSync(caFile)
+  }
+});
+
+// NEW
+const newClient = jwksClient({
+  jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
+  requestAgent: new https.Agent({
+    ca: fs.readFileSync(caFile)
+  })
+});
+```
+
+#### Migrated Callbacks to Async/Await
+The library no longer supports callbacks.  We have migrated to async/await(promises).
+
+```js
+// OLD
+client.getSigningKey(kid, (err, key) => {
+  const signingKey = key.getPublicKey();
+});
+
+// NEW
+const key = await client.getSigningKey(kid);
+const signingKey = key.getPublicKey();
+```
+
+## [1.12.3] - (2021-02-25)
+
+**Added**
+- Add alg to SigningKey types [\#220](https://github.com/auth0/node-jwks-rsa/pull/220) ([okko](https://github.com/okko))
+
+**Fixed**
+
+- Fix npmjs resolves [\#221](https://github.com/auth0/node-jwks-rsa/pull/221) ([adamjmcgrath](https://github.com/adamjmcgrath))
+- Fix Import default Axios instance [\#216](https://github.com/auth0/node-jwks-rsa/pull/216) ([dsebastien](https://github.com/dsebastien)) 
+
+
 ## [1.12.2] - (2021-01-07)
 
 **Fixed**
