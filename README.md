@@ -22,17 +22,12 @@ const client = jwksClient({
   strictSsl: true, // Default value
   jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
   requestHeaders: {}, // Optional
-  requestAgentOptions: {}, // Optional
-  timeout: 30000, // Defaults to 30s
-  proxy: '[protocol]://[username]:[pass]@[address]:[port]', // Optional
+  timeout: 30000 // Defaults to 30s
 });
 
 const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';
-client.getSigningKey(kid, (err, key) => {
-  const signingKey = key.getPublicKey();
-
-  // Now I can use this to configure my Express or Hapi middleware
-});
+const key = await client.getSigningKey(kid);
+const signingKey = key.getPublicKey();
 ```
 
 > Note that all methods on the `JwksClient` have asynchronous equivalents, where the promisified name is suffixed with `Async`, e.g., `client.getSigningKeyAsync(kid).then(key => { /* ... */ })`;
@@ -59,11 +54,8 @@ const client = jwksClient({
 });
 
 const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';
-client.getSigningKey(kid, (err, key) => {
-  const signingKey = key.getPublicKey();
-
-  // Now I can use this to configure my Express or Hapi middleware
-});
+const key = await client.getSigningKey(kid);
+const signingKey = key.getPublicKey();
 ```
 
 ### Rate Limiting
@@ -80,39 +72,32 @@ const client = jwksClient({
 });
 
 const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';
-client.getSigningKey(kid, (err, key) => {
-  const signingKey = key.getPublicKey();
-
-  // Now I can use this to configure my Express or Hapi middleware
-});
+const key = await client.getSigningKey(kid);
+const signingKey = key.getPublicKey();
 ```
 
-### Using AgentOptions for TLS/SSL Configuration
+### Using Request Agent for TLS/SSL Configuration
 
-The `requestAgentOptions` property can be used to configure SSL/TLS options. An
+The `requestAgent` property can be used to configure SSL/TLS options. An
 example use case is providing a trusted private (i.e. enterprise/corporate) root
 certificate authority to establish TLS communication with the `jwks_uri`.
 
 ```js
 const jwksClient = require("jwks-rsa");
+const https = require('https');
 const client = jwksClient({
   strictSsl: true, // Default value
   jwksUri: 'https://my-enterprise-id-provider/.well-known/jwks.json',
   requestHeaders: {}, // Optional
-  requestAgentOptions: {
+  requestAgent: new https.Agent({
     ca: fs.readFileSync(caFile)
-  }
+  })
 });
 ```
 
-For more information, see [the NodeJS request library `agentOptions`
-documentation](https://github.com/request/request#using-optionsagentoptions).
-
 ### Proxy configuration
 
-There are two ways to configure the usage of a proxy:
- - Provide the ```proxy``` option when initialiting the client as shown above
- - Provide the ```HTTP_PROXY```, ```HTTPS_PROXY``` and ```NO_PROXY``` environment variables
+You can configure a proxy with using a [custom http(s) agent](https://github.com/TooTallNate/node-https-proxy-agent) in the `requestAgent` option.
 
 ### Loading keys from local file, environment variable, or other externals
 
@@ -121,9 +106,9 @@ The `getKeysInterceptor` property can be used to fetch keys before sending a req
 ```js
   const client = new JwksClient({ 
     jwksUri: 'https://my-enterprise-id-provider/.well-known/jwks.json',
-    getKeysInterceptor: (cb) => {
+    getKeysInterceptor: () => {
       const file = fs.readFileSync(jwksFile);
-      return cb(null, file.keys);
+      return file.keys;
     }
   });
 ```

@@ -11,7 +11,7 @@ const koaJwt = require('koa-jwt');
 const jwksRsa = require('../src');
 
 describe('koaJwtSecret', () => {
-  it('should throw error if options.jwksUri and options.jwksObject is null', () => {
+  it('should throw error if options.jwksUri is null', () => {
     let err = null;
 
     try {

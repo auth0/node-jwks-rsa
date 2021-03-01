@@ -20,8 +20,8 @@ module.exports.passportJwtSecret = (options) => {
     throw new ArgumentError('An options object must be provided when initializing passportJwtSecret');
   }
 
-  if (!options.jwksUri && !options.jwksObject) {
-    throw new ArgumentError('No JWKS provided. Please provide a jwksUri or jwksObject');
+  if (!options.jwksUri) {
+    throw new ArgumentError('No JWKS provided. Please provide a jwksUri');
   }
 
   const client = new JwksClient(options);
@@ -37,13 +37,11 @@ module.exports.passportJwtSecret = (options) => {
       return cb(null, null);
     }
 
-    client.getSigningKey(decoded.header.kid, (err, key) => {
-      if (err) {
-        return onError(err, (newError) => cb(newError, null));
-      }
-
-      // Provide the key.
-      return cb(null, key.publicKey || key.rsaPublicKey);
-    });
+    client.getSigningKey(decoded.header.kid)
+      .then(key => {
+        cb(null, key.publicKey || key.rsaPublicKey);
+      }).catch(err => {
+        onError(err, (newError) => cb(newError, null));
+      });
   };
 };
