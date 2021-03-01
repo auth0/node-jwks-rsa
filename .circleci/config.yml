@@ -48,7 +48,7 @@ jobs:
           name: Run Tests
           command: npm run test:ci
       - store_artifacts:
-          path: ./coverage/lcov-report
+          path: ./coverage/<< parameters.v >>/lcov-report
       - run:
           name: Upload Coverage
           when: on_success
