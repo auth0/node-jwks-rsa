@@ -49,14 +49,6 @@ const signingKey = key.getPublicKey();
 - `requestAgent`: (_optional_) a Node `http.Agent` to be passed to the http(s) request
 - `getKeysInterceptor`: (_optional_) a promise returning function hook [(details)](#loading-keys-from-local-file-environment-variable-or-other-externals)
 
-#### Return Values
-
-- `data`: data for the given key resolved by `fetcher` (or undefined if not loaded)
-- `error`: error thrown by `fetcher` (or undefined)
-- `isValidating`: if there's a request or revalidation loading
-- `mutate(data?, shouldRevalidate?)`: function to mutate the cached data
-
-
 ### Caching
 
 By default, signing key verification results are cached in order to prevent excessive HTTP requests to the JWKS endpoint. If a signing key matching the `kid` is found, this will be cached and the next time this `kid` is requested the signing key will be served from the cache.  The caching behavior can be configured as seen below:
