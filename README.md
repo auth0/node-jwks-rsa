@@ -19,7 +19,6 @@ You'll provide the client with the JWKS endpoint which exposes your signing keys
 const jwksClient = require('jwks-rsa');
 
 const client = jwksClient({
-  strictSsl: true, // Default value
   jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
   requestHeaders: {}, // Optional
   timeout: 30000 // Defaults to 30s
@@ -30,14 +29,33 @@ const key = await client.getSigningKey(kid);
 const signingKey = key.getPublicKey();
 ```
 
-> Note that all methods on the `JwksClient` have asynchronous equivalents, where the promisified name is suffixed with `Async`, e.g., `client.getSigningKeyAsync(kid).then(key => { /* ... */ })`;
-
-Integrations are also provided with:
+### Integrations
 
  - [express/express-jwt](examples/express-demo)
  - [express/passport-jwt](examples/passport-demo)
  - [hapi/hapi-auth-jwt2](examples/hapi-demo)
  - [koa/koa-jwt](examples/koa-demo)
+
+### API
+
+#### JwksClient Options
+
+- `jwksUri`: a string that represents the JWKS URI
+- `timeout = 30000`: (_optional_) an integer in miliseconds that controls the request timeout
+- `cache = true`: (_optional_) enables a LRU Cache [(details)](#caching)
+- `rateLimit`: (_optional_) the default fetcher function [(details)](#rate-limiting)
+- `fetcher`: (_optional_) a Promise returning function to fetch data from the JWKS URI
+- `requestHeaders`: (_optional_) an object of headers to pass to the request
+- `requestAgent`: (_optional_) a Node `http.Agent` to be passed to the http(s) request
+- `getKeysInterceptor`: (_optional_) a promise returning function hook [(details)](#loading-keys-from-local-file-environment-variable-or-other-externals)
+
+#### Return Values
+
+- `data`: data for the given key resolved by `fetcher` (or undefined if not loaded)
+- `error`: error thrown by `fetcher` (or undefined)
+- `isValidating`: if there's a request or revalidation loading
+- `mutate(data?, shouldRevalidate?)`: function to mutate the cached data
+
 
 ### Caching
 
@@ -86,7 +104,6 @@ certificate authority to establish TLS communication with the `jwks_uri`.
 const jwksClient = require("jwks-rsa");
 const https = require('https');
 const client = jwksClient({
-  strictSsl: true, // Default value
   jwksUri: 'https://my-enterprise-id-provider/.well-known/jwks.json',
   requestHeaders: {}, // Optional
   requestAgent: new https.Agent({
