@@ -1,7 +1,7 @@
-import jose from 'jose';
-import JwksError from './errors/JwksError';
+const jose = require('jose');
+const JwksError = require('./errors/JwksError');
 
-export function retrieveSigningKeys(keys) {
+function retrieveSigningKeys(keys) {
   let keystore = [];
   try {
     keystore = jose.JWKS.asKeyStore({ keys }, { ignoreErrors: true });
@@ -18,3 +18,7 @@ export function retrieveSigningKeys(keys) {
     };
   });
 }
+
+module.exports = {
+  retrieveSigningKeys
+};

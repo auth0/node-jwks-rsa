@@ -1,9 +1,9 @@
-import debug from 'debug';
-import { RateLimiter } from 'limiter';
+const debug = require('debug');
+const { RateLimiter } = require('limiter');
 
-import JwksRateLimitError from '../errors/JwksRateLimitError';
+const JwksRateLimitError = require('../errors/JwksRateLimitError');
 
-export default function(client, { jwksRequestsPerMinute = 10 } = options) {
+function rateLimtWrapper(client, { jwksRequestsPerMinute = 10 } = options) {
   const logger = debug('jwks');
   const getSigningKey = client.getSigningKey.bind(client);
 
@@ -31,3 +31,5 @@ export default function(client, { jwksRequestsPerMinute = 10 } = options) {
     });
   });
 }
+
+module.exports.default = rateLimtWrapper;

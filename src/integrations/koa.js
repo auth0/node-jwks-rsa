@@ -1,9 +1,8 @@
-import { ArgumentError } from '../errors';
-import { JwksClient } from '../JwksClient';
-import supportedAlg from './config';
+const { ArgumentError } = require('../errors');
+const { JwksClient } = require('../JwksClient');
+const supportedAlg = require('./config');
 
-module.exports.koaJwtSecret = (options = {}) => {
-
+module.exports.koaJwtSecret = function (options = {}) {
   if (!options.jwksUri) {
     throw new ArgumentError('No JWKS provided. Please provide a jwksUri');
   }

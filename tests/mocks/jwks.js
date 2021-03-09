@@ -1,7 +1,7 @@
-import nock from 'nock';
-import jose from 'jose';
+const nock = require('nock');
+const jose = require('jose');
 
-export function jwksEndpoint(host, certs) {
+function jwksEndpoint(host, certs) {
   return nock(host)
     .get('/.well-known/jwks.json')
     .reply(200, {
@@ -15,3 +15,7 @@ export function jwksEndpoint(host, certs) {
       })
     });
 }
+
+module.exports = {
+  jwksEndpoint
+};

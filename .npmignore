@@ -1,6 +1,0 @@
-.babelrc
-.eslintrc
-src/
-examples/
-coverage/
-lib-cov/

@@ -1,10 +1,10 @@
-import { retrieveSigningKeys } from '../utils';
+const retrieveSigningKeys = require('../utils').retrieveSigningKeys;
 
 /**
  * Uses getKeysInterceptor to allow users to retrieve keys from a file,
  * external cache, or provided object before falling back to the jwksUri endpoint
  */
-export default function(client, { getKeysInterceptor } = options) {
+function getKeysInterceptor(client, { getKeysInterceptor } = options) {
   const getSigningKey = client.getSigningKey;
 
   return async (kid) => {
@@ -26,3 +26,5 @@ export default function(client, { getKeysInterceptor } = options) {
     return getSigningKey(kid);
   };
 }
+
+module.exports.default = getKeysInterceptor;

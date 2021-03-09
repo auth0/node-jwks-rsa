@@ -1,12 +1,6 @@
 {
-  "parser": "babel-eslint",
   "parserOptions": {
-    "ecmaFeatures": {
-      "arrowFunctions": true,
-      "blockBindings": true,
-      "generators": true,
-      "modules": true
-    }
+    "ecmaVersion": 2018
   },
   "rules": {
     "array-bracket-spacing": [2, "always"],
@@ -27,11 +21,6 @@
     "space-before-blocks": [2, "always"]
   },
   "env": {
-    "amd": true,
-    "es6": true,
     "node": true
-  },
-  "plugins": [
-    "babel"
-  ]
+  }
 }
