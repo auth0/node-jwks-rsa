@@ -1,7 +1,7 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 const jwt = require('koa-jwt');
-const jwksRsa = require('../../lib');
+const jwksRsa = require('../../src');
 
 const jwksHost = process.env.JWKS_HOST;
 const audience = process.env.AUDIENCE;

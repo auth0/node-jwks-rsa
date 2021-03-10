@@ -12,4 +12,4 @@ const allowedSignatureAlg = [
   'EdDSA'
 ];
 
-export default allowedSignatureAlg;
+module.exports = allowedSignatureAlg;

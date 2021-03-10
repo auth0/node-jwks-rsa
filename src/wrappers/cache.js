@@ -1,7 +1,7 @@
-import debug from 'debug';
-import memoizer from 'lru-memoizer';
+const debug = require('debug');
+const memoizer = require('lru-memoizer');
 
-export default function(client, { cacheMaxEntries = 5, cacheMaxAge = 600000 } = options) {
+function cacheWrapper(client, { cacheMaxEntries = 5, cacheMaxAge = 600000 } = options) {
   const logger = debug('jwks');
   logger(`Configured caching of signing keys. Max: ${cacheMaxEntries} / Age: ${cacheMaxAge}`);
   return memoizer.sync({
@@ -11,3 +11,5 @@ export default function(client, { cacheMaxEntries = 5, cacheMaxAge = 600000 } = 
     max: cacheMaxEntries
   });
 }
+
+module.exports.default = cacheWrapper;

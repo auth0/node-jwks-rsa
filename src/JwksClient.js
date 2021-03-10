@@ -1,19 +1,10 @@
-import debug from 'debug';
-import request from './wrappers/request';
-import JwksError from './errors/JwksError';
-import SigningKeyNotFoundError from './errors/SigningKeyNotFoundError';
+const debug = require('debug');
+const { retrieveSigningKeys } = require('./utils') ;
+const { request, cacheSigningKey, rateLimitSigningKey, getKeysInterceptor } = require('./wrappers');
+const JwksError = require('./errors/JwksError');
+const SigningKeyNotFoundError = require('./errors/SigningKeyNotFoundError');
 
-import {
-  retrieveSigningKeys
-} from './utils';
-
-import {
-  cacheSigningKey,
-  rateLimitSigningKey,
-  getKeysInterceptor
-} from './wrappers';
-
-export class JwksClient {
+class JwksClient {
   constructor(options) {
     this.options = {
       rateLimit: false,
@@ -93,3 +84,7 @@ export class JwksClient {
     }
   }
 }
+
+module.exports = {
+  JwksClient
+};

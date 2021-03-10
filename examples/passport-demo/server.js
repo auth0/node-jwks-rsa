@@ -3,7 +3,7 @@ const logger = require('debug')('express');
 const passport = require('passport');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-const jwksRsa = require('../../lib');
+const jwksRsa = require('../../src');
 
 const jwksHost = process.env.JWKS_HOST;
 const audience = process.env.AUDIENCE;

@@ -2,7 +2,7 @@ const Hapi = require('hapi');
 const good = require('good');
 const jwt = require('hapi-auth-jwt2');
 const logger = require('debug')('hapi');
-const jwksRsa = require('../../lib');
+const jwksRsa = require('../../src');
 
 const jwksHost = process.env.JWKS_HOST;
 const audience = process.env.AUDIENCE;

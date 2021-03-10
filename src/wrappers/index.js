@@ -1,3 +1,6 @@
-export cacheSigningKey from './cache';
-export rateLimitSigningKey from './rateLimit';
-export getKeysInterceptor from './interceptor';
+module.exports = {
+  request: require('./request').default,
+  cacheSigningKey: require('./cache').default,
+  rateLimitSigningKey: require('./rateLimit').default,
+  getKeysInterceptor: require('./interceptor').default
+};

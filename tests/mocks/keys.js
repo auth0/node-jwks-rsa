@@ -1,11 +1,11 @@
-export const publicKey = `-----BEGIN PUBLIC KEY-----
+const publicKey = `-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDdlatRjRjogo3WojgGHFHYLugd
 UWAY9iR3fy4arWNA1KoS8kVw33cJibXr8bvwUAUparCwlvdbH6dvEOfou0/gCFQs
 HUfQrSDv+MuSUMAe8jzKE4qW+jK+xQU9a03GUnKHkkle+Q0pX/g6jXZ7r1/xAK5D
 o2kQ+X5xK9cipRgEKwIDAQAB
 -----END PUBLIC KEY-----`;
 
-export const privateKey = `-----BEGIN RSA PRIVATE KEY-----
+const privateKey = `-----BEGIN RSA PRIVATE KEY-----
 MIICWwIBAAKBgQDdlatRjRjogo3WojgGHFHYLugdUWAY9iR3fy4arWNA1KoS8kV
 w33cJibXr8bvwUAUparCwlvdbH6dvEOfou0/gCFQsHUfQrSDv+MuSUMAe8jzKE4
 qW+jK+xQU9a03GUnKHkkle+Q0pX/g6jXZ7r1/xAK5Do2kQ+X5xK9cipRgEKwIDA
@@ -21,7 +21,7 @@ SDOxQ4G/523Y0sz/OZtSWcol/UMgQJALesy++GdvoIDLfJX5GBQpuFgFenRiRDa
 bxrE9MNUZ2aPFaFp+DyAe+b4nDwuJaW2LURbr8AEZga7oQj0uYxcYw==
 -----END RSA PRIVATE KEY-----`;
 
-export const randomPublicKey1 = `-----BEGIN PUBLIC KEY-----
+const randomPublicKey1 = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvqNYBKQeFfPlSDq3kGxg
 GtcMiCta7Tl/eirZ8T7knlEQomJjQN1z4p1rfhnA6m2dSh5/cnAo8MByRMlAO6DB
 401k/A6YUxEqPjGoSnESQhfwL7MezjVDrHnhlnLTFT5a9MZx2PPJlNn+HSI5iKyz
@@ -30,3 +30,9 @@ T+lkNTIWbdhF85w4PNWqnfA7P51wpvtx1k3XURgZk6SMR6Slx53McKj0fho6Z0oK
 nK2ov/0VeiKFwEyDf2zU5bdx/B+B/n+S84l1ypHg+gBNBN+wNWh4xZUHhcsZHpIL
 mQIDAQAB
 -----END PUBLIC KEY-----`;
+
+module.exports = {
+  publicKey,
+  privateKey,
+  randomPublicKey1
+};

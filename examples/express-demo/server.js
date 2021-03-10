@@ -1,7 +1,7 @@
 const Express = require('express');
 const jwt = require('express-jwt');
 const logger = require('debug')('express');
-const jwksRsa = require('../../lib');
+const jwksRsa = require('../../src');
 
 const jwksHost = process.env.JWKS_HOST;
 const audience = process.env.AUDIENCE;

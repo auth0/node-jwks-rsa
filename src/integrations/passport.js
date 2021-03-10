@@ -1,7 +1,7 @@
-import { JWT } from 'jose';
-import { ArgumentError } from '../errors';
-import { JwksClient } from '../JwksClient';
-import supportedAlg from './config';
+const JWT = require('jose').JWT;
+const { ArgumentError } = require('../errors');
+const { JwksClient } = require('../JwksClient');
+const supportedAlg = require('./config');
 
 const handleSigningKeyError = (err, cb) => {
   // If we didn't find a match, can't provide a key.
@@ -15,7 +15,7 @@ const handleSigningKeyError = (err, cb) => {
   }
 };
 
-module.exports.passportJwtSecret = (options) => {
+module.exports.passportJwtSecret = function (options) {
   if (options === null || options === undefined) {
     throw new ArgumentError('An options object must be provided when initializing passportJwtSecret');
   }

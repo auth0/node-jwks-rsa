@@ -1,9 +1,9 @@
-import request from 'supertest';
-import { expect } from 'chai';
+const request = require('supertest');
+const { expect } = require('chai');
 
-import { jwksEndpoint } from './mocks/jwks';
-import { publicKey, privateKey, randomPublicKey1 } from './mocks/keys';
-import { createToken, createSymmetricToken } from './mocks/tokens';
+const { jwksEndpoint } = require('./mocks/jwks');
+const { publicKey, privateKey, randomPublicKey1 } = require('./mocks/keys');
+const { createToken, createSymmetricToken } = require('./mocks/tokens');
 
 const Express = require('express');
 const passport = require('passport');
