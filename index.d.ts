@@ -8,12 +8,9 @@ declare namespace JwksRsa {
   class JwksClient {
     constructor(options: Options);
 
-    getKeys(cb: (err: Error | null, keys: unknown) => void): void;
-    getKeysAsync(): Promise<unknown>;
-    getSigningKeys(cb: (err: Error | null, keys: SigningKey[]) => void): void;
-    getSigningKeysAsync(): Promise<SigningKey[]>;
-    getSigningKey(kid: string, cb: (err: Error | null, key: SigningKey) => void): void;
-    getSigningKeyAsync(kid: string): Promise<SigningKey>;
+    getKeys(): Promise<unknown>;
+    getSigningKeys(): Promise<SigningKey[]>;
+    getSigningKey(kid: string): Promise<SigningKey>;
   }
 
   interface Headers {
