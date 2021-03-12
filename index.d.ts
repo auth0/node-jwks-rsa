@@ -29,7 +29,7 @@ declare namespace JwksRsa {
     requestHeaders?: Headers;
     timeout?: number;
     requestAgent?: HttpAgent | HttpsAgent;
-    fetcher?(jwksUri: string): Promise<{ keys: SigningKey[] }>;
+    fetcher?(jwksUri: string): Promise<{ keys: any }>;
     getKeysInterceptor?(): Promise<SigningKey[]>;
   }
 
