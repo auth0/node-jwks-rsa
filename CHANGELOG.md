@@ -1,4 +1,11 @@
 # Changelog
+## [2.0.1] - (2021-03-12)
+**Added**
+- Callback backwards compatbility for `getSigningKey` [\#227](https://github.com/auth0/node-jwks-rsa/pull/227) ([davidpatrick](https://github.com/davidpatrick))
+
+**Fixed**
+- Fix typescript declarations for v2 [\#229](https://github.com/auth0/node-jwks-rsa/pull/229) ([davidpatrick](https://github.com/baywet))
+- Fix typescript types for fetcher [\#231](https://github.com/auth0/node-jwks-rsa/pull/231) ([itajaja](https://github.com/itajaja))
 
 ## [2.0.0] - (2021-03-01)
 With version 2 we have added full JWK/JWS support.  With this we have bumped the node version to minimum 10.  We have also removed Axios and exposed a `fetcher` option to allow user's to completely override how the request to the `jwksUri` endpoint is made.
