@@ -1,6 +1,6 @@
 const debug = require('debug');
 const { retrieveSigningKeys } = require('./utils') ;
-const { request, cacheSigningKey, rateLimitSigningKey, getKeysInterceptor } = require('./wrappers');
+const { request, cacheSigningKey, rateLimitSigningKey, getKeysInterceptor, callbackSupport } = require('./wrappers');
 const JwksError = require('./errors/JwksError');
 const SigningKeyNotFoundError = require('./errors/SigningKeyNotFoundError');
 
@@ -25,6 +25,8 @@ class JwksClient {
     if (this.options.cache) {
       this.getSigningKey = cacheSigningKey(this, options);
     }
+
+    this.getSigningKey = callbackSupport(this, options);
   }
 
   async getKeys() {
