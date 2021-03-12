@@ -383,6 +383,40 @@ describe('JwksClient', () => {
   });
 
   describe('#getSigningKey', () => {
+    describe('when a callback is supplied', () => {
+      it('should return the key found to the callback', (done) => {
+        nock(jwksHost)
+          .get('/.well-known/jwks.json')
+          .reply(200, x5cMultiple);
+  
+        const client = new JwksClient({
+          jwksUri: `${jwksHost}/.well-known/jwks.json`
+        });
+        const key = x5cMultiple.keys[0];
+
+        client.getSigningKey(key.kid, (err, foundKey) => {
+          expect(foundKey.kid).to.equal(key.kid);
+          done();
+        });
+      });
+
+      it('should return any errors to the callback', (done) => {
+        nock(jwksHost)
+          .get('/.well-known/jwks.json')
+          .reply(200, x5cMultiple);
+  
+        const client = new JwksClient({
+          jwksUri: `${jwksHost}/.well-known/jwks.json`
+        });
+  
+        client.getSigningKey('123', (err) => {
+          expect(err).not.to.be.null;
+          expect(err.name).to.equal('SigningKeyNotFoundError');
+          done();
+        });
+      });
+    });
+
     it('should return error if signing key is not found', async () => {
       nock(jwksHost)
         .get('/.well-known/jwks.json')
