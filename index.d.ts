@@ -10,8 +10,8 @@ declare namespace JwksRsa {
 
     getKeys(): Promise<unknown>;
     getSigningKeys(): Promise<SigningKey[]>;
-    getSigningKey(kid: string): Promise<SigningKey>;
-    getSigningKey(kid: string, cb: (err: Error | null, key: SigningKey) => void): void;
+    getSigningKey(kid?: string | null | undefined): Promise<SigningKey>;
+    getSigningKey(kid: string | null | undefined, cb: (err: Error | null, key: SigningKey) => void): void;
   }
 
   interface Headers {
