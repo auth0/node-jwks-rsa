@@ -9,14 +9,14 @@ module.exports.default =  (options) => {
 
   return new Promise((resolve, reject) => {
     const {
-      host,
+      hostname,
       path,
       port,
       protocol
     } = urlUtil.parse(options.uri);
 
     const requestOptions = {
-      host,
+      hostname,
       path,
       port,
       method: 'GET',
