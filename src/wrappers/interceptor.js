@@ -5,7 +5,7 @@ const retrieveSigningKeys = require('../utils').retrieveSigningKeys;
  * external cache, or provided object before falling back to the jwksUri endpoint
  */
 function getKeysInterceptor(client, { getKeysInterceptor } = options) {
-  const getSigningKey = client.getSigningKey;
+  const getSigningKey = client.getSigningKey.bind(client);
 
   return async (kid) => {
     const keys = await getKeysInterceptor();
