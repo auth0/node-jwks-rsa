@@ -1,4 +1,11 @@
 # Changelog
+## [2.0.2] - (2021-03-24)
+
+**Fixed**
+- Interceptor bind client [\#237](https://github.com/auth0/node-jwks-rsa/pull/237) ([erikfried](https://github.com/erikfried))
+- Update type def for getSigningKey [\#236](https://github.com/auth0/node-jwks-rsa/pull/236) ([davidpatrick](https://github.com/davidpatrick))
+- Use hostname instead of host when creating request [\#233](https://github.com/auth0/node-jwks-rsa/pull/233) ([cjlpowers](https://github.com/cjlpowers))
+
 ## [2.0.1] - (2021-03-12)
 **Added**
 - Callback backwards compatbility for `getSigningKey` [\#227](https://github.com/auth0/node-jwks-rsa/pull/227) ([davidpatrick](https://github.com/davidpatrick))
