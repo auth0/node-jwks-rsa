@@ -25,13 +25,15 @@ module.exports.passportJwtSecret = function (options) {
   }
 
   const client = new JwksClient(options);
-  const onError = options.handleSigningKeyError || handleSigningKeyError;
+  const onError = options.handleSigningKeyError || handleSigningKeyError;
 
   return function secretProvider(req, rawJwtToken, cb) {
     let decoded;
     try {
       decoded = JWT.decode(rawJwtToken, { complete: true });
-    } catch (err) {}
+    } catch (err) {
+      decoded = null;
+    }
 
     if (!decoded || !supportedAlg.includes(decoded.header.alg)) {
       return cb(null, null);

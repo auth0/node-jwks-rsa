@@ -1,5 +1,4 @@
 const jose = require('jose');
-const JwksError = require('./errors/JwksError');
 
 function retrieveSigningKeys(keys) {
   const keystore = jose.JWKS.asKeyStore({ keys }, { ignoreErrors: true });

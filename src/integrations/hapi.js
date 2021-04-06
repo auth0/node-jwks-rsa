@@ -37,7 +37,7 @@ module.exports.hapiJwt2Key = function (options) {
   }
 
   const client = new JwksClient(options);
-  const onError = options.handleSigningKeyError || handleSigningKeyError;
+  const onError = options.handleSigningKeyError || handleSigningKeyError;
 
   return function secretProvider(decoded, cb) {
     // We cannot find a signing certificate if there is no header (no kid).
