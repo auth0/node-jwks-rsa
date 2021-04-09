@@ -20,10 +20,10 @@ module.exports.expressJwtSecret = function (options) {
   }
 
   const client = new JwksClient(options);
-  const onError = options.handleSigningKeyError || handleSigningKeyError;
+  const onError = options.handleSigningKeyError || handleSigningKeyError;
 
   return function secretProvider(req, header, payload, cb) {
-    if (!header || !supportedAlg.includes(header.alg)) {
+    if (!header || !supportedAlg.includes(header.alg)) {
       return cb(null, null);
     }
 
