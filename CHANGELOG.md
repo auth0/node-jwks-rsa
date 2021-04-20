@@ -1,4 +1,12 @@
 # Changelog
+## [2.0.3] - (2021-04-20)
+
+**Fixed**
+- Fix retrieveSigningKeys error [\#242](https://github.com/auth0/node-jwks-rsa/pull/237) ([davidpatrick](https://github.com/davidpatrick))
+
+**Security**
+- Bump jose from 2.0.3 to 2.0.5 [\#244](https://github.com/auth0/node-jwks-rsa/pull/244) ([dependabot](https://github.com/dependabot))
+
 ## [2.0.2] - (2021-03-24)
 
 **Fixed**
