@@ -23,4 +23,25 @@ describe('typescript definition', () => {
       expect(key).to.contain('-----BEGIN PUBLIC KEY');
     });
   });
+
+  describe('getKeysInterceptor', async () => {
+    const keySetResponse = {
+      keys: [
+        {
+          alg: 'RS256',
+          kty: 'RSA',
+          use: 'sig',
+          kid: 'NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA'
+        }
+      ]
+    };
+
+    const client = new jwksRsa.JwksClient({
+      jwksUri: `${jwksHost}/.well-known/jwks.json`,
+      getKeysInterceptor: () => Promise.resolve(keySetResponse.keys)
+    });
+
+    const key = await client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+    expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+  });
 });
