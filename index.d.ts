@@ -30,13 +30,13 @@ declare namespace JwksRsa {
     timeout?: number;
     requestAgent?: HttpAgent | HttpsAgent;
     fetcher?(jwksUri: string): Promise<{ keys: any }>;
-    getKeysInterceptor?(): Promise<UnknownKey[]>;
+    getKeysInterceptor?(): Promise<JSONWebKey[]>;
   }
 
-  interface UnknownKey {
+  interface JSONWebKey {
     kid: string,
     alg: string,
-    [key: string]: any 
+    [key: string]: any
   }
 
   interface CertSigningKey {
