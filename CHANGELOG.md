@@ -1,4 +1,9 @@
 # Changelog
+## [2.0.4] - (2021-07-16)
+
+**Fixed**
+- [SDK-2626] getKeysInterceptor types [\#251](https://github.com/auth0/node-jwks-rsa/pull/251) ([davidpatrick](https://github.com/davidpatrick))
+
 ## [2.0.3] - (2021-04-20)
 
 **Fixed**
