@@ -16,7 +16,7 @@
     "debug": "^4.3.2",
     "jose": "^2.0.5",
     "limiter": "^1.1.5",
-    "lru-memoizer": "^2.1.2"
+    "lru-memoizer": "^2.1.4"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",
