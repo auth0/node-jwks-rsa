@@ -1,26 +1,14 @@
 version: 2.1
-
-workflows:
-  version: 2
-  test:
-    jobs:
-      - test:
-          name: test_node10
-          v: "10"
-      - test:
-          name: test_node12
-          v: "12"
-      - test:
-          name: test_node14
-          v: "14"
+orbs:
+  ship: auth0/ship@0.3.0
 jobs:
-  test:
+  build:
     parameters:
-      v:
+      node-version:
         type: string
         default: "12"
     docker:
-      - image: circleci/node:<< parameters.v >>
+      - image: circleci/node:<< parameters.node-version >>
     environment:
       LANG: en_US.UTF-8
     steps:
@@ -28,19 +16,7 @@ jobs:
       - run:
           name: Update NPM version
           command: sudo npm install -g npm@latest
-      - restore_cache:
-          name: Restore NPM Package Cache
-          keys:
-            - npm-packages-{{ checksum "package-lock.json" }}
-            - npm-packages-
-      - run:
-          name: Install Dependencies
-          command: npm install
-      - save_cache:
-          name: Save NPM Package Cache
-          key: npm-packages-{{ checksum "package-lock.json" }}
-          paths:
-            - ./node_modules
+      - ship/node-install-packages
       - run:
           name: Run Linter
           command: npm run lint
@@ -48,8 +24,25 @@ jobs:
           name: Run Tests
           command: npm run test:ci
       - store_artifacts:
-          path: ./coverage/<< parameters.v >>/lcov-report
+          path: ./coverage/<< parameters.node-version >>/lcov-report
       - run:
           name: Upload Coverage
           when: on_success
           command: bash <(curl -s https://codecov.io/bash) -Z -C $CIRCLE_SHA1
+workflows:
+  build-and-test:
+    jobs:
+      - build:
+          matrix:
+            parameters:
+              node-version: ["10", "12", "14"]
+      - ship/node-publish:
+          requires:
+            - build
+          context:
+            - publish-npm
+            - publish-gh
+          filters:
+            branches:
+              only:
+                - master
