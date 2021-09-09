@@ -1,4 +1,5 @@
-# Changelog
+# Change Log
+
 ## [2.0.4] - (2021-07-16)
 
 **Fixed**
