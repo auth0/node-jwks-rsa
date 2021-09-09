@@ -2,13 +2,13 @@ version: 2.1
 orbs:
   ship: auth0/ship@0.3.0
 jobs:
-  test:
+  build:
     parameters:
-      v:
+      node-version:
         type: string
         default: "12"
     docker:
-      - image: circleci/node:<< parameters.v >>
+      - image: circleci/node:<< parameters.node-version >>
     environment:
       LANG: en_US.UTF-8
     steps:
@@ -24,28 +24,21 @@ jobs:
           name: Run Tests
           command: npm run test:ci
       - store_artifacts:
-          path: ./coverage/<< parameters.v >>/lcov-report
+          path: ./coverage/<< parameters.node-version >>/lcov-report
       - run:
           name: Upload Coverage
           when: on_success
           command: bash <(curl -s https://codecov.io/bash) -Z -C $CIRCLE_SHA1
 workflows:
-  test:
+  build-and-test:
     jobs:
-      - test:
-          name: test_node10
-          v: "10"
-      - test:
-          name: test_node12
-          v: "12"
-      - test:
-          name: test_node14
-          v: "14"
+      - build:
+          matrix:
+            parameters:
+              node-version: ["10", "12", "14"]
       - ship/node-publish:
           requires:
-            - test_node10
-            - test_node12
-            - test_node14
+            - build
           context:
             - publish-npm
             - publish-gh
