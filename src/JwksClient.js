@@ -1,4 +1,4 @@
-const debug = require('debug');
+const logger = require('debug')('jwks');
 const { retrieveSigningKeys } = require('./utils') ;
 const { request, cacheSigningKey, rateLimitSigningKey, getKeysInterceptor, callbackSupport } = require('./wrappers');
 const JwksError = require('./errors/JwksError');
@@ -12,7 +12,6 @@ class JwksClient {
       timeout: 30000,
       ...options
     };
-    this.logger = debug('jwks');
 
     // Initialize wrappers.
     if (this.options.getKeysInterceptor) {
@@ -30,7 +29,7 @@ class JwksClient {
   }
 
   async getKeys() {
-    this.logger(`Fetching keys from '${this.options.jwksUri}'`);
+    logger(`Fetching keys from '${this.options.jwksUri}'`);
 
     try {
       const res = await request({
@@ -41,11 +40,11 @@ class JwksClient {
         fetcher: this.options.fetcher
       });
 
-      this.logger('Keys:', res.keys);  
+      logger('Keys:', res.keys);
       return res.keys;
     } catch (err) {
       const { errorMsg } = err;
-      this.logger('Failure:', errorMsg || err);
+      logger('Failure:', errorMsg || err);
       throw (errorMsg ? new JwksError(errorMsg) : err);
     }
   }
@@ -63,17 +62,17 @@ class JwksClient {
       throw new JwksError('The JWKS endpoint did not contain any signing keys');
     }
 
-    this.logger('Signing Keys:', signingKeys);
+    logger('Signing Keys:', signingKeys);
     return signingKeys;
   }
 
   async getSigningKey (kid) {
-    this.logger(`Fetching signing key for '${kid}'`);
+    logger(`Fetching signing key for '${kid}'`);
     const keys = await this.getSigningKeys();
 
     const kidDefined = kid !== undefined && kid !== null;
     if (!kidDefined && keys.length > 1) {
-      this.logger('No KID specified and JWKS endpoint returned more than 1 key');
+      logger('No KID specified and JWKS endpoint returned more than 1 key');
       throw new SigningKeyNotFoundError('No KID specified and JWKS endpoint returned more than 1 key');
     }
 
@@ -81,7 +80,7 @@ class JwksClient {
     if (key) {
       return key;
     } else {
-      this.logger(`Unable to find a signing key that matches '${kid}'`);
+      logger(`Unable to find a signing key that matches '${kid}'`);
       throw new SigningKeyNotFoundError(`Unable to find a signing key that matches '${kid}'`);
     }
   }
