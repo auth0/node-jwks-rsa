@@ -3,7 +3,7 @@ const { RateLimiter } = require('limiter');
 
 const JwksRateLimitError = require('../errors/JwksRateLimitError');
 
-function rateLimtWrapper(client, { jwksRequestsPerMinute = 10 }) {
+function rateLimitWrapper(client, { jwksRequestsPerMinute = 10 }) {
   const logger = debug('jwks');
   const getSigningKey = client.getSigningKey.bind(client);
 
@@ -32,4 +32,4 @@ function rateLimtWrapper(client, { jwksRequestsPerMinute = 10 }) {
   });
 }
 
-module.exports.default = rateLimtWrapper;
+module.exports.default = rateLimitWrapper;
