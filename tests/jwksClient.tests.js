@@ -1,5 +1,5 @@
 const nock = require('nock');
-const { expect } = require('chai');
+const { expect } = require('chai').use(require('chai-as-promised'));
 
 const { x5cMultiple } = require('./keys');
 const { JwksClient } = require('../src/JwksClient');
@@ -361,13 +361,13 @@ describe('JwksClient', () => {
         expect(err.name).to.equal('JwksError');
         expect(err.message).to.equal(
           'The JWKS endpoint did not contain any signing keys'
-        ); 
+        );
       }
     });
 
     it('should handle errors passed from the interceptor', async () => {
       const error = new Error('interceptor error');
-      const client = new JwksClient({ 
+      const client = new JwksClient({
         jwksUri: 'http://invalidUri',
         getKeysInterceptor: () => { throw error; }
       });
@@ -388,7 +388,7 @@ describe('JwksClient', () => {
         nock(jwksHost)
           .get('/.well-known/jwks.json')
           .reply(200, x5cMultiple);
-  
+
         const client = new JwksClient({
           jwksUri: `${jwksHost}/.well-known/jwks.json`
         });
@@ -404,11 +404,11 @@ describe('JwksClient', () => {
         nock(jwksHost)
           .get('/.well-known/jwks.json')
           .reply(200, x5cMultiple);
-  
+
         const client = new JwksClient({
           jwksUri: `${jwksHost}/.well-known/jwks.json`
         });
-  
+
         client.getSigningKey('123', (err) => {
           expect(err).not.to.be.null;
           expect(err.name).to.equal('SigningKeyNotFoundError');
@@ -453,6 +453,23 @@ describe('JwksClient', () => {
         expect(err).not.to.be.null;
         expect(err.message).to.equal('Http Error 500');
       }
+    });
+
+    it('should not cache errors', async () => {
+      nock(jwksHost)
+        .get('/.well-known/jwks.json')
+        .reply(500);
+      nock(jwksHost)
+        .get('/.well-known/jwks.json')
+        .reply(200, x5cMultiple);
+
+      const client = new JwksClient({
+        jwksUri: `${jwksHost}/.well-known/jwks.json`
+      });
+
+      const kid = x5cMultiple.keys[0].kid;
+      await expect(client.getSigningKey(kid)).to.eventually.be.rejectedWith('Http Error 500');
+      await expect(client.getSigningKey(kid)).to.eventually.to.have.property('kid', kid);
     });
   });
 });
