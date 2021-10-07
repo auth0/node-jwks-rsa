@@ -469,7 +469,7 @@ describe('JwksClient', () => {
 
       const kid = x5cMultiple.keys[0].kid;
       await expect(client.getSigningKey(kid)).to.eventually.be.rejectedWith('Http Error 500');
-      await expect(client.getSigningKey(kid)).to.eventually.to.have.property('kid', kid);
+      await expect(client.getSigningKey(kid)).to.eventually.have.property('kid', kid);
     });
   });
 });
