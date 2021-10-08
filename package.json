@@ -24,6 +24,7 @@
     "@types/nock": "^11.0.0",
     "@types/node": "^14.14.12",
     "chai": "^3.5.0",
+    "chai-as-promised": "^7.1.1",
     "eslint": "^5.16.0",
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
