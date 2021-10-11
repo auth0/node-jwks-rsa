@@ -26,7 +26,7 @@ module.exports.default =  (options) => {
     };
 
     const httpRequestLib = protocol === 'https:' ? https : http;
-    httpRequestLib.request(requestOptions, (res) => {
+    const httpRequest = httpRequestLib.request(requestOptions, (res) => {
       let rawData = '';
       res.setEncoding('utf8');
       res.on('data', (chunk) => { rawData += chunk; });
@@ -42,7 +42,10 @@ module.exports.default =  (options) => {
           }
         }
       });
-    })
+    });
+
+    httpRequest
+      .on('timeout', () => httpRequest.destroy())
       .on('error', (e) => reject(e))
       .end();
   });
