@@ -69,6 +69,24 @@ describe('Request wrapper tests', () => {
     request({ uri, timeout });
   });
 
+  it('should destroy the request when reaches the timeout', (done) => {
+    const timeout = 5;
+    const latency = timeout + 5;
+    const errorCode = 'ECONNRESET';
+
+    nock(jwksHost)
+      .get('/.well-known/jwks.json')
+      .delay(latency)
+      .reply(200, jwksJson);
+
+    request({ uri, timeout })
+      .then(() => done('Should have thrown error'))
+      .catch((err) => {
+        expect(err.code).to.eql(errorCode);
+        done();
+      });
+  });
+
   it('should set modify headers when specified in options', (done) => {
     const headers = { 'test': '123' };
 
