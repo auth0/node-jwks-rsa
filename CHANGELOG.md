@@ -1,5 +1,12 @@
 # Change Log
 
+## [v2.0.5](https://github.com/auth0/node-jwks-rsa/tree/v2.0.5) (2021-10-15)
+[Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v2.0.4...v2.0.5)
+
+**Fixed**
+- Destroy the request when reaches the timeout (#270) [\#271](https://github.com/auth0/node-jwks-rsa/pull/271) ([amrsalama](https://github.com/amrsalama))
+- [SDK-2833] Fix issue where errors were being cached [\#268](https://github.com/auth0/node-jwks-rsa/pull/268) ([adamjmcgrath](https://github.com/adamjmcgrath))
+
 ## [2.0.4] - (2021-07-16)
 
 **Fixed**
