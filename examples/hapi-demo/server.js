@@ -1,45 +1,48 @@
-const Hapi = require('hapi');
-const good = require('good');
+const Hapi = require('@hapi/hapi');
 const jwt = require('hapi-auth-jwt2');
-const logger = require('debug')('hapi');
-const jwksRsa = require('../../src');
+const jwksRsa = require('jwks-rsa');
 
 const jwksHost = process.env.JWKS_HOST;
 const audience = process.env.AUDIENCE;
 const issuer = process.env.ISSUER;
 
 // Fake validation, accept any authenticated user.
-const validateUser = (decoded, request, callback) => {
-  logger('Validating user:', decoded);
-
+const validateUser = async (decoded) => {
+  console.log(decoded);
   if (decoded && decoded.sub) {
-    return callback(null, true);
+    return {
+      isValid: true
+    }
+  } else {
+    return {
+      isValid: false
+    }
   }
-
-  return callback(null, false);
 };
 
-// Start the server.
-const server = new Hapi.Server({ debug: { log: [ 'error' ] } });
-server.connection({ port: 4001 });
-server.register(jwt, (err) => {
-  if (err) {
-    logger(err);
-  }
-
+const init = async () => {
+  // eslint-disable-next-line new-cap
+  const server = new Hapi.server({
+    port: 4001,
+    host: 'localhost'
+  });
+  await server.register(jwt);
+  // jwks-rsa strategy
   server.auth.strategy('jwt', 'jwt', {
     complete: true,
-    key: jwksRsa.hapiJwt2Key({
+    headerKey: 'authorization',
+    tokenType: 'Bearer',
+    key: jwksRsa.hapiJwt2KeyAsync({
       cache: true,
       rateLimit: true,
       jwksRequestsPerMinute: 2,
       jwksUri: `${jwksHost}/.well-known/jwks.json`
     }),
-    validateFunc: validateUser,
+    validate: validateUser,
     verifyOptions: {
       audience: audience,
       issuer: issuer,
-      algorithms: [ 'RS256' ]
+      algorithms: ['RS256']
     }
   });
   server.auth.default('jwt');
@@ -49,30 +52,20 @@ server.register(jwt, (err) => {
       method: 'GET',
       path: '/me',
       config: { auth: 'jwt' },
-      handler: (request, reply) => {
+      handler: (request, h) => {
         // This is the user object
-        reply(request.auth.credentials);
+        return (request.auth.credentials)
       }
     }
   ]);
-});
-
-// Logging.
-const options = {
-  reporters: {
-    console: [
-      { module: 'good-console' },
-      'stdout'
-    ]
-  }
+  await server.start();
+  return server;
 };
 
-server.register({ register: good, options }, (err) => {
-  if (err) {
-    return logger(err);
-  }
-
-  server.start(() => {
-    logger('Server running at:', server.info.uri);
+init()
+  .then(server => {
+    console.log(`Server running at: ${server.info.uri}`);
+  })
+  .catch(err => {
+    console.error(err);
   });
-});
