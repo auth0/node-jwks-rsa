@@ -3,40 +3,39 @@
 The `jwks-rsa` library provides a small helper that makes it easy to configure `hapi-auth-jwt2` with the `RS256` algorithm. Using `hapiJwt2Key` you can generate a key provider that will provide the right signing key to `hapi-auth-jwt2` based on the `kid` in the JWT header.
 
 ```js
-const Hapi = require('hapi');
+const Hapi = require('@hapi/hapi');
 const jwt = require('hapi-auth-jwt2');
 const jwksRsa = require('jwks-rsa');
 
 ...
 
 // Start the server.
-const server = new Hapi.Server();
-server.connection({ port: 4001 });
-server.register(jwt, (err) => {
-  if (err) {
-    logger(err);
-  }
-
+const init = async () => {
+  const server = new Hapi.server({
+    port: 4001,
+    host: 'localhost'
+  });
+  
+  await server.register(jwt);
+  
   server.auth.strategy('jwt', 'jwt', {
     // Get the complete decoded token, because we need info from the header (the kid)
     complete: true,
-
+    
+    headerKey: 'authorization',
+    tokenType: 'Bearer',
+    
     // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
-
-    /* If you're using Hapi 17.x.x you have to use version 8.x.x of hapi-auth-jwt2
-      (https://github.com/dwyl/hapi-auth-jwt2#compatibility) and use the promise based version jwksRsa.hapiJwt2KeyAsync instead of jwksRsa.hapiJwt2Key
-    */
-
-    key: jwksRsa.hapiJwt2Key({
+    key: jwksRsa.hapiJwt2KeyAsync({
       cache: true,
       rateLimit: true,
       jwksRequestsPerMinute: 2,
       jwksUri: 'https://my-authz-server/.well-known/jwks.json'
     }),
-
+    
     // Your own logic to validate the user.
-    validateFunc: validateUser,
-
+    validate: validateUser,
+    
     // Validate the audience and the issuer.
     verifyOptions: {
       audience: 'urn:my-resource-server',
@@ -51,13 +50,24 @@ server.register(jwt, (err) => {
       method: 'GET',
       path: '/me',
       config: { auth: 'jwt' },
-      handler: (request, reply) => {
+      handler: (request, h) => {
         // This is the user object
-        reply(request.auth.credentials);
+        return (request.auth.credentials)
       }
     }
   ]);
-});
+  await server.start();
+  return server;
+};
+
+init()
+  .then(server => {
+    console.log(`Server running at: ${server.info.uri}`);
+  })
+  .catch(err => {
+    console.error(err);
+  });
+
 ```
 
 ## Running the sample
