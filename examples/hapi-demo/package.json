@@ -15,10 +15,8 @@
   "author": "Sandrino Di Mattia",
   "license": "MIT",
   "dependencies": {
-    "debug": "^2.6.9",
-    "good": "^7.3.0",
-    "good-console": "^6.4.1",
-    "hapi": "^13.5.3",
-    "hapi-auth-jwt2": "^7.4.1"
+    "@hapi/hapi": "^20.2.1",
+    "hapi-auth-jwt2": "^10.2.0",
+    "jwks-rsa": "^2.0.5"
   }
 }
