@@ -12,7 +12,6 @@
     "node": ">=10 < 13 || >=14"
   },
   "dependencies": {
-    "@types/express-jwt": "0.0.42",
     "debug": "^4.3.2",
     "jose": "^2.0.5",
     "limiter": "^1.1.5",
@@ -20,6 +19,7 @@
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",
+    "@types/express-jwt": "0.0.42",
     "@types/mocha": "^5.2.7",
     "@types/nock": "^11.0.0",
     "@types/node": "^14.14.12",
