@@ -11,6 +11,8 @@ A library to retrieve signing keys from a JWKS (JSON Web Key Set) endpoint.
 
 > npm install --save jwks-rsa
 
+Supports all currently registered JWK types and JWS Algorithms, see [panva/jose#262](https://github.com/panva/jose/issues/262) for more information.
+
 ## Usage
 
 You'll provide the client with the JWKS endpoint which exposes your signing keys. Using the `getSigningKey` you can then get the signing key that matches a specific `kid`.
