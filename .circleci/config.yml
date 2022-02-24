@@ -13,9 +13,6 @@ jobs:
       LANG: en_US.UTF-8
     steps:
       - checkout
-      - run:
-          name: Update NPM version
-          command: sudo npm install -g npm@latest
       - ship/node-install-packages
       - run:
           name: Run Linter
