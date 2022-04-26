@@ -23,6 +23,7 @@ module.exports.expressJwtSecret = function (options) {
   const onError = options.handleSigningKeyError || handleSigningKeyError;
 
   const expressJwt7Provider = async (req, token) => {
+    if (!token) { return; }
     const header = token.header;
     if (!header || !supportedAlg.includes(header.alg)) {
       return;
