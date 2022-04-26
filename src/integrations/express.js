@@ -22,16 +22,39 @@ module.exports.expressJwtSecret = function (options) {
   const client = new JwksClient(options);
   const onError = options.handleSigningKeyError || handleSigningKeyError;
 
-  return function secretProvider(req, header, payload, cb) {
+  const expressJwt7Provider = async (req, token) => {
+    if (!token) { return; }
+    const header = token.header;
     if (!header || !supportedAlg.includes(header.alg)) {
-      return cb(null, null);
+      return;
+    }
+    try {
+      const key = await client.getSigningKey(header.kid);
+      return key.publicKey || key.rsaPublicKey;
+    } catch (err) {
+      return new Promise((resolve, reject) => {
+        onError(err, (newError) => {
+          if (!newError) { return resolve(); }
+          reject(newError);
+        });
+      });
+    }
+  };
+
+  return function secretProvider(req, header, payload, cb) {
+    //This function has 4 parameters to make it work with express-jwt@6
+    //but it also supports express-jwt@7 which only has 2.
+    if (arguments.length === 4) {
+      expressJwt7Provider(req, { header })
+        .then(key => {
+          setImmediate(cb, null, key);
+        }).catch(err => {
+          setImmediate(cb, err);
+        });
+
+      return;
     }
 
-    client.getSigningKey(header.kid)
-      .then(key => {
-        cb(null, key.publicKey || key.rsaPublicKey);
-      }).catch(err => {
-        onError(err, (newError) => cb(newError, null));
-      });
+    return expressJwt7Provider(req, arguments[1]);
   };
 };
