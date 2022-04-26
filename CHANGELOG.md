@@ -1,5 +1,14 @@
 # Change Log
 
+## [v2.1.0](https://github.com/auth0/node-jwks-rsa/tree/v2.1.0) (2022-04-26)
+[Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v2.0.5...v2.1.0)
+
+**Added**
+- add support for express-jwt@7 [\#297](https://github.com/auth0/node-jwks-rsa/pull/297) ([jfromaniello](https://github.com/jfromaniello))
+
+**Fixed**
+- fix(type): correct the wrong type of the `getSigningKey` function arg… [\#289](https://github.com/auth0/node-jwks-rsa/pull/289) ([stegano](https://github.com/stegano))
+
 ## [v2.0.5](https://github.com/auth0/node-jwks-rsa/tree/v2.0.5) (2021-10-15)
 [Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v2.0.4...v2.0.5)
 
