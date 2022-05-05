@@ -1,6 +1,6 @@
-import { SecretCallback, SecretCallbackLong } from 'express-jwt';
 import { Agent as HttpAgent } from 'http';
 import { Agent as HttpsAgent } from 'https';
+import type {Jwt, Secret} from 'jsonwebtoken'
 
 declare function JwksRsa(options: JwksRsa.Options): JwksRsa.JwksClient;
 
@@ -55,7 +55,24 @@ declare namespace JwksRsa {
 
   type SigningKey = CertSigningKey | RsaSigningKey;
 
-  function expressJwtSecret(options: ExpressJwtOptions): SecretCallbackLong;
+  /**
+   * Types are duplicated from express-jwt@6/7
+   * due to numerous breaking changes in the lib's types
+   * whilst this lib supportd both <=6 & >=7  implementations
+   * 
+   * express-jwt's installed version (or its @types)
+   * will be the types used at transpilation time
+   */
+
+  /** Types from express-jwt@<=6 */
+  type secretType = string|Buffer;
+  type SecretCallbackLong = (req: Express.Request, header: any, payload: any, done: (err: any, secret?: secretType) => void) => void;
+  type SecretCallback = (req: Express.Request, payload: any, done: (err: any, secret?: secretType) => void) => void;
+
+  /** Types from express-jwt@>=7 */
+  type GetVerificationKey = (req: Express.Request, token: Jwt | undefined) => Secret | Promise<Secret>;
+
+  function expressJwtSecret(options: ExpressJwtOptions): SecretCallbackLong|GetVerificationKey;
 
   function passportJwtSecret(options: ExpressJwtOptions): SecretCallback;
 

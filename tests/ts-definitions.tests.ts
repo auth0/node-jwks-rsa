@@ -1,5 +1,7 @@
 import * as jwksRsaType from '../index';
 import {expect} from 'chai';
+import expressjwt6 from "express-jwt";
+import { expressjwt as expressjwt7, GetVerificationKey } from "express-jwt-v7";
 const { jwksEndpoint } = require('../tests/mocks/jwks');
 const { publicKey } = require('../tests/mocks/keys');
 const jwksRsa: typeof jwksRsaType = require('../src');
@@ -24,7 +26,7 @@ describe('typescript definition', () => {
     });
   });
 
-  describe('getKeysInterceptor', async () => {
+  it('getKeysInterceptor', async () => {
     const keySetResponse = {
       keys: [
         {
@@ -44,4 +46,22 @@ describe('typescript definition', () => {
     const key = await client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
     expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
   });
+
+  it.skip('Types-Only Validation with express-jwt', () => {
+    expressjwt6({
+      algorithms: ["RS256"],
+      secret: jwksRsa.expressJwtSecret({
+        cache: true,
+        jwksUri: `https://my-authz-server/.well-known/jwks.json`
+      })
+    });
+
+    expressjwt7({
+      algorithms: ['RS256'],
+      secret: jwksRsa.expressJwtSecret({
+        cache: true,
+        jwksUri: `https://my-authz-server/.well-known/jwks.json`
+      }) as GetVerificationKey
+    });
+  })
 });
