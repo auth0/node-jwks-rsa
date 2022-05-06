@@ -4,6 +4,7 @@ import expressjwt6 from "express-jwt";
 import { expressjwt as expressjwt7, GetVerificationKey } from "express-jwt-v7";
 const { jwksEndpoint } = require('../tests/mocks/jwks');
 const { publicKey } = require('../tests/mocks/keys');
+const { x5cSingle } = require('../tests/keys.js');
 const jwksRsa: typeof jwksRsaType = require('../src');
 
 describe('typescript definition', () => {
@@ -27,20 +28,9 @@ describe('typescript definition', () => {
   });
 
   it('getKeysInterceptor', async () => {
-    const keySetResponse = {
-      keys: [
-        {
-          alg: 'RS256',
-          kty: 'RSA',
-          use: 'sig',
-          kid: 'NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA'
-        }
-      ]
-    };
-
     const client = new jwksRsa.JwksClient({
       jwksUri: `${jwksHost}/.well-known/jwks.json`,
-      getKeysInterceptor: () => Promise.resolve(keySetResponse.keys)
+      getKeysInterceptor: () => Promise.resolve(x5cSingle.keys)
     });
 
     const key = await client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
