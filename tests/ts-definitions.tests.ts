@@ -8,7 +8,7 @@ const { x5cSingle } = require('../tests/keys.js');
 const jwksRsa: typeof jwksRsaType = require('../src');
 
 describe('typescript definition', () => {
-  const jwksHost = 'http://my-authz-server';
+  const jwksHost = 'http://localhost';
 
   describe('hapiJwt2KeyAsync', () => {
     it('should return a secret provider function', async () => {
@@ -37,7 +37,7 @@ describe('typescript definition', () => {
     expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
   });
 
-  it.skip('Types-Only Validation with express-jwt', () => {
+  it('Types-Only Validation with express-jwt', () => {
     expressjwt6({
       algorithms: ["RS256"],
       secret: jwksRsa.expressJwtSecret({
