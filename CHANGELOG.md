@@ -1,5 +1,11 @@
 # Change Log
 
+## [v2.1.1](https://github.com/auth0/node-jwks-rsa/tree/v2.1.1) (2022-05-06)
+[Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v2.1.0...v2.1.1)
+
+**Fixed**
+- fix: types-compabitility for express-jwt @ 7 [\#301](https://github.com/auth0/node-jwks-rsa/pull/301) ([carboneater](https://github.com/carboneater))
+
 ## [v2.1.0](https://github.com/auth0/node-jwks-rsa/tree/v2.1.0) (2022-04-26)
 [Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v2.0.5...v2.1.0)
 
