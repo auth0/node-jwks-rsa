@@ -1,5 +1,11 @@
 # Change Log
 
+## [v2.1.2](https://github.com/auth0/node-jwks-rsa/tree/v2.1.2) (2022-05-12)
+[Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v2.1.1...v2.1.2)
+
+**Fixed**
+- fix: express build error [\#304](https://github.com/auth0/node-jwks-rsa/pull/304) ([blindperson](https://github.com/blindperson))
+
 ## [v2.1.1](https://github.com/auth0/node-jwks-rsa/tree/v2.1.1) (2022-05-06)
 [Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v2.1.0...v2.1.1)
 
