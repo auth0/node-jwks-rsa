@@ -1,6 +1,7 @@
 import { Agent as HttpAgent } from 'http';
 import { Agent as HttpsAgent } from 'https';
 import type {Jwt, Secret} from 'jsonwebtoken'
+import Express from 'express'
 
 declare function JwksRsa(options: JwksRsa.Options): JwksRsa.JwksClient;
 
