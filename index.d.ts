@@ -1,7 +1,7 @@
 import { Agent as HttpAgent } from 'http';
 import { Agent as HttpsAgent } from 'https';
 import type {Jwt, Secret} from 'jsonwebtoken'
-import Express from 'express'
+import Express = require('express')
 
 declare function JwksRsa(options: JwksRsa.Options): JwksRsa.JwksClient;
 
@@ -60,7 +60,7 @@ declare namespace JwksRsa {
    * Types are duplicated from express-jwt@6/7
    * due to numerous breaking changes in the lib's types
    * whilst this lib supportd both <=6 & >=7  implementations
-   * 
+   *
    * express-jwt's installed version (or its @types)
    * will be the types used at transpilation time
    */
