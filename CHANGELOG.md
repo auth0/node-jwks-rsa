@@ -1,5 +1,11 @@
 # Change Log
 
+## [v2.1.3](https://github.com/auth0/node-jwks-rsa/tree/v2.1.3) (2022-05-20)
+[Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v2.1.2...v2.1.3)
+
+**Fixed**
+- Fix issue with ES Express import [\#310](https://github.com/auth0/node-jwks-rsa/pull/310) ([adamjmcgrath](https://github.com/adamjmcgrath))
+
 ## [v2.1.2](https://github.com/auth0/node-jwks-rsa/tree/v2.1.2) (2022-05-12)
 [Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v2.1.1...v2.1.2)
 
