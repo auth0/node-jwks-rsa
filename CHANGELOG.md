@@ -1,5 +1,11 @@
 # Change Log
 
+## [v2.1.4](https://github.com/auth0/node-jwks-rsa/tree/v2.1.4) (2022-06-07)
+[Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v2.1.3...v2.1.4)
+
+**Fixed**
+- Type definitions depend on jsonwebtoken [\#314](https://github.com/auth0/node-jwks-rsa/pull/314) ([adamjmcgrath](https://github.com/adamjmcgrath))
+
 ## [v2.1.3](https://github.com/auth0/node-jwks-rsa/tree/v2.1.3) (2022-05-20)
 [Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v2.1.2...v2.1.3)
 
