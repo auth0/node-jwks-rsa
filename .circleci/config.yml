@@ -1,6 +1,8 @@
 version: 2.1
 orbs:
   ship: auth0/ship@0.3.0
+  codecov: codecov/codecov@3
+  
 jobs:
   build:
     parameters:
@@ -13,19 +15,22 @@ jobs:
       LANG: en_US.UTF-8
     steps:
       - checkout
+      
       - ship/node-install-packages
+      
       - run:
           name: Run Linter
           command: npm run lint
+          
       - run:
           name: Run Tests
           command: npm run test:ci
+          
       - store_artifacts:
           path: ./coverage/<< parameters.node-version >>/lcov-report
-      - run:
-          name: Upload Coverage
-          when: on_success
-          command: bash <(curl -s https://codecov.io/bash) -Z -C $CIRCLE_SHA1
+          
+      - codecov/upload
+      
 workflows:
   build-and-test:
     jobs:
