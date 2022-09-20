@@ -24,7 +24,9 @@ declare namespace JwksRsa {
     rateLimit?: boolean;
     cache?: boolean;
     cacheMaxEntries?: number;
+    // The max age of the JWKS cache (in ms)
     cacheMaxAge?: number;
+    // The max number of requests permitted to the JWKS endpoint per minute
     jwksRequestsPerMinute?: number;
     proxy?: string;
     requestHeaders?: Headers;
