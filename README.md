@@ -50,6 +50,8 @@ const signingKey = key.getPublicKey();
 - `requestHeaders`: (_optional_) an object of headers to pass to the request
 - `requestAgent`: (_optional_) a Node `http.Agent` to be passed to the http(s) request
 - `getKeysInterceptor`: (_optional_) a promise returning function hook [(details)](#loading-keys-from-local-file-environment-variable-or-other-externals)
+- `cacheMaxAge`: (_optional_) the duration for which to store a cached JWKS in ms (default 600,000 or 10 minutes)
+- `jwksRequestsPerMinute`: (_optional_) max number of requests allowed to the JWKS URI per minute (defaults to 10)
 
 ### Caching
 
