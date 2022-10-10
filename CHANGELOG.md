@@ -1,5 +1,11 @@
 # Change Log
 
+## [v2.1.5](https://github.com/auth0/node-jwks-rsa/tree/v2.1.5) (2022-10-10)
+[Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v2.1.4...v2.1.5)
+
+**Fixed**
+- Fix GetVerificationKey typing to include undefined [\#329](https://github.com/auth0/node-jwks-rsa/pull/329) ([AaronMoat](https://github.com/AaronMoat))
+
 ## [v2.1.4](https://github.com/auth0/node-jwks-rsa/tree/v2.1.4) (2022-06-07)
 [Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v2.1.3...v2.1.4)
 
