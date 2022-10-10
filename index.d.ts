@@ -71,7 +71,7 @@ declare namespace JwksRsa {
   type SecretCallback = (req: Express.Request, payload: any, done: (err: any, secret?: secretType) => void) => void;
 
   /** Types from express-jwt@>=7 */
-  type GetVerificationKey = (req: Express.Request, token: Jwt | undefined) => Secret | Promise<Secret>;
+  type GetVerificationKey = (req: Express.Request, token: Jwt | undefined) => Secret | undefined | Promise<Secret | undefined>;
 
   function expressJwtSecret(options: ExpressJwtOptions): SecretCallbackLong|GetVerificationKey;
 
