@@ -8,7 +8,12 @@ A library to retrieve signing keys from a JWKS (JSON Web Key Set) endpoint.
 [![License](https://img.shields.io/:license-mit-blue.svg?style=flat)](https://opensource.org/licenses/MIT)
 ![CircleCI](https://img.shields.io/circleci/build/github/auth0/node-jwks-rsa)
 
-:rocket: [Getting Started](#getting-started) - :speech_balloon: [Feedback](#feedback)
+📚 [Documentation](#documentation) - 🚀 [Getting Started](#getting-started) - 💬 [Feedback](#feedback)
+
+## Documentation
+
+- [Examples](https://github.com/auth0/node-jwks-rsa/blob/master/EXAMPLES.md) - code samples for common scenarios.
+- [Docs Site](https://auth0.com/docs) - explore our Docs site and learn more about Auth0.
 
 ## Getting Started
 
@@ -67,14 +72,14 @@ Please do not report security vulnerabilities on the public GitHub issue tracker
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./auth0_dark_mode.png" width="150">
-    <source media="(prefers-color-scheme: light)" srcset="./auth0_light_mode.png" width="150">
-    <img alt="Auth0 Logo" src="./auth0_light_mode.png" width="150">
+    <source media="(prefers-color-scheme: dark)" srcset="https://cdn.auth0.com/website/sdks/logos/auth0_dark_mode.png" width="150">
+    <source media="(prefers-color-scheme: light)" srcset="https://cdn.auth0.com/website/sdks/logos/auth0_light_mode.png" width="150">
+    <img alt="Auth0 Logo" src="https://cdn.auth0.com/website/sdks/logos/auth0_light_mode.png" width="150">
   </picture>
 </p>
 <p align="center">
   Auth0 is an easy to implement, adaptable authentication and authorization platform. To learn more checkout <a href="https://auth0.com/why-auth0">Why Auth0?</a>
 </p>
 <p align="center">
-  This project is licensed under the MIT license. See the <a href="./LICENSE"> LICENSE</a> file for more info.
+  This project is licensed under the MIT license. See the <a href="https://github.com/auth0/node-jwks-rsa/blob/master/LICENSE"> LICENSE</a> file for more info.
 </p>
