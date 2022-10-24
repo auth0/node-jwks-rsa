@@ -12,7 +12,7 @@ function getKeysInterceptor(client, { getKeysInterceptor }) {
 
     let signingKeys;
     if (keys && keys.length) {
-      signingKeys = retrieveSigningKeys(keys);
+      signingKeys = await retrieveSigningKeys(keys);
     }
 
     if (signingKeys && signingKeys.length) {

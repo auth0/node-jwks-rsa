@@ -56,7 +56,7 @@ class JwksClient {
       throw new JwksError('The JWKS endpoint did not contain any keys');
     }
 
-    const signingKeys = retrieveSigningKeys(keys);
+    const signingKeys = await retrieveSigningKeys(keys);
 
     if (!signingKeys.length) {
       throw new JwksError('The JWKS endpoint did not contain any signing keys');

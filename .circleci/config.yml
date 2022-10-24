@@ -8,7 +8,7 @@ jobs:
     parameters:
       node-version:
         type: string
-        default: "12"
+        default: "18"
     docker:
       - image: circleci/node:<< parameters.node-version >>
     environment:
@@ -37,7 +37,7 @@ workflows:
       - build:
           matrix:
             parameters:
-              node-version: ["10", "12", "14"]
+              node-version: ["14", "16", "18"]
       - ship/node-publish:
           requires:
             - build
