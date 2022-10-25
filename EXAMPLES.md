@@ -18,7 +18,6 @@ This repository holds a number of example integrations found in the [examples](.
 - [hapi/hapi-auth-jwt2](examples/hapi-demo)
 - [koa/koa-jwt](examples/koa-demo)
 
-
 ## Configuration
 
 - `jwksUri`: a string that represents the JWKS URI
