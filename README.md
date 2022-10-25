@@ -1,6 +1,4 @@
-# jwks-rsa
-
-A library to retrieve signing keys from a JWKS (JSON Web Key Set) endpoint.
+![A library to retrieve signing keys from a JWKS (JSON Web Key Set) endpoint.](https://cdn.auth0.com/website/sdks/banner/node-jwks-rsa-banner.png)
 
 ![Release](https://img.shields.io/npm/v/jwks-rsa)
 [![Codecov](https://img.shields.io/codecov/c/github/auth0/node-jwks-rsa)](https://codecov.io/gh/auth0/node-jwks-rsa)
