@@ -1,4 +1,4 @@
-const JWT = require('jose').JWT;
+const jose = require('jose');
 const { ArgumentError } = require('../errors');
 const { JwksClient } = require('../JwksClient');
 const supportedAlg = require('./config');
@@ -30,7 +30,10 @@ module.exports.passportJwtSecret = function (options) {
   return function secretProvider(req, rawJwtToken, cb) {
     let decoded;
     try {
-      decoded = JWT.decode(rawJwtToken, { complete: true });
+      decoded = {
+        payload: jose.decodeJwt(rawJwtToken),
+        header: jose.decodeProtectedHeader(rawJwtToken)
+      };
     } catch (err) {
       decoded = null;
     }
