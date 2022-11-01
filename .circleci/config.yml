@@ -10,7 +10,7 @@ jobs:
         type: string
         default: "18"
     docker:
-      - image: cimg/node:<< parameters.node-version >>
+      - image: circleci/node:<< parameters.node-version >>
     environment:
       LANG: en_US.UTF-8
     steps:
