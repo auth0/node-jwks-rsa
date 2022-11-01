@@ -1,5 +1,13 @@
 # Change Log
 
+## [v3.0.0](https://github.com/auth0/node-jwks-rsa/tree/v3.0.0) (2022-11-01)
+[Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v2.1.5...v3.0.0)
+
+**⚠️ BREAKING CHANGES**
+
+This release drops support for Node 10 and 12
+- [major] bump jose [\#333](https://github.com/auth0/node-jwks-rsa/pull/333) ([panva](https://github.com/panva))
+
 ## [v2.1.5](https://github.com/auth0/node-jwks-rsa/tree/v2.1.5) (2022-10-10)
 [Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v2.1.4...v2.1.5)
 
