@@ -1,6 +1,6 @@
 {
   "name": "jwks-rsa",
-  "version": "2.1.5",
+  "version": "2.2.0",
   "description": "Library to retrieve RSA public keys from a JWKS endpoint",
   "main": "src/index.js",
   "files": [
@@ -9,7 +9,7 @@
   ],
   "types": "index.d.ts",
   "engines": {
-    "node": ">=10 < 13 || >=14"
+    "node": ">=14"
   },
   "dependencies": {
     "@types/express": "^4.17.14",

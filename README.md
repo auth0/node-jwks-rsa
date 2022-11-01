@@ -23,6 +23,9 @@ Using [npm](https://npmjs.org) in your project directory run the following comma
 npm install --save jwks-rsa
 ````
 
+This library supports all LTS versions of Node.js.
+> **Note:** dropping support for End-of-Life versions of Node will not be considered breaking changes and may be done in a minor release.  
+
 Supports all currently registered JWK types and JWS Algorithms, see [panva/jose#262](https://github.com/panva/jose/issues/262) for more information.
 
 ### Configure the client
