@@ -1,7 +1,7 @@
 {
   "name": "express-demo",
   "version": "1.0.0",
-  "description": "Sample that shows how tu use jwks-rsa with Express",
+  "description": "Sample that shows how to use jwks-rsa with Express",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

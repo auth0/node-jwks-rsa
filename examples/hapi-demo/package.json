@@ -1,7 +1,7 @@
 {
   "name": "hapi-demo",
   "version": "1.0.0",
-  "description": "Sample that shows how tu use jwks-rsa with Hapi",
+  "description": "Sample that shows how to use jwks-rsa with Hapi",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
