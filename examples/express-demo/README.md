@@ -4,7 +4,7 @@ The `jwks-rsa` library provides a small helper that makes it easy to configure `
 
 ```js
 const Express = require('express');
-const jwt = require('express-jwt');
+const { expressjwt: jwt } = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
 
 ...
