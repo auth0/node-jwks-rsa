@@ -1,7 +1,7 @@
 const Express = require('express');
-const jwt = require('express-jwt');
+const { expressjwt: jwt } = require('express-jwt');
 const logger = require('debug')('express');
-const jwksRsa = require('../../src');
+const { expressJwtSecret } = require('../../src');
 
 const jwksHost = process.env.JWKS_HOST;
 const audience = process.env.AUDIENCE;
@@ -10,7 +10,7 @@ const issuer = process.env.ISSUER;
 // Initialize the app.
 const app = new Express();
 app.use(jwt({
-  secret: jwksRsa.expressJwtSecret({
+  secret: expressJwtSecret({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 2,
