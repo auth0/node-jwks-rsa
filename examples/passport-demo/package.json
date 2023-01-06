@@ -20,6 +20,6 @@
     "debug": "^2.6.9",
     "express": "^4.18.2",
     "passport": "^0.6.0",
-    "passport-jwt": "^4.0.0"
+    "passport-jwt": "^4.0.1"
   }
 }
