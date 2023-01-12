@@ -1,5 +1,12 @@
 # Change Log
 
+## [v3.0.1](https://github.com/auth0/node-jwks-rsa/tree/v3.0.1) (2023-01-12)
+[Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v3.0.0...v3.0.1)
+
+**Fixed**
+- update types/jsonwebtoken update v9.0.0 [\#349](https://github.com/auth0/node-jwks-rsa/pull/349) ([ToshihitoKon](https://github.com/ToshihitoKon))
+- Bump jsonwebtoken from 8.5.1 to 9.0.0 [\#344](https://github.com/auth0/node-jwks-rsa/pull/344) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v3.0.0](https://github.com/auth0/node-jwks-rsa/tree/v3.0.0) (2022-11-01)
 [Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v2.1.5...v3.0.0)
 
