@@ -22,8 +22,20 @@ declare namespace JwksRsa {
   interface Options {
     jwksUri: string;
     rateLimit?: boolean;
+    
+    /**
+     * If the signing keys should be cached for a limited amount of time
+     */
     cache?: boolean;
+    
+    /**
+     * How many signing keys to remember
+     */
     cacheMaxEntries?: number;
+    
+    /**
+     * Defaults to 600.000 (10 minutes)
+     */
     cacheMaxAge?: number;
     jwksRequestsPerMinute?: number;
     proxy?: string;
