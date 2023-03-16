@@ -10,7 +10,7 @@
 
 ## Documentation
 
-- [Examples](https://github.com/auth0/node-jwks-rsa/blob/master/EXAMPLES.md) - code samples for common scenarios.
+- [Examples](https://github.com/auth0/node-jwks-rsa/blob/master/EXAMPLES.md) - documentation of the options and code samples for common scenarios.
 - [Docs Site](https://auth0.com/docs) - explore our Docs site and learn more about Auth0.
 
 ## Getting Started
