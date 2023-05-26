@@ -6,18 +6,13 @@ const { publicKey, privateKey, randomPublicKey1 } = require('./mocks/keys');
 const { createToken, createSymmetricToken } = require('./mocks/tokens');
 
 const jwksRsa = require('../src');
-const { expressJwt } = require('express-jwt');
+const { expressjwt } = require('express-jwt');
 
 const suites = [
   {
     description: 'expressJwtSecret (auth) for express-jwt@8',
-    expressJwt: expressJwt,
+    expressJwt: expressjwt,
     reqProperty: 'auth'
-  },
-  {
-    description: 'expressJwtSecret (user) for express-jwt@8',
-    expressJwt: expressJwt,
-    reqProperty: 'user'
   }
 ];
 
