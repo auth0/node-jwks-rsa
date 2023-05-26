@@ -6,7 +6,7 @@ const { publicKey, privateKey, randomPublicKey1 } = require('./mocks/keys');
 const { createToken, createSymmetricToken } = require('./mocks/tokens');
 
 const jwksRsa = require('../src');
-const expressJwt = require('express-jwt');
+const { expressJwt } = require('express-jwt');
 
 const suites = [
   {
