@@ -1,5 +1,5 @@
 const nock = require('nock');
-const jose2 = require('jose');
+const jose = require('jose');
 
 function jwksEndpoint(host, certs) {
   return nock(host)
