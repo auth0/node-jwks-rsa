@@ -1,5 +1,5 @@
 const nock = require('nock');
-const { expect } = require('chai');
+const { expect } = require('chai').use(require('chai-as-promised'));
 
 const { x5cSingle } = require('./keys');
 const { JwksClient } = require('../src/JwksClient');
@@ -14,10 +14,12 @@ describe('JwksClient (cache)', () => {
   describe('#getSigningKey', () => {
     describe('should cache requests per kid', () => {
       let client;
+      let scope;
 
-      before(async () => {
-        nock(jwksHost)
+      beforeEach(async () => {
+        scope = nock(jwksHost)
           .get('/.well-known/jwks.json')
+          .twice()
           .reply(200, x5cSingle);
 
         client = new JwksClient({
@@ -28,23 +30,22 @@ describe('JwksClient (cache)', () => {
         // Cache the Key
         const key = await client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
         expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+      });
+
+      afterEach(() => {
         // Stop the JWKS server
         nock.cleanAll();
       });
 
-      it('should ignore the cache when the KID isnt cached and make a requst', async () => {
-        try {
-          await client.getSigningKey('12345');
-          throw new Error('should have thrown error');
-        } catch (err) {
-          expect(err).not.to.be.null;
-          expect(err.code).to.equal('ENOTFOUND'); 
-        }
+      it('should ignore the cache when the KID isnt cached and make a request', async () => {
+        await expect(client.getSigningKey('12345')).to.eventually.be.rejectedWith('Unable to find a signing key that matches \'12345\'');
+        expect(scope.isDone()).ok;
       });
 
       it('should fetch the key from the cache', async () => {
         const key = await client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
         expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+        expect(scope.isDone()).not.ok;
       });
     });
   });
