@@ -1,6 +1,6 @@
 import * as jwksRsaType from '../index';
 import {expect} from 'chai';
-import expressjwt6 from "express-jwt";
+import expressjwt6 from "express-jwt-v6";
 import { expressjwt as expressjwt7, GetVerificationKey } from "express-jwt-v7";
 const { jwksEndpoint } = require('../tests/mocks/jwks');
 const { publicKey } = require('../tests/mocks/keys');

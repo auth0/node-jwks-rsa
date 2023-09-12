@@ -22,7 +22,7 @@ app.use(jwt({
 }));
 
 app.get('/me', (req, res) => {
-  res.json(req.user);
+  res.json(req.auth);
 });
 
 app.use((err, req, res, next) => {
