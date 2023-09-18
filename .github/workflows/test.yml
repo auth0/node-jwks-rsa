@@ -98,12 +98,12 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 18
           cache: npm
 
       - uses: actions/cache/restore@v3
         with:
           path: .
-          key: ${{ matrix.node }}-${{ env.CACHE_KEY }}
+          key: 18-${{ env.CACHE_KEY }}
 
       - run: npm run lint
