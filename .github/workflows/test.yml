@@ -1,0 +1,109 @@
+name: Build and Test
+
+on:
+  merge_group:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+env:
+  CACHE_KEY: "${{ github.ref }}-${{ github.run_id }}-${{ github.run_attempt }}"
+
+jobs:
+  configure:
+    name: Configure Build Matrix
+    runs-on: ubuntu-latest
+
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.ref }}
+
+      - id: set-matrix
+        run: echo "matrix=$(jq -c . < ./.github/workflows/matrix.json)" >> $GITHUB_OUTPUT
+
+  build:
+    needs: configure
+
+    name: Build Package
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: ./.github/actions/build
+        with:
+          node: ${{ matrix.node }}
+
+      - name: Save build artifacts
+        uses: actions/cache/save@v3
+        with:
+          path: .
+          key: ${{ matrix.node }}-${{ env.CACHE_KEY }}
+
+  unit:
+    needs: [configure, build] # Require build to complete before running tests
+
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - uses: actions/cache/restore@v3
+        with:
+          path: .
+          key: ${{ matrix.node }}-${{ env.CACHE_KEY }}
+
+      - run: npm run test:ci
+
+      # only upload coverage on one node version
+      - if: matrix.node == 18
+        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # pin@3.1.4
+
+  lint:
+    needs: build # Require build to complete before running tests
+
+    name: Lint Code
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+
+      - uses: actions/cache/restore@v3
+        with:
+          path: .
+          key: 18-${{ env.CACHE_KEY }}
+
+      - run: npm run lint
