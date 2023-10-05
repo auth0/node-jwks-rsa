@@ -1,5 +1,38 @@
 const jose = require('jose');
-const crypto = require('crypto');
+const JwksError = require('./errors/JwksError');
+
+function resolveAlg(jwk) {
+  if (jwk.alg) {
+    return jwk.alg;
+  }
+
+  if (jwk.kty === 'RSA') {
+    return 'RS256';
+  }
+
+  if (jwk.kty === 'EC') {
+    switch (jwk.crv) {
+      case 'P-256':
+        return 'ES256';
+      case 'secp256k1':
+        return 'ES256K';
+      case 'P-384':
+        return 'ES384';
+      case 'P-521':
+        return 'ES512';
+    }
+  }
+
+  if (jwk.kty === 'OKP') {
+    switch (jwk.crv) {
+      case 'Ed25519':
+      case 'Ed448':
+        return 'EdDSA';
+    }
+  }
+
+  throw new JwksError('Unsupported JWK');
+}
 
 async function retrieveSigningKeys(jwks) {
   const results = [];
@@ -10,14 +43,23 @@ async function retrieveSigningKeys(jwks) {
 
   for (const jwk of jwks) {
     try {
-      // The algorithm is actually not used in the Node.js KeyObject-based runtime
-      // passing an arbitrary value here and checking that KeyObject was returned
-      // later
-      const keyObject = await jose.importJWK(jwk, 'RS256');
-      if (!(keyObject instanceof crypto.KeyObject) || keyObject.type !== 'public') {
+      const key = await jose.importJWK(jwk, resolveAlg(jwk));
+      if (key.type !== 'public') {
         continue;
       }
-      const getSpki = () => keyObject.export({ format: 'pem', type: 'spki' });
+      let getSpki;
+      switch (key[Symbol.toStringTag]) {
+        case 'CryptoKey': {
+          const spki = await jose.exportSPKI(key);
+          getSpki = () => spki;
+          break;
+        }
+        case 'KeyObject':
+          // Assume legacy Node.js version without the Symbol.toStringTag backported
+          // Fall through
+        default:
+          getSpki = () => key.export({ format: 'pem', type: 'spki' });
+      }
       results.push({
         get publicKey() { return getSpki(); },
         get rsaPublicKey() { return getSpki(); },
