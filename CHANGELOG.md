@@ -1,5 +1,11 @@
 # Change Log
 
+## [v3.1.0](https://github.com/auth0/node-jwks-rsa/tree/v3.1.0) (2023-10-05)
+[Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v3.0.1...v3.1.0)
+
+**Added**
+- feat: resolve bun/deno compat issues [\#374](https://github.com/auth0/node-jwks-rsa/pull/374) ([panva](https://github.com/panva))
+
 ## [v3.0.1](https://github.com/auth0/node-jwks-rsa/tree/v3.0.1) (2023-01-12)
 [Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v3.0.0...v3.0.1)
 
