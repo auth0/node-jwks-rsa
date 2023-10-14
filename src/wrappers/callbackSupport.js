@@ -1,4 +1,4 @@
-import { callbackify } from 'util';
+import { callbackify } from 'node:util';
 
 export const callbackSupport = (client) => {
   const getSigningKey = client.getSigningKey.bind(client);

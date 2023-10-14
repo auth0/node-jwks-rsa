@@ -1,6 +1,6 @@
-import { request as httpRequestFn } from 'http';
-import { request as httpsRequestFn } from 'https';
-import { parse } from 'url';
+import { request as httpRequestFn } from 'node:http';
+import { request as httpsRequestFn } from 'node:https';
+import { parse } from 'node:url';
 
 export const request = (options) => {
   if (options.fetcher) {

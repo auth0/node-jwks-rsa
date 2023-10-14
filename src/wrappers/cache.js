@@ -1,6 +1,6 @@
 import debug from 'debug';
 import memoizer from 'lru-memoizer';
-import { promisify, callbackify } from 'util';
+import { promisify, callbackify } from 'node:util';
 
 const logger = debug('jwks');
 
