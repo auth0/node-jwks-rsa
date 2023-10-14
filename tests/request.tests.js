@@ -1,6 +1,7 @@
-const nock = require('nock');
-const { expect } = require('chai');
-const { request } = require('../src/wrappers');
+import nock from 'nock';
+import { expect } from 'chai';
+
+import { request } from '../src/wrappers/request.js';
 
 describe('Request wrapper tests', () => {
   const jwksHost = 'http://my-authz-server';
@@ -29,9 +30,7 @@ describe('Request wrapper tests', () => {
   });
 
   it('should make a successful request to specified uri', (done) => {
-    nock(jwksHost)
-      .get('/.well-known/jwks.json')
-      .reply(200, jwksJson);
+    nock(jwksHost).get('/.well-known/jwks.json').reply(200, jwksJson);
 
     request({ uri })
       .then((data) => {
@@ -45,12 +44,14 @@ describe('Request wrapper tests', () => {
     const errorMsg = 'Server response error!!';
     nock(jwksHost)
       .get('/.well-known/jwks.json')
-      .reply(500, function () { this.req.response.statusMessage = errorMsg; });
-      
+      .reply(500, function () {
+        this.req.response.statusMessage = errorMsg;
+      });
+
     request({ uri })
       .then(() => done('Shoul dhave thrown error'))
-      .catch((err) => { 
-        expect(err.errorMsg).to.eql(errorMsg); 
+      .catch((err) => {
+        expect(err.errorMsg).to.eql(errorMsg);
         done();
       });
   });
@@ -60,12 +61,12 @@ describe('Request wrapper tests', () => {
 
     nock(jwksHost)
       .get('/.well-known/jwks.json')
-      .reply(200, function () { 
+      .reply(200, function () {
         const { options } = this.req;
         expect(options.timeout).to.equal(timeout);
         done();
       });
-      
+
     request({ uri, timeout });
   });
 
@@ -74,10 +75,7 @@ describe('Request wrapper tests', () => {
     const latency = timeout + 5;
     const errorCode = 'ECONNRESET';
 
-    nock(jwksHost)
-      .get('/.well-known/jwks.json')
-      .delay(latency)
-      .reply(200, jwksJson);
+    nock(jwksHost).get('/.well-known/jwks.json').delay(latency).reply(200, jwksJson);
 
     request({ uri, timeout })
       .then(() => done('Should have thrown error'))
@@ -88,16 +86,16 @@ describe('Request wrapper tests', () => {
   });
 
   it('should set modify headers when specified in options', (done) => {
-    const headers = { 'test': '123' };
+    const headers = { test: '123' };
 
     nock(jwksHost)
       .get('/.well-known/jwks.json')
-      .reply(200, function () { 
+      .reply(200, function () {
         const { options } = this.req;
         expect(options.headers.test).to.equal(headers.test);
         done();
       });
-      
+
     request({ uri, headers });
   });
 
@@ -106,23 +104,24 @@ describe('Request wrapper tests', () => {
 
     nock(jwksHost)
       .get('/.well-known/jwks.json')
-      .reply(200, function () { 
+      .reply(200, function () {
         const { options } = this.req;
         expect(options.agent).to.equal(agent);
         done();
       });
-      
+
     request({ uri, agent });
   });
 
   describe('when fetcher is specified', () => {
     it('should use the specified fetcher to make the request', (done) => {
-      request({ 
+      request({
         uri,
-        fetcher: (url) => new Promise((resolve) => {
-          expect(url).to.equal(uri);
-          resolve(jwksJson);
-        })
+        fetcher: (url) =>
+          new Promise((resolve) => {
+            expect(url).to.equal(uri);
+            resolve(jwksJson);
+          })
       })
         .then((data) => {
           expect(data).to.deep.equal(jwksJson);

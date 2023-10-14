@@ -1,6 +1,6 @@
-const { ArgumentError } = require('../errors');
-const { JwksClient } = require('../JwksClient');
-const supportedAlg = require('./config');
+import { ArgumentError } from '../errors/ArgumentError.js';
+import { JwksClient } from '../JwksClient.js';
+import { allowedSignatureAlg } from './config.js';
 
 const handleSigningKeyError = (err, cb) => {
   // If we didn't find a match, can't provide a key.
@@ -14,7 +14,7 @@ const handleSigningKeyError = (err, cb) => {
   }
 };
 
-module.exports.expressJwtSecret = function (options) {
+export function expressJwtSecret(options) {
   if (options === null || options === undefined) {
     throw new ArgumentError('An options object must be provided when initializing expressJwtSecret');
   }
@@ -23,9 +23,11 @@ module.exports.expressJwtSecret = function (options) {
   const onError = options.handleSigningKeyError || handleSigningKeyError;
 
   const expressJwt7Provider = async (req, token) => {
-    if (!token) { return; }
+    if (!token) {
+      return;
+    }
     const header = token.header;
-    if (!header || !supportedAlg.includes(header.alg)) {
+    if (!header || !allowedSignatureAlg.includes(header.alg)) {
       return;
     }
     try {
@@ -34,7 +36,9 @@ module.exports.expressJwtSecret = function (options) {
     } catch (err) {
       return new Promise((resolve, reject) => {
         onError(err, (newError) => {
-          if (!newError) { return resolve(); }
+          if (!newError) {
+            return resolve();
+          }
           reject(newError);
         });
       });
@@ -46,9 +50,10 @@ module.exports.expressJwtSecret = function (options) {
     //but it also supports express-jwt@7 which only has 2.
     if (arguments.length === 4) {
       expressJwt7Provider(req, { header })
-        .then(key => {
+        .then((key) => {
           setImmediate(cb, null, key);
-        }).catch(err => {
+        })
+        .catch((err) => {
           setImmediate(cb, err);
         });
 
@@ -57,4 +62,4 @@ module.exports.expressJwtSecret = function (options) {
 
     return expressJwt7Provider(req, arguments[1]);
   };
-};
+}

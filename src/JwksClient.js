@@ -1,10 +1,17 @@
-const logger = require('debug')('jwks');
-const { retrieveSigningKeys } = require('./utils') ;
-const { request, cacheSigningKey, rateLimitSigningKey, getKeysInterceptor, callbackSupport } = require('./wrappers');
-const JwksError = require('./errors/JwksError');
-const SigningKeyNotFoundError = require('./errors/SigningKeyNotFoundError');
+import debug from 'debug';
 
-class JwksClient {
+import { cacheWrapper as cacheSigningKey } from './wrappers/cache.js';
+import { callbackSupport } from './wrappers/callbackSupport.js';
+import { getKeysInterceptor } from './wrappers/interceptor.js';
+import { JwksError } from './errors/JwksError.js';
+import { rateLimitWrapper as rateLimitSigningKey } from './wrappers/rateLimit.js';
+import { retrieveSigningKeys } from './utils.js';
+import { SigningKeyNotFoundError } from './errors/SigningKeyNotFoundError.js';
+import { request } from './wrappers/request.js';
+
+const logger = debug('jwks');
+
+export class JwksClient {
   constructor(options) {
     this.options = {
       rateLimit: false,
@@ -45,7 +52,7 @@ class JwksClient {
     } catch (err) {
       const { errorMsg } = err;
       logger('Failure:', errorMsg || err);
-      throw (errorMsg ? new JwksError(errorMsg) : err);
+      throw errorMsg ? new JwksError(errorMsg) : err;
     }
   }
 
@@ -66,7 +73,7 @@ class JwksClient {
     return signingKeys;
   }
 
-  async getSigningKey (kid) {
+  async getSigningKey(kid) {
     logger(`Fetching signing key for '${kid}'`);
     const keys = await this.getSigningKeys();
 
@@ -76,7 +83,7 @@ class JwksClient {
       throw new SigningKeyNotFoundError('No KID specified and JWKS endpoint returned more than 1 key');
     }
 
-    const key = keys.find(k => !kidDefined || k.kid === kid);
+    const key = keys.find((k) => !kidDefined || k.kid === kid);
     if (key) {
       return key;
     } else {
@@ -85,7 +92,3 @@ class JwksClient {
     }
   }
 }
-
-module.exports = {
-  JwksClient
-};

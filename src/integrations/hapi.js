@@ -1,6 +1,6 @@
-const { ArgumentError } = require('../errors');
-const { JwksClient } = require('../JwksClient');
-const supportedAlg = require('./config');
+import { ArgumentError } from '../errors/ArgumentError.js';
+import { JwksClient } from '../JwksClient.js';
+import { allowedSignatureAlg } from './config.js';
 
 const handleSigningKeyError = (err, cb) => {
   // If we didn't find a match, can't provide a key.
@@ -16,22 +16,22 @@ const handleSigningKeyError = (err, cb) => {
 
 /**
  * Call hapiJwt2Key as a Promise
- * @param {object} options 
+ * @param {object} options
  * @returns {Promise}
  */
-module.exports.hapiJwt2KeyAsync = (options) => {
-  const secretProvider = module.exports.hapiJwt2Key(options);
-  return function(decoded) {
+export function hapiJwt2KeyAsync(options) {
+  const secretProvider = hapiJwt2Key(options);
+  return function (decoded) {
     return new Promise((resolve, reject) => {
       const cb = (err, key) => {
-        (!key || err) ? reject(err) : resolve({ key });
+        !key || err ? reject(err) : resolve({ key });
       };
       secretProvider(decoded, cb);
     });
   };
-}; 
+}
 
-module.exports.hapiJwt2Key = function (options) {
+export function hapiJwt2Key(options) {
   if (options === null || options === undefined) {
     throw new ArgumentError('An options object must be provided when initializing hapiJwt2Key');
   }
@@ -45,15 +45,17 @@ module.exports.hapiJwt2Key = function (options) {
       return cb(new Error('Cannot find a signing certificate if there is no header'), null, null);
     }
 
-    if (!supportedAlg.includes(decoded.header.alg)) {
+    if (!allowedSignatureAlg.includes(decoded.header.alg)) {
       return cb(new Error('Unsupported algorithm ' + decoded.header.alg + ' supplied.'), null, null);
     }
 
-    client.getSigningKey(decoded.header.kid)
-      .then(key => {
+    client
+      .getSigningKey(decoded.header.kid)
+      .then((key) => {
         return cb(null, key.publicKey || key.rsaPublicKey, key);
-      }).catch(err => {
+      })
+      .catch((err) => {
         return onError(err, (newError) => cb(newError, null, null));
       });
   };
-};
+}

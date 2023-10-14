@@ -1,4 +1,4 @@
-const allowedSignatureAlg = [
+export const allowedSignatureAlg = [
   'RS256',
   'RS384',
   'RS512',
@@ -11,5 +11,3 @@ const allowedSignatureAlg = [
   'ES512',
   'EdDSA'
 ];
-
-module.exports = allowedSignatureAlg;

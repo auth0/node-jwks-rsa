@@ -1,8 +1,8 @@
-const nock = require('nock');
-const { expect } = require('chai');
+import nock from 'nock';
+import { expect } from 'chai';
 
-const { x5cSingle } = require('./keys');
-const { JwksClient } = require('../src/JwksClient');
+import { x5cSingle } from './keys.js';
+import { JwksClient } from '../src/JwksClient.js';
 
 describe('JwksClient (cache)', () => {
   const jwksHost = 'http://my-authz-server';
@@ -20,16 +20,12 @@ describe('JwksClient (cache)', () => {
         jwksUri: `${jwksHost}/.well-known/jwks.json`
       });
 
-      nock(jwksHost)
-        .get('/.well-known/jwks.json')
-        .reply(200, x5cSingle);
+      nock(jwksHost).get('/.well-known/jwks.json').reply(200, x5cSingle);
 
       const key = await client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
       expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
 
-      nock(jwksHost)
-        .get('/.well-known/jwks.json')
-        .reply(200, x5cSingle);
+      nock(jwksHost).get('/.well-known/jwks.json').reply(200, x5cSingle);
 
       const key2 = await client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
       expect(key2.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
@@ -40,7 +36,7 @@ describe('JwksClient (cache)', () => {
       } catch (err) {
         expect(err).not.to.be.null;
         expect(err.name).to.equal('JwksRateLimitError');
-        expect(err.message).to.equal('Too many requests to the JWKS endpoint'); 
+        expect(err.message).to.equal('Too many requests to the JWKS endpoint');
       }
     });
 
@@ -53,23 +49,17 @@ describe('JwksClient (cache)', () => {
       });
 
       // First call.
-      nock(jwksHost)
-        .get('/.well-known/jwks.json')
-        .reply(200, x5cSingle);
+      nock(jwksHost).get('/.well-known/jwks.json').reply(200, x5cSingle);
       const key = await client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
       expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
 
       // Second call (cached).
-      nock(jwksHost)
-        .get('/.well-known/jwks.json')
-        .reply(200, x5cSingle);
+      nock(jwksHost).get('/.well-known/jwks.json').reply(200, x5cSingle);
       const key2 = await client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
       expect(key2.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
 
       // Third call (cached).
-      nock(jwksHost)
-        .get('/.well-known/jwks.json')
-        .reply(200, x5cSingle);
+      nock(jwksHost).get('/.well-known/jwks.json').reply(200, x5cSingle);
       const key3 = await client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
       expect(key3.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
 
@@ -80,7 +70,7 @@ describe('JwksClient (cache)', () => {
       } catch (err) {
         expect(err).not.to.be.null;
         expect(err.name).to.equal('SigningKeyNotFoundError');
-        expect(err.message).to.equal('Unable to find a signing key that matches \'abc\'');
+        expect(err.message).to.equal("Unable to find a signing key that matches 'abc'");
       }
 
       // Fifth call.

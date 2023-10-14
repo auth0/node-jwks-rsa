@@ -1,4 +1,4 @@
-const publicKey = `-----BEGIN PUBLIC KEY-----
+export const publicKey = `-----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA3ZXOSNDYQcAwTSJizehG
 E6cXYi/P4XXXtw/ONdiJCINFS7bUy8g6trBjY7ZNwIKPe+ejbCu7oOa8MP6XH/Tf
 2+JHKLus2fBfuSNreFvTj9J5ILnWdT4bPf6Urjo8eJ401cQ/IypHiY3zFLQ5P0Yh
@@ -13,7 +13,7 @@ F9AmvQ82ZX35V5MPRG0CU555BO2aSEnPyfHOm4wnaXbvPAmLJQ8hn5y2puEAWYkK
 wraVDsQEFb+3sIaPLL4nQlcCAwEAAQ==
 -----END PUBLIC KEY-----`;
 
-const privateKey = `-----BEGIN RSA PRIVATE KEY-----
+export const privateKey = `-----BEGIN RSA PRIVATE KEY-----
 MIIJKAIBAAKCAgEA3ZXOSNDYQcAwTSJizehGE6cXYi/P4XXXtw/ONdiJCINFS7bU
 y8g6trBjY7ZNwIKPe+ejbCu7oOa8MP6XH/Tf2+JHKLus2fBfuSNreFvTj9J5ILnW
 dT4bPf6Urjo8eJ401cQ/IypHiY3zFLQ5P0YhUCTLeb1NGNKKVPSWaYrM3IFlGbbc
@@ -65,7 +65,7 @@ IZqoiOM2gD4zEK70tBt07uSLA9ExVsAkz0f/trG8zcfXFn6dL0AFTTKXlRMyO69I
 /pWJfHKT2Bkp9ksJuEdOOPkJPElPIH9VDSbi/8bjpwWyYDKd61fNp2xvgcI=
 -----END RSA PRIVATE KEY-----`;
 
-const randomPublicKey1 = `-----BEGIN PUBLIC KEY-----
+export const randomPublicKey1 = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvqNYBKQeFfPlSDq3kGxg
 GtcMiCta7Tl/eirZ8T7knlEQomJjQN1z4p1rfhnA6m2dSh5/cnAo8MByRMlAO6DB
 401k/A6YUxEqPjGoSnESQhfwL7MezjVDrHnhlnLTFT5a9MZx2PPJlNn+HSI5iKyz
@@ -74,9 +74,3 @@ T+lkNTIWbdhF85w4PNWqnfA7P51wpvtx1k3XURgZk6SMR6Slx53McKj0fho6Z0oK
 nK2ov/0VeiKFwEyDf2zU5bdx/B+B/n+S84l1ypHg+gBNBN+wNWh4xZUHhcsZHpIL
 mQIDAQAB
 -----END PUBLIC KEY-----`;
-
-module.exports = {
-  publicKey,
-  privateKey,
-  randomPublicKey1
-};

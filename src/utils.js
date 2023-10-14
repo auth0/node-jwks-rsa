@@ -1,5 +1,6 @@
-const jose = require('jose');
-const JwksError = require('./errors/JwksError');
+import { importJWK, exportSPKI } from 'jose';
+
+import { JwksError } from './errors/JwksError.js';
 
 function resolveAlg(jwk) {
   if (jwk.alg) {
@@ -34,7 +35,7 @@ function resolveAlg(jwk) {
   throw new JwksError('Unsupported JWK');
 }
 
-async function retrieveSigningKeys(jwks) {
+export async function retrieveSigningKeys(jwks) {
   const results = [];
 
   jwks = jwks
@@ -43,27 +44,33 @@ async function retrieveSigningKeys(jwks) {
 
   for (const jwk of jwks) {
     try {
-      const key = await jose.importJWK(jwk, resolveAlg(jwk));
+      const key = await importJWK(jwk, resolveAlg(jwk));
       if (key.type !== 'public') {
         continue;
       }
       let getSpki;
       switch (key[Symbol.toStringTag]) {
         case 'CryptoKey': {
-          const spki = await jose.exportSPKI(key);
+          const spki = await exportSPKI(key);
           getSpki = () => spki;
           break;
         }
         case 'KeyObject':
-          // Assume legacy Node.js version without the Symbol.toStringTag backported
-          // Fall through
+        // Assume legacy Node.js version without the Symbol.toStringTag backported
+        // Fall through
         default:
           getSpki = () => key.export({ format: 'pem', type: 'spki' });
       }
       results.push({
-        get publicKey() { return getSpki(); },
-        get rsaPublicKey() { return getSpki(); },
-        getPublicKey() { return getSpki(); },
+        get publicKey() {
+          return getSpki();
+        },
+        get rsaPublicKey() {
+          return getSpki();
+        },
+        getPublicKey() {
+          return getSpki();
+        },
         ...(typeof jwk.kid === 'string' && jwk.kid ? { kid: jwk.kid } : undefined),
         ...(typeof jwk.alg === 'string' && jwk.alg ? { alg: jwk.alg } : undefined)
       });
@@ -74,7 +81,3 @@ async function retrieveSigningKeys(jwks) {
 
   return results;
 }
-
-module.exports = {
-  retrieveSigningKeys
-};

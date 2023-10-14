@@ -1,48 +1,48 @@
-const { expect } = require('chai');
+import { expect } from 'chai';
 
-const jwksRsa = require('../src');
+import { ArgumentError, JwksError, JwksRateLimitError, SigningKeyNotFoundError } from '../src/index.js';
 
 describe('Errors', () => {
   describe('#ArgumentError', () => {
     it('should be exposed', () => {
-      expect(jwksRsa.ArgumentError).not.to.be.null;
+      expect(ArgumentError).not.to.be.null;
     });
 
     it('should have correct name', () => {
-      const err = new jwksRsa.ArgumentError('foo');
+      const err = new ArgumentError('foo');
       expect(err.name).to.equal('ArgumentError');
     });
   });
 
   describe('#JwksError', () => {
     it('should be exposed', () => {
-      expect(jwksRsa.JwksError).not.to.be.null;
+      expect(JwksError).not.to.be.null;
     });
 
     it('should have correct name', () => {
-      const err = new jwksRsa.JwksError('foo');
+      const err = new JwksError('foo');
       expect(err.name).to.equal('JwksError');
     });
   });
 
   describe('#JwksRateLimitError', () => {
     it('should be exposed', () => {
-      expect(jwksRsa.JwksRateLimitError).not.to.be.null;
+      expect(JwksRateLimitError).not.to.be.null;
     });
 
     it('should have correct name', () => {
-      const err = new jwksRsa.JwksRateLimitError('foo');
+      const err = new JwksRateLimitError('foo');
       expect(err.name).to.equal('JwksRateLimitError');
     });
   });
 
   describe('#SigningKeyNotFoundError', () => {
     it('should be exposed', () => {
-      expect(jwksRsa.SigningKeyNotFoundError).not.to.be.null;
+      expect(SigningKeyNotFoundError).not.to.be.null;
     });
 
     it('should have correct name', () => {
-      const err = new jwksRsa.SigningKeyNotFoundError('foo');
+      const err = new SigningKeyNotFoundError('foo');
       expect(err.name).to.equal('SigningKeyNotFoundError');
     });
   });

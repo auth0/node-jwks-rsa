@@ -1,8 +1,11 @@
-const nock = require('nock');
-const { expect } = require('chai').use(require('chai-as-promised'));
+import nock from 'nock';
+import { use } from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 
-const { x5cSingle } = require('./keys');
-const { JwksClient } = require('../src/JwksClient');
+const { expect } = use(chaiAsPromised);
+
+import { x5cSingle } from './keys.js';
+import { JwksClient } from '../src/JwksClient.js';
 
 describe('JwksClient (cache)', () => {
   const jwksHost = 'http://my-authz-server';
@@ -17,10 +20,7 @@ describe('JwksClient (cache)', () => {
       let scope;
 
       beforeEach(async () => {
-        scope = nock(jwksHost)
-          .get('/.well-known/jwks.json')
-          .twice()
-          .reply(200, x5cSingle);
+        scope = nock(jwksHost).get('/.well-known/jwks.json').twice().reply(200, x5cSingle);
 
         client = new JwksClient({
           cache: true,
@@ -38,7 +38,9 @@ describe('JwksClient (cache)', () => {
       });
 
       it('should ignore the cache when the KID isnt cached and make a request', async () => {
-        await expect(client.getSigningKey('12345')).to.eventually.be.rejectedWith('Unable to find a signing key that matches \'12345\'');
+        await expect(client.getSigningKey('12345')).to.eventually.be.rejectedWith(
+          "Unable to find a signing key that matches '12345'"
+        );
         expect(scope.isDone()).ok;
       });
 

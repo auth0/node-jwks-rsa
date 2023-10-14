@@ -1,10 +1,6 @@
-function ArgumentError(message) {
-  Error.call(this, message);
-  Error.captureStackTrace(this, this.constructor);
-  this.name = 'ArgumentError';
-  this.message = message;
+export class ArgumentError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'ArgumentError';
+  }
 }
-
-ArgumentError.prototype = Object.create(Error.prototype);
-ArgumentError.prototype.constructor = ArgumentError;
-module.exports = ArgumentError;

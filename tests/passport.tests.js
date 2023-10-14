@@ -1,46 +1,45 @@
-const request = require('supertest');
-const { expect } = require('chai');
+import request from 'supertest';
+import { expect } from 'chai';
+import Express from 'express';
+import passport from 'passport';
+import { Strategy as JwtStrategy } from 'passport-jwt';
+import { ExtractJwt } from 'passport-jwt';
 
-const { jwksEndpoint } = require('./mocks/jwks');
-const { publicKey, privateKey, randomPublicKey1 } = require('./mocks/keys');
-const { createToken, createSymmetricToken } = require('./mocks/tokens');
+import { jwksEndpoint } from './mocks/jwks.js';
+import { publicKey, privateKey, randomPublicKey1 } from './mocks/keys.js';
+import { createToken, createSymmetricToken } from './mocks/tokens.js';
 
-const Express = require('express');
-const passport = require('passport');
-const JwtStrategy = require('passport-jwt').Strategy;
-const ExtractJwt = require('passport-jwt').ExtractJwt;
-
-const jwksRsa = require('../src');
+import { passportJwtSecret, ArgumentError, SigningKeyNotFoundError } from '../src/index.js';
 
 describe('passportJwtSecret', () => {
   it('should throw error if options is null', () => {
     let err = null;
 
     try {
-      new jwksRsa.passportJwtSecret();
+      new passportJwtSecret();
     } catch (e) {
       err = e;
     }
 
-    expect(err instanceof jwksRsa.ArgumentError).to.be.true;
+    expect(err instanceof ArgumentError).to.be.true;
   });
 
   it('should throw error if options.jwksUri is null', () => {
     let err = null;
 
     try {
-      new jwksRsa.passportJwtSecret({});
+      new passportJwtSecret({});
     } catch (e) {
       err = e;
     }
 
-    expect(err instanceof jwksRsa.ArgumentError).to.be.true;
+    expect(err instanceof ArgumentError).to.be.true;
   });
 
   it('should accept the secret function', () => {
     new JwtStrategy(
       {
-        secretOrKeyProvider: jwksRsa.passportJwtSecret({
+        secretOrKeyProvider: passportJwtSecret({
           jwksUri: 'http://localhost/.well-known/jwks.json'
         }),
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
@@ -49,12 +48,12 @@ describe('passportJwtSecret', () => {
     );
   });
 
-  it('should not provide a key if token is invalid', done => {
+  it('should not provide a key if token is invalid', (done) => {
     const app = new Express();
     passport.use(
       new JwtStrategy(
         {
-          secretOrKeyProvider: jwksRsa.passportJwtSecret({
+          secretOrKeyProvider: passportJwtSecret({
             jwksUri: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
@@ -88,12 +87,12 @@ describe('passportJwtSecret', () => {
       });
   });
 
-  it('should not provide a key if token is HS256', done => {
+  it('should not provide a key if token is HS256', (done) => {
     const app = new Express();
     passport.use(
       new JwtStrategy(
         {
-          secretOrKeyProvider: jwksRsa.passportJwtSecret({
+          secretOrKeyProvider: passportJwtSecret({
             jwksUri: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
@@ -129,12 +128,12 @@ describe('passportJwtSecret', () => {
       });
   });
 
-  it('should not provide a key if JWKS endpoint returned multiple keys and no KID was provided', done => {
+  it('should not provide a key if JWKS endpoint returned multiple keys and no KID was provided', (done) => {
     const app = new Express();
     passport.use(
       new JwtStrategy(
         {
-          secretOrKeyProvider: jwksRsa.passportJwtSecret({
+          secretOrKeyProvider: passportJwtSecret({
             jwksUri: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
@@ -147,9 +146,9 @@ describe('passportJwtSecret', () => {
     app.get(
       '/',
       (req, res, next) => {
-        req.flash = (type, msg) => {
+        (req.flash = (type, msg) => {
           expectedFlashMessage = msg;
-        },
+        }),
         next();
       },
       passport.authenticate('jwt', { session: false, failureFlash: true }),
@@ -159,7 +158,10 @@ describe('passportJwtSecret', () => {
     );
 
     const token = createToken(privateKey, null, { sub: 'john' });
-    jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' }, { pub: publicKey, kid: '456' } ]);
+    jwksEndpoint('http://localhost', [
+      { pub: publicKey, kid: '123' },
+      { pub: publicKey, kid: '456' }
+    ]);
 
     request(app.listen())
       .get('/')
@@ -171,12 +173,12 @@ describe('passportJwtSecret', () => {
       });
   });
 
-  it('should not provide a key if token is RS256 and invalid KID was provided', done => {
+  it('should not provide a key if token is RS256 and invalid KID was provided', (done) => {
     const app = new Express();
     passport.use(
       new JwtStrategy(
         {
-          secretOrKeyProvider: jwksRsa.passportJwtSecret({
+          secretOrKeyProvider: passportJwtSecret({
             jwksUri: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
@@ -215,12 +217,12 @@ describe('passportJwtSecret', () => {
       });
   });
 
-  it('should not authenticate the user if KID matches but the keys don\'t', done => {
+  it("should not authenticate the user if KID matches but the keys don't", (done) => {
     const app = new Express();
     passport.use(
       new JwtStrategy(
         {
-          secretOrKeyProvider: jwksRsa.passportJwtSecret({
+          secretOrKeyProvider: passportJwtSecret({
             jwksUri: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
@@ -259,15 +261,15 @@ describe('passportJwtSecret', () => {
       });
   });
 
-  it('should allow returning an error if key not found', done => {
+  it('should allow returning an error if key not found', (done) => {
     const app = new Express();
     passport.use(
       new JwtStrategy(
         {
-          secretOrKeyProvider: jwksRsa.passportJwtSecret({
+          secretOrKeyProvider: passportJwtSecret({
             jwksUri: 'http://localhost/.well-known/jwks.json',
             handleSigningKeyError: (err, cb) => {
-              if (err instanceof jwksRsa.SigningKeyNotFoundError) {
+              if (err instanceof SigningKeyNotFoundError) {
                 return cb(new Error('this is bad'));
               }
             }
@@ -277,7 +279,7 @@ describe('passportJwtSecret', () => {
         (jwt_payload, done) => done(null, jwt_payload)
       )
     );
-    
+
     let expectedFlashMessage;
     app.get(
       '/',
@@ -306,12 +308,12 @@ describe('passportJwtSecret', () => {
       });
   });
 
-  it('should work if the token matches a signing key', done => {
+  it('should work if the token matches a signing key', (done) => {
     const app = new Express();
     passport.use(
       new JwtStrategy(
         {
-          secretOrKeyProvider: jwksRsa.passportJwtSecret({
+          secretOrKeyProvider: passportJwtSecret({
             jwksUri: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -321,13 +323,9 @@ describe('passportJwtSecret', () => {
       )
     );
 
-    app.get(
-      '/',
-      passport.authenticate('jwt', { session: false }),
-      (req, res) => {
-        res.json(req.user);
-      }
-    );
+    app.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+      res.json(req.user);
+    });
 
     const token = createToken(privateKey, '123', { sub: 'john' });
     jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' } ]);
@@ -342,12 +340,12 @@ describe('passportJwtSecret', () => {
       });
   });
 
-  it('should work if the JWKS endpoint returns a single key and no KID is provided', done => {
+  it('should work if the JWKS endpoint returns a single key and no KID is provided', (done) => {
     const app = new Express();
     passport.use(
       new JwtStrategy(
         {
-          secretOrKeyProvider: jwksRsa.passportJwtSecret({
+          secretOrKeyProvider: passportJwtSecret({
             jwksUri: 'http://localhost/.well-known/jwks.json'
           }),
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -357,13 +355,9 @@ describe('passportJwtSecret', () => {
       )
     );
 
-    app.get(
-      '/',
-      passport.authenticate('jwt', { session: false }),
-      (req, res) => {
-        res.json(req.user);
-      }
-    );
+    app.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+      res.json(req.user);
+    });
 
     const token = createToken(privateKey, null, { sub: 'john' });
     jwksEndpoint('http://localhost', [ { pub: publicKey } ]);

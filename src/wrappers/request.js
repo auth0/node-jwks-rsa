@@ -1,19 +1,14 @@
-const http = require('http');
-const https = require('https');
-const urlUtil = require('url');
+import { request as httpRequestFn } from 'http';
+import { request as httpsRequestFn } from 'https';
+import { parse } from 'url';
 
-module.exports.default =  (options) => {
+export const request = (options) => {
   if (options.fetcher) {
     return options.fetcher(options.uri);
   }
 
   return new Promise((resolve, reject) => {
-    const {
-      hostname,
-      path,
-      port,
-      protocol
-    } = urlUtil.parse(options.uri);
+    const { hostname, path, port, protocol } = parse(options.uri);
 
     const requestOptions = {
       hostname,
@@ -25,14 +20,17 @@ module.exports.default =  (options) => {
       ...(options.agent && { agent: options.agent })
     };
 
-    const httpRequestLib = protocol === 'https:' ? https : http;
-    const httpRequest = httpRequestLib.request(requestOptions, (res) => {
+    const requestFn = protocol === 'https:' ? httpsRequestFn : httpRequestFn;
+    const httpRequest = requestFn(requestOptions, (res) => {
       let rawData = '';
       res.setEncoding('utf8');
-      res.on('data', (chunk) => { rawData += chunk; });
+      res.on('data', (chunk) => {
+        rawData += chunk;
+      });
       res.on('end', () => {
         if (res.statusCode < 200 || res.statusCode >= 300) {
-          const errorMsg = res.body && (res.body.message || res.body) || res.statusMessage || `Http Error ${res.statusCode}`;
+          const errorMsg =
+            (res.body && (res.body.message || res.body)) || res.statusMessage || `Http Error ${res.statusCode}`;
           reject({ errorMsg });
         } else {
           try {
