@@ -1,7 +1,14 @@
+/** @typedef {import('../types.js').KoaJwtOptions} KoaJwtOptions */
+/** @typedef {import('../types.js').TokenHeader} TokenHeader */
+
 import { ArgumentError } from '../errors/ArgumentError.js';
 import { JwksClient } from '../JwksClient.js';
 import { allowedSignatureAlg } from './config.js';
 
+/**
+ * @param {KoaJwtOptions} options
+ * @returns {(header: TokenHeader) => Promise<string>}
+ */
 export function koaJwtSecret(options = {}) {
   if (!options.jwksUri) {
     throw new ArgumentError('No JWKS provided. Please provide a jwksUri');

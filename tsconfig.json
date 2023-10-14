@@ -3,6 +3,7 @@
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
+    "checkJs": true,
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "noEmit": false,
@@ -17,8 +18,5 @@
     "target": "es5",
     "outDir": "ts-output"
   },
-  "include": [
-    "index.d.ts",
-    "tests/**/*.tests.ts"
-  ]
+  "include": ["./src/**/*", "tests/**/*"]
 }

@@ -16,6 +16,7 @@ describe('JwksClient (cache)', () => {
 
   describe('#getSigningKey', () => {
     describe('should cache requests per kid', () => {
+      /** @type {JwksClient} */
       let client;
       let scope;
 

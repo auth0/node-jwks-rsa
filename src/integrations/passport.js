@@ -1,9 +1,13 @@
+/** @typedef {import('../types.js').ExpressJwtOptions} ExpressJwtOptions */
+/** @typedef {import('../types.js').SecretCallback} SecretCallback */
+
 import { decodeJwt, decodeProtectedHeader } from 'jose';
 
 import { ArgumentError } from '../errors/ArgumentError.js';
 import { JwksClient } from '../JwksClient.js';
 import { allowedSignatureAlg } from './config.js';
 
+/** @type {ExpressJwtOptions['handleSigningKeyError']} */
 const handleSigningKeyError = (err, cb) => {
   // If we didn't find a match, can't provide a key.
   if (err && err.name === 'SigningKeyNotFoundError') {
@@ -16,6 +20,10 @@ const handleSigningKeyError = (err, cb) => {
   }
 };
 
+/**
+ * @param {ExpressJwtOptions} options
+ * @returns {SecretCallback}
+ */
 export function passportJwtSecret(options) {
   if (options === null || options === undefined) {
     throw new ArgumentError('An options object must be provided when initializing passportJwtSecret');

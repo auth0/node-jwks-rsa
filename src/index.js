@@ -1,3 +1,5 @@
+/** @typedef {import('./types.js').Options} Options */
+
 export { ArgumentError } from './errors/ArgumentError.js';
 export { JwksError } from './errors/JwksError.js';
 export { JwksRateLimitError } from './errors/JwksRateLimitError.js';
@@ -11,6 +13,10 @@ export { passportJwtSecret } from './integrations/passport.js';
 import { JwksClient } from './JwksClient.js';
 export { JwksClient } from './JwksClient.js';
 
+/**
+ * @param {Options} options
+ * @returns {JwksClient}
+ */
 export default (options) => {
   return new JwksClient(options);
 };

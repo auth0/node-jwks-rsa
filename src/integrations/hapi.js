@@ -1,7 +1,12 @@
+/** @typedef {import('../types.js').DecodedToken} DecodedToken */
+/** @typedef {import('../types.js').HapiCallback} HapiCallback */
+/** @typedef {import('../types.js').HapiJwtOptions} HapiJwtOptions */
+
 import { ArgumentError } from '../errors/ArgumentError.js';
 import { JwksClient } from '../JwksClient.js';
 import { allowedSignatureAlg } from './config.js';
 
+/** @type {HapiJwtOptions['handleSigningKeyError']} */
 const handleSigningKeyError = (err, cb) => {
   // If we didn't find a match, can't provide a key.
   if (err && err.name === 'SigningKeyNotFoundError') {
@@ -16,8 +21,9 @@ const handleSigningKeyError = (err, cb) => {
 
 /**
  * Call hapiJwt2Key as a Promise
- * @param {object} options
- * @returns {Promise}
+ *
+ * @param {HapiJwtOptions} options
+ * @returns {(decodedToken: DecodedToken) => Promise<{ key: string }>}
  */
 export function hapiJwt2KeyAsync(options) {
   const secretProvider = hapiJwt2Key(options);
@@ -31,6 +37,10 @@ export function hapiJwt2KeyAsync(options) {
   };
 }
 
+/**
+ * @param {HapiJwtOptions} options
+ * @returns {(decodedToken: DecodedToken, cb: HapiCallback) => void}
+ */
 export function hapiJwt2Key(options) {
   if (options === null || options === undefined) {
     throw new ArgumentError('An options object must be provided when initializing hapiJwt2Key');

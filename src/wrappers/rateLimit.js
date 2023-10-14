@@ -1,3 +1,6 @@
+/** @typedef {import('../JwksClient.js').JwksClient} JwksClient */
+/** @typedef {import('../types.js').Options} Options */
+
 import debug from 'debug';
 import { RateLimiter } from 'limiter';
 
@@ -5,6 +8,10 @@ import { JwksRateLimitError } from '../errors/JwksRateLimitError.js';
 
 const logger = debug('jwks');
 
+/**
+ * @param {JwksClient} client
+ * @param {Omit<Options, 'rateLimit'> & Required<Pick<Options, 'rateLimit'>>} options
+ */
 export function rateLimitWrapper(client, { jwksRequestsPerMinute = 10 }) {
   const getSigningKey = client.getSigningKey.bind(client);
 

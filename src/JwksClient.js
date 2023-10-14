@@ -1,3 +1,5 @@
+/** @typedef {import('./types.js').Options} Options */
+
 import debug from 'debug';
 
 import { cacheWrapper as cacheSigningKey } from './wrappers/cache.js';
@@ -12,6 +14,7 @@ import { request } from './wrappers/request.js';
 const logger = debug('jwks');
 
 export class JwksClient {
+  /** @param {Options} options */
   constructor(options) {
     this.options = {
       rateLimit: false,
@@ -32,7 +35,7 @@ export class JwksClient {
       this.getSigningKey = cacheSigningKey(this, options);
     }
 
-    this.getSigningKey = callbackSupport(this, options);
+    this.getSigningKey = callbackSupport(this);
   }
 
   async getKeys() {
