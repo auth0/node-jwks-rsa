@@ -10,13 +10,4 @@ export { hapiJwt2Key, hapiJwt2KeyAsync } from './integrations/hapi.js';
 export { koaJwtSecret } from './integrations/koa.js';
 export { passportJwtSecret } from './integrations/passport.js';
 
-import { JwksClient } from './JwksClient.js';
 export { JwksClient } from './JwksClient.js';
-
-/**
- * @param {Options} options
- * @returns {JwksClient}
- */
-export default (options) => {
-  return new JwksClient(options);
-};
