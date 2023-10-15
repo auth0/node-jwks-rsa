@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.base",
   "compilerOptions": {
-    "noEmit": true
+    "outDir": "./ts-output",
   },
-  "include": ["./src/**/*", "tests/**/*"]
+  "include": ["./tests/**/*"]
 }

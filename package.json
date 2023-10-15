@@ -19,12 +19,14 @@
     "lru-memoizer": "^2.2.0"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.2",
-    "@types/express": "^4.17.17",
+    "@tsconfig/node14": "^14.1.0",
     "@types/chai-as-promised": "^7.1.6",
     "@types/chai": "^4.3.6",
     "@types/debug": "^4.1.9",
     "@types/express-jwt-v6": "npm:@types/express-jwt@^6.0.4",
+    "@types/express": "^4.17.17",
+    "@types/jsonwebtoken": "^9.0.2",
+    "@types/koa": "^2.13.9",
     "@types/mocha": "^10.0.1",
     "@types/nock": "^11.0.0",
     "@types/node": "^20.6.0",
@@ -55,11 +57,12 @@
   "scripts": {
     "clean:ts": "rimraf ts-output/",
     "lint": "eslint ./src ./tests",
-    "test:ts": "npm run clean:ts && tsc && NODE_ENV=test mocha --exit --timeout 5000 $(find ./ts-output -name *.tests.js)",
+    "test:ts": "npm run clean:ts && tsc --project tsconfig.tests.json && NODE_ENV=test mocha --exit --timeout 5000 $(find ./ts-output -name *.tests.js)",
     "test:js": "NODE_ENV=test mocha --exit --timeout 5000 $(find ./tests -name *.tests.js)",
     "test": "npm run test:js && npm run test:ts",
     "test:ci": "nyc --reporter=lcov npm test",
     "test-watch": "NODE_ENV=test mocha --exit --timeout 5000 $(find ./tests -name *.tests.js) --watch",
+    "types:check": "tsc",
     "release": "git tag $npm_package_version && git push && git push --tags && npm publish"
   },
   "repository": {
