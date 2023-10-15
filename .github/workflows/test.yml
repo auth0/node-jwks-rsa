@@ -107,3 +107,26 @@ jobs:
           key: 18-${{ env.CACHE_KEY }}
 
       - run: npm run lint
+
+  types:
+    needs: build # Require build to complete before running tests
+
+    name: Check source and built types
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+
+      - uses: actions/cache/restore@v3
+        with:
+          path: .
+          key: 18-${{ env.CACHE_KEY }}
+
+      - run: npm run types:check
+
+      - run: npm run build:check
