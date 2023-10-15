@@ -27,6 +27,7 @@
     "lru-memoizer": "^2.2.0"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.12.2",
     "@tsconfig/node14": "^14.1.0",
     "@types/chai-as-promised": "^7.1.6",
     "@types/chai": "^4.3.6",
@@ -63,9 +64,11 @@
     "typescript": "^5.2.2"
   },
   "scripts": {
-    "build": "rimraf dist && npm run build:cjs && npm run build:esm",
+    "build": "npm run clean:build && npm run build:cjs && npm run build:esm",
+    "build:check": "npm run build && attw --pack .",
     "build:cjs": "tsc --project tsconfig.build-cjs.json && cp src/types.d.ts dist/cjs/types.d.ts && echo '{ \"type\": \"commonjs\" }'> dist/cjs/package.json",
     "build:esm": "tsc --project tsconfig.build-esm.json && cp src/types.d.ts dist/esm/types.d.ts",
+    "clean:build": "rimraf dist",
     "clean:ts": "rimraf ts-output/",
     "lint": "eslint ./src ./tests",
     "test:ts": "npm run clean:ts && tsc --project tsconfig.tests.json && NODE_ENV=test mocha --exit --timeout 5000 $(find ./ts-output -name *.tests.js)",
