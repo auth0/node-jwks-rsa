@@ -19,9 +19,9 @@
 
 Using [npm](https://npmjs.org) in your project directory run the following command:
 
-````bash
+```bash
 npm install --save jwks-rsa
-````
+```
 
 Supports all currently registered JWK types and JWS Algorithms, see [panva/jose#262](https://github.com/panva/jose/issues/262) for more information.
 
@@ -29,25 +29,25 @@ Supports all currently registered JWK types and JWS Algorithms, see [panva/jose#
 
 Provide a JWKS endpoint which exposes your signing keys.
 
-````js
-const jwksClient = require('jwks-rsa');
+```js
+const { JwksClient } = require('jwks-rsa');
 
-const client = jwksClient({
+const client = new JwksClient({
   jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
   requestHeaders: {}, // Optional
   timeout: 30000 // Defaults to 30s
 });
-````
+```
 
 ### Retrieve a key
 
 Then use `getSigningKey` to retrieve a signing key that matches a specific `kid`.
 
-````js
+```js
 const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';
 const key = await client.getSigningKey(kid);
 const signingKey = key.getPublicKey();
-````
+```
 
 ## Feedback
 
