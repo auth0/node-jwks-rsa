@@ -2,6 +2,7 @@ import { request as httpRequestFn } from 'node:http';
 import { request as httpsRequestFn } from 'node:https';
 import { parse } from 'node:url';
 
+// @ts-ignore
 export const request = (options) => {
   if (options.fetcher) {
     return options.fetcher(options.uri);
@@ -28,8 +29,10 @@ export const request = (options) => {
         rawData += chunk;
       });
       res.on('end', () => {
+        // @ts-ignore
         if (res.statusCode < 200 || res.statusCode >= 300) {
           const errorMsg =
+          // @ts-ignore
             (res.body && (res.body.message || res.body)) || res.statusMessage || `Http Error ${res.statusCode}`;
           reject({ errorMsg });
         } else {

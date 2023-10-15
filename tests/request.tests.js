@@ -33,6 +33,7 @@ describe('Request wrapper tests', () => {
     nock(jwksHost).get('/.well-known/jwks.json').reply(200, jwksJson);
 
     request({ uri })
+    // @ts-ignore
       .then((data) => {
         expect(data).to.deep.equal(jwksJson);
         done();
@@ -45,11 +46,13 @@ describe('Request wrapper tests', () => {
     nock(jwksHost)
       .get('/.well-known/jwks.json')
       .reply(500, function () {
+        // @ts-ignore
         this.req.response.statusMessage = errorMsg;
       });
 
     request({ uri })
       .then(() => done('Shoul dhave thrown error'))
+      // @ts-ignore
       .catch((err) => {
         expect(err.errorMsg).to.eql(errorMsg);
         done();
@@ -62,6 +65,7 @@ describe('Request wrapper tests', () => {
     nock(jwksHost)
       .get('/.well-known/jwks.json')
       .reply(200, function () {
+        // @ts-ignore
         const { options } = this.req;
         expect(options.timeout).to.equal(timeout);
         done();
@@ -79,6 +83,7 @@ describe('Request wrapper tests', () => {
 
     request({ uri, timeout })
       .then(() => done('Should have thrown error'))
+      // @ts-ignore
       .catch((err) => {
         expect(err.code).to.eql(errorCode);
         done();
@@ -91,6 +96,7 @@ describe('Request wrapper tests', () => {
     nock(jwksHost)
       .get('/.well-known/jwks.json')
       .reply(200, function () {
+        // @ts-ignore
         const { options } = this.req;
         expect(options.headers.test).to.equal(headers.test);
         done();
@@ -105,6 +111,7 @@ describe('Request wrapper tests', () => {
     nock(jwksHost)
       .get('/.well-known/jwks.json')
       .reply(200, function () {
+        // @ts-ignore
         const { options } = this.req;
         expect(options.agent).to.equal(agent);
         done();
@@ -117,12 +124,14 @@ describe('Request wrapper tests', () => {
     it('should use the specified fetcher to make the request', (done) => {
       request({
         uri,
+        // @ts-ignore
         fetcher: (url) =>
           new Promise((resolve) => {
             expect(url).to.equal(uri);
             resolve(jwksJson);
           })
       })
+      // @ts-ignore
         .then((data) => {
           expect(data).to.deep.equal(jwksJson);
           done();

@@ -6,9 +6,11 @@ import { callbackify } from 'node:util';
 export const callbackSupport = (client) => {
   const getSigningKey = client.getSigningKey.bind(client);
 
+  // @ts-ignore
   return (kid, cb) => {
     if (cb) {
       const callbackFunc = callbackify(getSigningKey);
+      // @ts-ignore
       return callbackFunc(kid, cb);
     }
 

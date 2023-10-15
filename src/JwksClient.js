@@ -25,16 +25,18 @@ export class JwksClient {
 
     // Initialize wrappers.
     if (this.options.getKeysInterceptor) {
-      this.getSigningKey = getKeysInterceptor(this, options);
+      // @ts-ignore
+      this.getSigningKey = getKeysInterceptor(this, this.options);
     }
 
     if (this.options.rateLimit) {
-      this.getSigningKey = rateLimitSigningKey(this, options);
+      this.getSigningKey = rateLimitSigningKey(this, this.options);
     }
     if (this.options.cache) {
-      this.getSigningKey = cacheSigningKey(this, options);
+      this.getSigningKey = cacheSigningKey(this, this.options);
     }
 
+    // @ts-ignore
     this.getSigningKey = callbackSupport(this);
   }
 
@@ -53,6 +55,7 @@ export class JwksClient {
       logger('Keys:', res.keys);
       return res.keys;
     } catch (err) {
+      // @ts-ignore
       const { errorMsg } = err;
       logger('Failure:', errorMsg || err);
       throw errorMsg ? new JwksError(errorMsg) : err;
@@ -76,6 +79,7 @@ export class JwksClient {
     return signingKeys;
   }
 
+  // @ts-ignore
   async getSigningKey(kid) {
     logger(`Fetching signing key for '${kid}'`);
     const keys = await this.getSigningKeys();

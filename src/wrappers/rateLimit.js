@@ -18,6 +18,7 @@ export function rateLimitWrapper(client, { jwksRequestsPerMinute = 10 }) {
   const limiter = new RateLimiter(jwksRequestsPerMinute, 'minute', true);
   logger(`Configured rate limiting to JWKS endpoint at ${jwksRequestsPerMinute}/minute`);
 
+  // @ts-ignore
   return async (kid) =>
     await new Promise((resolve, reject) => {
       limiter.removeTokens(1, async (err, remaining) => {

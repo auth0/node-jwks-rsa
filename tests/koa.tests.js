@@ -14,6 +14,7 @@ describe('koaJwtSecret', () => {
     let err = null;
 
     try {
+      // @ts-ignore
       new koaJwtSecret();
     } catch (e) {
       err = e;
@@ -46,7 +47,7 @@ describe('koaJwtSecret', () => {
       .get('/')
       .set('Authorization', 'Bearer abc')
       .expect(401)
-      .end((err, res) => {
+      .end((_err, res) => {
         expect(res.text).to.equal('Invalid token');
         done();
       });
@@ -69,7 +70,7 @@ describe('koaJwtSecret', () => {
       .get('/')
       .set('Authorization', `Bearer ${token}`)
       .expect(401)
-      .end((err, res) => {
+      .end((_err, res) => {
         expect(res.text).to.equal('Missing / invalid token algorithm');
         done();
       });
@@ -96,7 +97,7 @@ describe('koaJwtSecret', () => {
       .get('/')
       .set('Authorization', `Bearer ${token}`)
       .expect(401)
-      .end((err, res) => {
+      .end((_err, res) => {
         expect(res.text).to.equal('No KID specified and JWKS endpoint returned more than 1 key');
         done();
       });
@@ -120,7 +121,7 @@ describe('koaJwtSecret', () => {
       .get('/')
       .set('Authorization', `Bearer ${token}`)
       .expect(401)
-      .end((err, res) => {
+      .end((_err, res) => {
         expect(res.text).to.equal("Unable to find a signing key that matches '456'");
         done();
       });
@@ -144,7 +145,7 @@ describe('koaJwtSecret', () => {
       .get('/')
       .set('Authorization', `Bearer ${token}`)
       .expect(401)
-      .end((err, res) => {
+      .end((_err, res) => {
         expect(res.text).to.equal('invalid signature');
         done();
       });
@@ -157,6 +158,7 @@ describe('koaJwtSecret', () => {
         debug: true,
         secret: koaJwtSecret({
           jwksUri: 'http://localhost/.well-known/jwks.json',
+          // @ts-ignore
           handleSigningKeyError: (err) => {
             if (err instanceof SigningKeyNotFoundError) {
               return Promise.resolve(new Error('this is bad'));
@@ -173,7 +175,7 @@ describe('koaJwtSecret', () => {
       .get('/')
       .set('Authorization', `Bearer ${token}`)
       .expect(401)
-      .end((err, res) => {
+      .end((_err, res) => {
         expect(res.text).to.equal('this is bad');
         done();
       });
@@ -202,7 +204,7 @@ describe('koaJwtSecret', () => {
       .get('/')
       .set('Authorization', `Bearer ${token}`)
       .expect(200)
-      .end((err, res) => {
+      .end((_err, res) => {
         expect(res.body.sub).to.equal('john');
         done();
       });
@@ -230,7 +232,7 @@ describe('koaJwtSecret', () => {
       .get('/')
       .set('Authorization', `Bearer ${token}`)
       .expect(200)
-      .end((err, res) => {
+      .end((_err, res) => {
         expect(res.body.sub).to.equal('john');
         done();
       });

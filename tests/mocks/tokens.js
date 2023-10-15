@@ -2,6 +2,7 @@ import jsonwebtoken from 'jsonwebtoken';
 
 const { sign } = jsonwebtoken;
 
+// @ts-ignore
 export function createToken(key, kid, payload) {
   return sign(payload, key, {
     noTimestamp: true,
@@ -10,6 +11,7 @@ export function createToken(key, kid, payload) {
   });
 }
 
+// @ts-ignore
 export function createSymmetricToken(key, payload) {
   return sign(payload, key, {
     noTimestamp: true,

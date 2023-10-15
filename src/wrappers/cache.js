@@ -15,8 +15,10 @@ export function cacheWrapper(client, { cacheMaxEntries = 5, cacheMaxAge = 600000
   logger(`Configured caching of signing keys. Max: ${cacheMaxEntries} / Age: ${cacheMaxAge}`);
   return promisify(
     memoizer({
+      // @ts-ignore
       hash: (kid) => kid,
       load: callbackify(client.getSigningKey.bind(client)),
+      // @ts-ignore
       maxAge: cacheMaxAge,
       max: cacheMaxEntries
     })

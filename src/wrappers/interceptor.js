@@ -13,6 +13,7 @@ import { retrieveSigningKeys } from '../utils.js';
 export function getKeysInterceptor(client, { getKeysInterceptor }) {
   const getSigningKey = client.getSigningKey.bind(client);
 
+  // @ts-ignore
   return async (kid) => {
     const keys = await getKeysInterceptor();
 

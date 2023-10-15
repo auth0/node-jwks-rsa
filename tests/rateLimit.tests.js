@@ -35,7 +35,9 @@ describe('JwksClient (cache)', () => {
         throw new Error('should have thrown error');
       } catch (err) {
         expect(err).not.to.be.null;
+        // @ts-ignore
         expect(err.name).to.equal('JwksRateLimitError');
+        // @ts-ignore
         expect(err.message).to.equal('Too many requests to the JWKS endpoint');
       }
     });
@@ -69,7 +71,9 @@ describe('JwksClient (cache)', () => {
         throw new Error('should have thrown error');
       } catch (err) {
         expect(err).not.to.be.null;
+        // @ts-ignore
         expect(err.name).to.equal('SigningKeyNotFoundError');
+        // @ts-ignore
         expect(err.message).to.equal("Unable to find a signing key that matches 'abc'");
       }
 
@@ -79,7 +83,9 @@ describe('JwksClient (cache)', () => {
         throw new Error('should have thrown error');
       } catch (err) {
         expect(err).not.to.be.null;
+        // @ts-ignore
         expect(err.name).to.equal('JwksRateLimitError');
+        // @ts-ignore
         expect(err.message).to.equal('Too many requests to the JWKS endpoint');
       }
     });

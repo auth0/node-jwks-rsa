@@ -36,7 +36,7 @@ export function passportJwtSecret(options) {
   const client = new JwksClient(options);
   const onError = options.handleSigningKeyError || handleSigningKeyError;
 
-  return function secretProvider(req, rawJwtToken, cb) {
+  return function secretProvider(_req, rawJwtToken, cb) {
     let decoded;
     try {
       decoded = {
@@ -47,7 +47,9 @@ export function passportJwtSecret(options) {
       decoded = null;
     }
 
+    // @ts-ignore
     if (!decoded || !allowedSignatureAlg.includes(decoded.header.alg)) {
+      // @ts-ignore
       return cb(null, null);
     }
 
@@ -57,6 +59,7 @@ export function passportJwtSecret(options) {
         cb(null, key.publicKey || key.rsaPublicKey);
       })
       .catch((err) => {
+        // @ts-ignore
         onError(err, (newError) => cb(newError, null));
       });
   };

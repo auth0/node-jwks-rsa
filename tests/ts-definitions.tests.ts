@@ -6,7 +6,7 @@ import { expressjwt as expressjwt7, GetVerificationKey } from 'express-jwt-v7';
 import { jwksEndpoint } from '../tests/mocks/jwks.js';
 import { publicKey } from '../tests/mocks/keys.js';
 import { x5cSingle } from '../tests/keys.js';
-import { expressJwtSecret, hapiJwt2KeyAsync, JwksClient } from 'src/index.js';
+import { expressJwtSecret, hapiJwt2KeyAsync, JwksClient } from '../src/index.js';
 
 describe('typescript definition', () => {
   const jwksHost = 'http://localhost';

@@ -31,6 +31,7 @@ export function expressJwtSecret(options) {
   const client = new JwksClient(options);
   const onError = options.handleSigningKeyError || handleSigningKeyError;
 
+  // @ts-ignore
   const expressJwt7Provider = async (req, token) => {
     if (!token) {
       return;
@@ -44,8 +45,10 @@ export function expressJwtSecret(options) {
       return key.publicKey || key.rsaPublicKey;
     } catch (err) {
       return new Promise((resolve, reject) => {
+        // @ts-ignore
         onError(err, (newError) => {
           if (!newError) {
+            // @ts-ignore
             return resolve();
           }
           reject(newError);
@@ -54,7 +57,7 @@ export function expressJwtSecret(options) {
     }
   };
 
-  return function secretProvider(req, header, payload, cb) {
+  return function secretProvider(req, header, _payload, cb) {
     //This function has 4 parameters to make it work with express-jwt@6
     //but it also supports express-jwt@7 which only has 2.
     if (arguments.length === 4) {

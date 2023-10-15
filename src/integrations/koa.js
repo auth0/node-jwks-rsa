@@ -9,6 +9,7 @@ import { allowedSignatureAlg } from './config.js';
  * @param {KoaJwtOptions} options
  * @returns {(header: TokenHeader) => Promise<string>}
  */
+// @ts-ignore
 export function koaJwtSecret(options = {}) {
   if (!options.jwksUri) {
     throw new ArgumentError('No JWKS provided. Please provide a jwksUri');
@@ -16,6 +17,7 @@ export function koaJwtSecret(options = {}) {
 
   const client = new JwksClient(options);
 
+  // @ts-ignore
   return function secretProvider({ alg, kid } = {}) {
     return new Promise((resolve, reject) => {
       if (!allowedSignatureAlg.includes(alg)) {

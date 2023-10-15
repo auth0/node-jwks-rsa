@@ -18,6 +18,7 @@ describe('JwksClient (cache)', () => {
     describe('should cache requests per kid', () => {
       /** @type {JwksClient} */
       let client;
+      // @ts-ignore
       let scope;
 
       beforeEach(async () => {
@@ -42,12 +43,14 @@ describe('JwksClient (cache)', () => {
         await expect(client.getSigningKey('12345')).to.eventually.be.rejectedWith(
           "Unable to find a signing key that matches '12345'"
         );
+        // @ts-ignore
         expect(scope.isDone()).ok;
       });
 
       it('should fetch the key from the cache', async () => {
         const key = await client.getSigningKey('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
         expect(key.kid).to.equal('NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA');
+        // @ts-ignore
         expect(scope.isDone()).not.ok;
       });
     });

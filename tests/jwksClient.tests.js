@@ -27,6 +27,7 @@ describe('JwksClient', () => {
         throw new Error('should have thrown error');
       } catch (err) {
         expect(err).not.to.be.null;
+        // @ts-ignore
         expect(err.message).to.equal('Http Error 500');
       }
     });
@@ -157,6 +158,7 @@ describe('JwksClient', () => {
         throw new Error('should have thrown error');
       } catch (err) {
         expect(err).not.to.be.null;
+        // @ts-ignore
         expect(err.message).to.equal('Http Error 500');
       }
     });
@@ -343,7 +345,9 @@ describe('JwksClient', () => {
         throw new Error('should have thrown error');
       } catch (err) {
         expect(err).not.to.be.null;
+        // @ts-ignore
         expect(err.name).to.equal('JwksError');
+        // @ts-ignore
         expect(err.message).to.equal('The JWKS endpoint did not contain any signing keys');
       }
     });
@@ -377,6 +381,7 @@ describe('JwksClient', () => {
         });
         const key = x5cMultiple.keys[0];
 
+        // @ts-ignore
         client.getSigningKey(key.kid, (err, foundKey) => {
           expect(foundKey.kid).to.equal(key.kid);
           done();
@@ -390,6 +395,7 @@ describe('JwksClient', () => {
           jwksUri: `${jwksHost}/.well-known/jwks.json`
         });
 
+        // @ts-ignore
         client.getSigningKey('123', (err) => {
           expect(err).not.to.be.null;
           expect(err.name).to.equal('SigningKeyNotFoundError');
@@ -410,6 +416,7 @@ describe('JwksClient', () => {
         throw new Error('should have thrown error');
       } catch (err) {
         expect(err).not.to.be.null;
+        // @ts-ignore
         expect(err.name).to.equal('SigningKeyNotFoundError');
       }
     });
@@ -428,6 +435,7 @@ describe('JwksClient', () => {
         throw new Error('should have thrown error');
       } catch (err) {
         expect(err).not.to.be.null;
+        // @ts-ignore
         expect(err.message).to.equal('Http Error 500');
       }
     });
