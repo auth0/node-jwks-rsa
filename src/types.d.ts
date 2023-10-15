@@ -12,7 +12,7 @@ declare class JwksClient {
   getSigningKey(kid: string | null | undefined, cb: (err: Error | null, key?: SigningKey) => void): void;
 }
 
-interface Headers {
+export interface Headers {
   [key: string]: string;
 }
 
@@ -28,30 +28,30 @@ export interface Options {
   timeout?: number;
   requestAgent?: HttpAgent | HttpsAgent;
   fetcher?(jwksUri: string): Promise<{ keys: any }>;
-  getKeysInterceptor?(): Promise<JSONWebKey[]>;
+  getKeysInterceptor?: () => Promise<JSONWebKey[]>;
 }
 
-interface JSONWebKey {
+export interface JSONWebKey {
   kid: string;
   alg: string;
   [key: string]: any;
 }
 
-interface CertSigningKey {
+export interface CertSigningKey {
   kid: string;
   alg: string;
   getPublicKey(): string;
   publicKey: string;
 }
 
-interface RsaSigningKey {
+export interface RsaSigningKey {
   kid: string;
   alg: string;
   getPublicKey(): string;
   rsaPublicKey: string;
 }
 
-type SigningKey = CertSigningKey | RsaSigningKey;
+export type SigningKey = CertSigningKey | RsaSigningKey;
 
 /**
  * Types are duplicated from express-jwt@6/7 due to numerous breaking changes in the lib's types whilst this lib
@@ -61,40 +61,40 @@ type SigningKey = CertSigningKey | RsaSigningKey;
  */
 
 /** Types from express-jwt@<=6 */
-type secretType = string | Buffer;
-type SecretCallbackLong = (
+export type secretType = string | Buffer;
+export type SecretCallbackLong = (
   req: Express.Request,
   header: any,
   payload: any,
   done: (err: any, secret?: secretType) => void
 ) => void;
-type SecretCallback = (req: Express.Request, payload: any, done: (err: any, secret?: secretType) => void) => void;
+export type SecretCallback = (req: Express.Request, payload: any, done: (err: any, secret?: secretType) => void) => void;
 
 /** Types from express-jwt@>=7 */
-type GetVerificationKey = (
+export type GetVerificationKey = (
   req: Express.Request,
   token: Jwt | undefined
 ) => Secret | undefined | Promise<Secret | undefined>;
 
-interface ExpressJwtOptions extends Options {
+export interface ExpressJwtOptions extends Options {
   handleSigningKeyError?: (err: Error | null, cb: (err: Error | null) => void) => void;
 }
 
-interface HapiJwtOptions extends Options {
+export interface HapiJwtOptions extends Options {
   handleSigningKeyError?: (err: Error | null, cb: HapiCallback) => void;
 }
 
-type HapiCallback = (err: Error | null, publicKey: string, signingKey: SigningKey) => void;
+export type HapiCallback = (err: Error | null, publicKey: string, signingKey: SigningKey) => void;
 
-interface DecodedToken {
+export interface DecodedToken {
   header: TokenHeader;
 }
 
-interface TokenHeader {
+export interface TokenHeader {
   alg: string;
   kid: string;
 }
 
-interface KoaJwtOptions extends Options {
+export interface KoaJwtOptions extends Options {
   handleSigningKeyError?(err: Error | null): Promise<void>;
 }
