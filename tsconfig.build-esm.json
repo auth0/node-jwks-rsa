@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.base",
+  "compilerOptions": {
+    "outDir": "./dist/esm",
+  },
+  "include": ["./src/**/*"]
+}

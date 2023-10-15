@@ -3,12 +3,20 @@
   "version": "3.1.0",
   "description": "Library to retrieve RSA public keys from a JWKS endpoint",
   "type": "module",
-  "main": "src/index.js",
+  "sideEffects": false,
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
   "files": [
-    "src",
-    "index.d.ts"
+    "dist"
   ],
-  "types": "index.d.ts",
+  "types": "./dist/esm/index.d.ts",
   "engines": {
     "node": ">=14"
   },
@@ -55,6 +63,9 @@
     "typescript": "^5.2.2"
   },
   "scripts": {
+    "build": "rimraf dist && npm run build:cjs && npm run build:esm",
+    "build:cjs": "tsc --project tsconfig.build-cjs.json && cp src/types.d.ts dist/cjs/types.d.ts && echo '{ \"type\": \"commonjs\" }'> dist/cjs/package.json",
+    "build:esm": "tsc --project tsconfig.build-esm.json && cp src/types.d.ts dist/esm/types.d.ts",
     "clean:ts": "rimraf ts-output/",
     "lint": "eslint ./src ./tests",
     "test:ts": "npm run clean:ts && tsc --project tsconfig.tests.json && NODE_ENV=test mocha --exit --timeout 5000 $(find ./ts-output -name *.tests.js)",

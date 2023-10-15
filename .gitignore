@@ -36,6 +36,7 @@ node_modules
 .node_repl_history
 
 # Build output
+dist
 lib
 !src/lib
 ts-output
