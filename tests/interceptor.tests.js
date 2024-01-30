@@ -39,5 +39,27 @@ describe('JwksClient (interceptor)', () => {
       const key = await client.getSigningKey('RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg');
       expect(key.kid).to.equal('RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg');
     });
+
+    it('should not fallback to fetch from jwksUri if jwksUriFallback=false', async () => {
+      const client = new JwksClient({
+        cache: false,
+        jwksUri: `${jwksHost}/.well-known/jwks.json`,
+        getKeysInterceptor: () => Promise.resolve([]),
+        jwksUriFallback: false
+      });
+
+      nock(jwksHost)
+        .get('/.well-known/jwks.json')
+        .reply(200, x5cMultiple);
+
+      try {
+        await client.getSigningKey('RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg');
+        throw new Error('should have thrown error');
+      } catch (err) {
+        expect(err).not.to.be.null;
+        expect(err.message).to.equal('Unable to find a signing key that matches \'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg\'');
+      }
+
+    });
   });
 });

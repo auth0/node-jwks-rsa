@@ -1,10 +1,12 @@
+const logger = require('debug')('jwks');
+const SigningKeyNotFoundError = require('../errors/SigningKeyNotFoundError');
 const retrieveSigningKeys = require('../utils').retrieveSigningKeys;
 
 /**
  * Uses getKeysInterceptor to allow users to retrieve keys from a file,
  * external cache, or provided object before falling back to the jwksUri endpoint
  */
-function getKeysInterceptor(client, { getKeysInterceptor }) {
+function getKeysInterceptor(client, { getKeysInterceptor, jwksUriFallback = true }) {
   const getSigningKey = client.getSigningKey.bind(client);
 
   return async (kid) => {
@@ -22,7 +24,10 @@ function getKeysInterceptor(client, { getKeysInterceptor }) {
         return key;
       }
     }
-
+    if (!jwksUriFallback) {
+      logger(`Unable to find a signing key that matches '${kid}'`);
+      throw new SigningKeyNotFoundError(`Unable to find a signing key that matches '${kid}'`);
+    }
     return getSigningKey(kid);
   };
 }

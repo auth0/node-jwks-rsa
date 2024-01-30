@@ -28,6 +28,7 @@ This repository holds a number of example integrations found in the [examples](.
 - `requestHeaders`: (_optional_) an object of headers to pass to the request
 - `requestAgent`: (_optional_) a Node `http.Agent` to be passed to the http(s) request
 - `getKeysInterceptor`: (_optional_) a promise returning function hook [(details)](#loading-keys-from-local-file-environment-variable-or-other-externals)
+- `jwksUriFallback`: (_optional_) boolean to determine fallback behaviour if `getKeysInterceptor` doesn't return keys which match the `kid` on the request (defaults to `true`, so it will fall back to `jwksUri`). 
 - `cacheMaxAge`: (_optional_) the duration for which to store a cached JWKS in ms (default 600,000 or 10 minutes)
 - `jwksRequestsPerMinute`: (_optional_) max number of requests allowed to the JWKS URI per minute (defaults to 10)
 
@@ -92,7 +93,7 @@ You can configure a proxy with using a [custom http(s) agent](https://github.com
 
 ## Loading keys from local file, environment variable, or other externals
 
-The `getKeysInterceptor` property can be used to fetch keys before sending a request to the `jwksUri` endpoint.  This can be helpful when wanting to load keys from a file, env variable, or an external cache. If a KID cannot be found in the keys returned from the interceptor, it will fallback to the `jwksUri` endpoint. This property will continue to work with the provided LRU cache, if the cache is enabled.
+The `getKeysInterceptor` property can be used to fetch keys before sending a request to the `jwksUri` endpoint.  This can be helpful when wanting to load keys from a file, env variable, or an external cache. If a KID cannot be found in the keys returned from the interceptor, it will fall back to the `jwksUri` endpoint. If you don't want to fall back to `jwksUri` set `jwksUriFallback: false`. This property will continue to work with the provided LRU cache, if the cache is enabled.
 
 ```js
   const client = new JwksClient({ 
