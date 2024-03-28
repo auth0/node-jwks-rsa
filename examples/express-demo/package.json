@@ -17,7 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "debug": "^4.3.4",
-    "express": "^4.18.2",
+    "express": "^4.19.2",
     "express-jwt": "^8.4.1"
   }
 }
