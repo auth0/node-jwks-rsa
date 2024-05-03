@@ -43,7 +43,7 @@ async function retrieveSigningKeys(jwks) {
 
   for (const jwk of jwks) {
     try {
-      const key = await jose.importJWK(jwk, resolveAlg(jwk));
+      const key = await jose.importJWK({ ...jwk, ext: true }, resolveAlg(jwk));
       if (key.type !== 'public') {
         continue;
       }
