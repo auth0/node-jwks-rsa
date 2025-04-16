@@ -1,0 +1,11 @@
+[
+    {
+        "Name": "jwks-rsa",
+        "License": "MIT License",
+        "License File": " LICENSE",
+        "Version Number": "1.0.0",
+        "Owner" : "xiafeng@huawei.com",
+        "Upstream URL": "https://github.com/auth0/node-jwks-rsa",
+        "Description": "A library to retrieve RSA public keys from a JWKS (JSON Web Key Set) endpoint."
+    }
+]

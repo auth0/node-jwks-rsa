@@ -1,0 +1,12 @@
+{
+  "license": "Apache 2.0",
+  "devDependencies": {},
+  "author": "",
+  "name": "entry",
+  "description": "Please describe the basic information.",
+  "main": "",
+  "version": "2.0.1",
+  "dependencies": {
+    "@ohos/jwks_rsa": "file:../library"
+  }
+}

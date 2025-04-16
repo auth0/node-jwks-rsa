@@ -1,0 +1,36 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "模块描述"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "jwks_rsa"
+    },
+    {
+      "name": "button_font_size",
+      "value": "35fp"
+    },
+    {
+      "name": "font_size",
+      "value": "30fp"
+    },
+    {
+      "name": "margin",
+      "value": "5vp"
+    },
+    {
+      "name": "internet_permission",
+      "value": "obtain internet  resource"
+    },
+    {
+      "name": "generate_public_key",
+      "value": "点击生成公钥"
+    }
+  ]
+}

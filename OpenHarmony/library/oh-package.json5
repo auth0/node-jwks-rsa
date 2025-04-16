@@ -1,0 +1,27 @@
+{
+  "keywords": [
+    "Tool",
+    "OpenHarmony",
+    "rsa",
+    "jwks"
+  ],
+  "author": "ohos_tpc",
+  "description": "用于从 JWKS（JSON Web 密钥集）端点检索RSA签名密钥的库，支持所有当前注册的 JWK 类型和 JWS 算法",
+  "ohos": {
+    "org": "opensource"
+  },
+  "main": "index.ets",
+  "repository": "https://gitcode.com/openharmony-tpc/openharmony_tpc_samples/tree/master/jwks-rsa",
+  "type": "module",
+  "version": "2.0.1",
+  "dependencies": {
+    "limiter": "^1.1.5"
+  },
+  "tags": [
+    "Tool"
+  ],
+  "compileOnlyDependencies": {},
+  "license": "MIT License",
+  "devDependencies": {},
+  "name": "@ohos/jwks_rsa"
+}

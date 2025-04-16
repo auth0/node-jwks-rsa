@@ -1,0 +1,21 @@
+{
+	"app": {
+		"bundleName": "cn.openharmony.jwks_rsa",
+		"debug": true,
+		"versionCode": 1000000,
+		"versionName": "1.0.0",
+		"minAPIVersion": 10,
+		"targetAPIVersion": 10,
+		"apiReleaseType": "Beta2",
+		"compileSdkVersion": "4.0.9.6",
+		"compileSdkType": "OpenHarmony"
+	},
+	"module": {
+		"name": "jwks_rsa",
+		"type": "har",
+		"deviceTypes": [
+			"default",
+			"tablet"
+		]
+	}
+}
