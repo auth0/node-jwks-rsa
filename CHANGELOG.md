@@ -1,5 +1,10 @@
 # Change Log
 
+## Unreleased
+
+**Changed**
+- Bump jose from 4.15.4 to 6.1.0
+
 ## [v3.2.0](https://github.com/auth0/node-jwks-rsa/tree/v3.2.0) (2025-03-18)
 [Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v3.1.0...v3.2.0)
 
