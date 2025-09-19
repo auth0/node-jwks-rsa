@@ -3,17 +3,17 @@
   "version": "3.2.0",
   "description": "Library to retrieve RSA public keys from a JWKS endpoint",
   "type": "module",
-  "main": "./src/index.js",
+  "main": "./dist/index.js",
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "import": "./src/index.js",
-      "default": "./src/index.js"
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
   "files": [
-    "src",
+    "dist",
     "index.d.ts"
   ],
   "types": "index.d.ts",
@@ -29,6 +29,8 @@
     "lru-memoizer": "^2.2.0"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-node-resolve": "^16.0.1",
     "@types/chai": "^4.3.9",
     "@types/express-jwt-v6": "npm:@types/express-jwt@^6.0.4",
     "@types/mocha": "^10.0.3",
@@ -51,11 +53,13 @@
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "rimraf": "^5.0.5",
+    "rollup": "^4.50.2",
     "supertest": "^6.3.3",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   },
   "scripts": {
+    "build": "rollup -c",
     "clean:ts": "rimraf ts-output/",
     "lint": "eslint ./src ./tests",
     "test:ts": "npm run clean:ts && tsc && NODE_ENV=test mocha --exit --timeout 5000 $(find ./ts-output -name *.tests.js)",
@@ -63,7 +67,7 @@
     "test": "npm run test:js && npm run test:ts",
     "test:ci": "nyc --reporter=lcov npm test",
     "test-watch": "NODE_ENV=test mocha --exit --timeout 5000 $(find ./tests -name *.tests.js) --watch",
-    "release": "git tag $npm_package_version && git push && git push --tags && npm publish"
+    "release": "npm run build && git tag $npm_package_version && git push && git push --tags && npm publish"
   },
   "repository": {
     "type": "git",
