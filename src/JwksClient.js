@@ -1,8 +1,10 @@
-const logger = require('debug')('jwks');
-const { retrieveSigningKeys } = require('./utils') ;
-const { request, cacheSigningKey, rateLimitSigningKey, getKeysInterceptor, callbackSupport } = require('./wrappers');
-const JwksError = require('./errors/JwksError');
-const SigningKeyNotFoundError = require('./errors/SigningKeyNotFoundError');
+import createDebug from 'debug';
+import { retrieveSigningKeys } from './utils.js';
+import { request, cacheSigningKey, rateLimitSigningKey, getKeysInterceptor, callbackSupport } from './wrappers/index.js';
+import JwksError from './errors/JwksError.js';
+import SigningKeyNotFoundError from './errors/SigningKeyNotFoundError.js';
+
+const logger = createDebug('jwks');
 
 class JwksClient {
   constructor(options) {
@@ -86,6 +88,4 @@ class JwksClient {
   }
 }
 
-module.exports = {
-  JwksClient
-};
+export { JwksClient };

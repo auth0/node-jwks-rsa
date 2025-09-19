@@ -1,22 +1,30 @@
-const { JwksClient } = require('./JwksClient');
-const errors = require('./errors');
-const { hapiJwt2Key, hapiJwt2KeyAsync } = require('./integrations/hapi');
-const { expressJwtSecret } = require('./integrations/express');
-const { koaJwtSecret } = require('./integrations/koa');
-const { passportJwtSecret } = require('./integrations/passport');
+import { JwksClient } from './JwksClient.js';
+import * as errors from './errors/index.js';
+import { hapiJwt2Key, hapiJwt2KeyAsync } from './integrations/hapi.js';
+import { expressJwtSecret } from './integrations/express.js';
+import { koaJwtSecret } from './integrations/koa.js';
+import { passportJwtSecret } from './integrations/passport.js';
 
-module.exports = (options) => {
+function jwksRsa(options) {
   return new JwksClient(options);
-};
-module.exports.JwksClient = JwksClient;
+}
 
-module.exports.ArgumentError = errors.ArgumentError;
-module.exports.JwksError = errors.JwksError;
-module.exports.JwksRateLimitError = errors.JwksRateLimitError;
-module.exports.SigningKeyNotFoundError = errors.SigningKeyNotFoundError;
+// Attach properties for backwards compatibility
+jwksRsa.JwksClient = JwksClient;
+jwksRsa.ArgumentError = errors.ArgumentError;
+jwksRsa.JwksError = errors.JwksError;
+jwksRsa.JwksRateLimitError = errors.JwksRateLimitError;
+jwksRsa.SigningKeyNotFoundError = errors.SigningKeyNotFoundError;
+jwksRsa.expressJwtSecret = expressJwtSecret;
+jwksRsa.hapiJwt2Key = hapiJwt2Key;
+jwksRsa.hapiJwt2KeyAsync = hapiJwt2KeyAsync;
+jwksRsa.koaJwtSecret = koaJwtSecret;
+jwksRsa.passportJwtSecret = passportJwtSecret;
 
-module.exports.expressJwtSecret = expressJwtSecret;
-module.exports.hapiJwt2Key = hapiJwt2Key;
-module.exports.hapiJwt2KeyAsync = hapiJwt2KeyAsync;
-module.exports.koaJwtSecret = koaJwtSecret;
-module.exports.passportJwtSecret = passportJwtSecret;
+export default jwksRsa;
+export { JwksClient };
+export const ArgumentError = errors.ArgumentError;
+export const JwksError = errors.JwksError;
+export const JwksRateLimitError = errors.JwksRateLimitError;
+export const SigningKeyNotFoundError = errors.SigningKeyNotFoundError;
+export { expressJwtSecret, hapiJwt2Key, hapiJwt2KeyAsync, koaJwtSecret, passportJwtSecret };

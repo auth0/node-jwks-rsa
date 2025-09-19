@@ -1,11 +1,10 @@
-const logger = require('debug')('jwks');
-const { RateLimiter } = require('limiter');
+import createDebug from 'debug';
+import { RateLimiter } from 'limiter';
+import JwksRateLimitError from '../errors/JwksRateLimitError.js';
 
-const JwksRateLimitError = require('../errors/JwksRateLimitError');
-
+const logger = createDebug('jwks');
 function rateLimitWrapper(client, { jwksRequestsPerMinute = 10 }) {
   const getSigningKey = client.getSigningKey.bind(client);
-
   const limiter = new RateLimiter(jwksRequestsPerMinute, 'minute', true);
   logger(`Configured rate limiting to JWKS endpoint at ${jwksRequestsPerMinute}/minute`);
 
@@ -30,5 +29,4 @@ function rateLimitWrapper(client, { jwksRequestsPerMinute = 10 }) {
     });
   });
 }
-
-module.exports.default = rateLimitWrapper;
+export default rateLimitWrapper;

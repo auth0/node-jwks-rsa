@@ -1,16 +1,12 @@
-const request = require('supertest');
-const { expect } = require('chai');
-
-const { jwksEndpoint } = require('./mocks/jwks');
-const { publicKey, privateKey, randomPublicKey1 } = require('./mocks/keys');
-const { createToken, createSymmetricToken } = require('./mocks/tokens');
-
-const Express = require('express');
-const passport = require('passport');
-const JwtStrategy = require('passport-jwt').Strategy;
-const ExtractJwt = require('passport-jwt').ExtractJwt;
-
-const jwksRsa = require('../src');
+import request from 'supertest';
+import { expect } from 'chai';
+import { jwksEndpoint } from './mocks/jwks.js';
+import { publicKey, privateKey, randomPublicKey1 } from './mocks/keys.js';
+import { createToken, createSymmetricToken } from './mocks/tokens.js';
+import Express from 'express';
+import passport from 'passport';
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import jwksRsa from '../src/index.js';
 
 describe('passportJwtSecret', () => {
   it('should throw error if options is null', () => {
@@ -374,6 +370,63 @@ describe('passportJwtSecret', () => {
       .expect(200)
       .end((err, res) => {
         expect(res.body.sub).to.equal('john');
+        done();
+      });
+  });
+
+  it('should not authenticate the user if token payload is tampered after signing', done => {
+    const app = new Express();
+    passport.use(
+      new JwtStrategy(
+        {
+          secretOrKeyProvider: jwksRsa.passportJwtSecret({
+            jwksUri: 'http://localhost/.well-known/jwks.json'
+          }),
+          jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+        },
+        (jwt_payload, doneStrategy) => {
+          doneStrategy(null, jwt_payload);
+        }
+      )
+    );
+
+    let expectedFlashMessage;
+    app.get(
+      '/',
+      (req, res, next) => {
+        req.flash = (type, msg) => { expectedFlashMessage = msg; };
+        next();
+      },
+      passport.authenticate('jwt', { session: false, failureFlash: true }),
+      (req, res) => {
+        res.send('OK');
+      }
+    );
+
+    // Create a valid token first.
+    const token = createToken(privateKey, '123', { sub: 'john' });
+    // JWKS endpoint serves the matching public key.
+    jwksEndpoint('http://localhost', [ { pub: publicKey, kid: '123' } ]);
+
+    // Tamper with payload (change sub) without resigning -> invalid signature.
+    const parts = token.split('.');
+    const rawPayload = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const payloadObj = JSON.parse(Buffer.from(rawPayload, 'base64').toString('utf8'));
+    payloadObj.sub = 'mallory';
+    const newPayload = Buffer.from(JSON.stringify(payloadObj))
+      .toString('base64')
+      .replace(/=/g, '')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_');
+    parts[1] = newPayload;
+    const tamperedToken = parts.join('.');
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', `Bearer ${tamperedToken}`)
+      .expect(401)
+      .end(() => {
+        expect(expectedFlashMessage).to.equal('invalid signature');
         done();
       });
   });

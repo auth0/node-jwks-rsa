@@ -1,10 +1,7 @@
-function JwksRateLimitError(message) {
-  Error.call(this, message);
-  Error.captureStackTrace(this, this.constructor);
-  this.name = 'JwksRateLimitError';
-  this.message = message;
+class JwksRateLimitError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'JwksRateLimitError';
+  }
 }
-
-JwksRateLimitError.prototype = Object.create(Error.prototype);
-JwksRateLimitError.prototype.constructor = JwksRateLimitError;
-module.exports = JwksRateLimitError;
+export default JwksRateLimitError;

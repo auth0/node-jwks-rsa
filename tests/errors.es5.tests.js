@@ -1,6 +1,5 @@
-const { expect } = require('chai');
-
-const jwksRsa = require('../src');
+import { expect } from 'chai';
+import jwksRsa from '../src/index.js';
 
 describe('Errors', () => {
   describe('#ArgumentError', () => {

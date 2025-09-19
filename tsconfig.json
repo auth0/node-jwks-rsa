@@ -1,10 +1,13 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "target": "ES2020",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
     "noEmit": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
@@ -14,11 +17,17 @@
     "noUnusedParameters": true,
     "strictNullChecks": true,
     "esModuleInterop": true,
-    "target": "es5",
+    "allowJs": true,
+    "checkJs": false,
     "outDir": "ts-output"
   },
   "include": [
     "index.d.ts",
-    "tests/**/*.tests.ts"
+    "tests/**/*.tests.ts",
+    "tests/**/*.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "ts-output"
   ]
 }

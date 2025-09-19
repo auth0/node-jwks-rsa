@@ -1,14 +1,12 @@
-const nock = require('nock');
-const { expect } = require('chai');
-
-const { jwksEndpoint } = require('./mocks/jwks');
-const { publicKey, privateKey, randomPublicKey1 } = require('./mocks/keys');
-const { createToken, createSymmetricToken } = require('./mocks/tokens');
-
-const jwksRsa = require('../src');
-const { expressjwt: expressJwt8 } = require('express-jwt');
-const { expressjwt: expressJwt7 } = require('express-jwt-v7');
-const expressJwt6 = require('express-jwt-v6');
+import nock from 'nock';
+import { expect } from 'chai';
+import { jwksEndpoint } from './mocks/jwks.js';
+import { publicKey, privateKey, randomPublicKey1 } from './mocks/keys.js';
+import { createToken, createSymmetricToken } from './mocks/tokens.js';
+import jwksRsa from '../src/index.js';
+import { expressjwt as expressJwt8 } from 'express-jwt';
+import { expressjwt as expressJwt7 } from 'express-jwt-v7';
+import expressJwt6 from 'express-jwt-v6';
 
 const suites = [
   {

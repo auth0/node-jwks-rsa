@@ -1,8 +1,11 @@
-const http = require('http');
-const https = require('https');
-const urlUtil = require('url');
+// CommonJS imports
+import { createRequire } from 'module';
+const cjsRequire = createRequire(import.meta.url);
+const http = cjsRequire('http');
+const https = cjsRequire('https');
+const urlUtil = cjsRequire('url');
 
-module.exports.default =  (options) => {
+const request = (options) => {
   if (options.fetcher) {
     return options.fetcher(options.uri);
   }
@@ -50,3 +53,5 @@ module.exports.default =  (options) => {
       .end();
   });
 };
+
+export default request;

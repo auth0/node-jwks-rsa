@@ -2,7 +2,16 @@
   "name": "jwks-rsa",
   "version": "3.2.0",
   "description": "Library to retrieve RSA public keys from a JWKS endpoint",
-  "main": "src/index.js",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "src",
     "index.d.ts"
@@ -24,6 +33,7 @@
     "@types/express-jwt-v6": "npm:@types/express-jwt@^6.0.4",
     "@types/mocha": "^10.0.3",
     "@types/node": "^20.19.17",
+    "@typescript-eslint/eslint-plugin": "^8.44.0",
     "chai": "^4.3.10",
     "chai-as-promised": "^7.1.1",
     "eslint": "^8.52.0",

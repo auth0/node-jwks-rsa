@@ -1,6 +1,6 @@
-const { ArgumentError } = require('../errors');
-const { JwksClient } = require('../JwksClient');
-const supportedAlg = require('./config');
+import { ArgumentError } from '../errors/index.js';
+import { JwksClient } from '../JwksClient.js';
+import supportedAlg from './config.js';
 
 const handleSigningKeyError = (err, cb) => {
   // If we didn't find a match, can't provide a key.
@@ -15,12 +15,12 @@ const handleSigningKeyError = (err, cb) => {
 };
 
 /**
- * Call hapiJwt2Key as a Promise
- * @param {object} options 
- * @returns {Promise}
+ * Wraps hapiJwt2Key with a Promise-based provider.
+ * @param {object} options
+ * @returns {(decoded: { header: { alg: string, kid: string } }) => Promise<{ key: string }>}
  */
-module.exports.hapiJwt2KeyAsync = (options) => {
-  const secretProvider = module.exports.hapiJwt2Key(options);
+export function hapiJwt2KeyAsync(options) {
+  const secretProvider = hapiJwt2Key(options);
   return function(decoded) {
     return new Promise((resolve, reject) => {
       const cb = (err, key) => {
@@ -29,9 +29,9 @@ module.exports.hapiJwt2KeyAsync = (options) => {
       secretProvider(decoded, cb);
     });
   };
-}; 
+}
 
-module.exports.hapiJwt2Key = function (options) {
+export function hapiJwt2Key(options) {
   if (options === null || options === undefined) {
     throw new ArgumentError('An options object must be provided when initializing hapiJwt2Key');
   }
@@ -50,10 +50,7 @@ module.exports.hapiJwt2Key = function (options) {
     }
 
     client.getSigningKey(decoded.header.kid)
-      .then(key => {
-        return cb(null, key.publicKey || key.rsaPublicKey, key);
-      }).catch(err => {
-        return onError(err, (newError) => cb(newError, null, null));
-      });
+      .then(key => cb(null, key.publicKey || key.rsaPublicKey, key))
+      .catch(err => onError(err, (newError) => cb(newError, null, null)));
   };
-};
+}

@@ -1,8 +1,7 @@
-const nock = require('nock');
-const { expect } = require('chai');
-
-const { x5cSingle } = require('./keys');
-const { JwksClient } = require('../src/JwksClient');
+import nock from 'nock';
+import { expect } from 'chai';
+import { x5cSingle } from './keys.js';
+import { JwksClient } from '../src/JwksClient.js';
 
 describe('JwksClient (cache)', () => {
   const jwksHost = 'http://my-authz-server';
