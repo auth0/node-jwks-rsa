@@ -6,8 +6,6 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-
-    // ESM-friendly Node semantics
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "target": "ES2022",
