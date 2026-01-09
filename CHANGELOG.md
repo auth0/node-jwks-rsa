@@ -1,5 +1,25 @@
 # Change Log
 
+## [v3.2.0](https://github.com/auth0/node-jwks-rsa/tree/v3.2.0) (2025-03-18)
+[Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v3.1.0...v3.2.0)
+
+**Changed**
+- Bump express from 4.18.2 to 4.19.2 [\#408](https://github.com/auth0/node-jwks-rsa/pull/408) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump braces from 3.0.2 to 3.0.3 [\#413](https://github.com/auth0/node-jwks-rsa/pull/413) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump jose from 4.15.4 to 4.15.5 [\#402](https://github.com/auth0/node-jwks-rsa/pull/402) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump codecov/codecov-action from 3.1.4 to 3.1.5 [\#396](https://github.com/auth0/node-jwks-rsa/pull/396) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump actions/cache from 3 to 4 [\#395](https://github.com/auth0/node-jwks-rsa/pull/395) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Update automated release process to latest version [\#391](https://github.com/auth0/node-jwks-rsa/pull/391) ([frederikprijck](https://github.com/frederikprijck))
+- Bump actions/github-script from 6 to 7 [\#387](https://github.com/auth0/node-jwks-rsa/pull/387) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore(deps): Update Lockfile [\#386](https://github.com/auth0/node-jwks-rsa/pull/386) ([evansims](https://github.com/evansims))
+- Bump actions/setup-node from 3 to 4 [\#382](https://github.com/auth0/node-jwks-rsa/pull/382) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @babel/traverse from 7.10.1 to 7.23.2 [\#381](https://github.com/auth0/node-jwks-rsa/pull/381) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+**Fixed**
+- [Fix] Change type of unused req param to unknown to resolve type conflicts [\#394](https://github.com/auth0/node-jwks-rsa/pull/394) ([zackdotcomputer](https://github.com/zackdotcomputer))
+- fix(compat): ensure WebCryptoAPI runtime imported keys are re-exportable [\#409](https://github.com/auth0/node-jwks-rsa/pull/409) ([panva](https://github.com/panva))
+- fix: express-jwt types [\#412](https://github.com/auth0/node-jwks-rsa/pull/412) ([jfromaniello](https://github.com/jfromaniello))
+
 ## [v3.1.0](https://github.com/auth0/node-jwks-rsa/tree/v3.1.0) (2023-10-05)
 [Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v3.0.1...v3.1.0)
 
