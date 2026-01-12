@@ -1,6 +1,6 @@
+
 const http = require('http');
 const https = require('https');
-const urlUtil = require('url');
 
 module.exports.default =  (options) => {
   if (options.fetcher) {
@@ -10,10 +10,13 @@ module.exports.default =  (options) => {
   return new Promise((resolve, reject) => {
     const {
       hostname,
-      path,
       port,
-      protocol
-    } = urlUtil.parse(options.uri);
+      protocol,
+      pathname,
+      search
+    } = new URL(options.uri);
+    const path = pathname + search;
+
 
     const requestOptions = {
       hostname,
