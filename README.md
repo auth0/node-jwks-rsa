@@ -26,6 +26,8 @@ npm install --save jwks-rsa
 
 Supports all currently registered JWK types and JWS Algorithms, see [panva/jose#262](https://github.com/panva/jose/issues/262) for more information.
 
+Note latest version will require node@^20.19.0 or node@^22.12.0 or newer.
+
 ### Configure the client
 
 Provide a JWKS endpoint which exposes your signing keys.
@@ -49,6 +51,36 @@ const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';
 const key = await client.getSigningKey(kid);
 const signingKey = key.getPublicKey();
 ````
+
+## Known Issues
+
+### Workaround Jest ESM issue
+
+Downstream repositories using Jest may not support ESM fully.
+
+One way to work around this issue is to add the following to your `jest.config.ts`:
+
+```
+  moduleNameMapper: {
+    '^jwks-rsa$': '<rootDir>/__mocks__/jwks-rsa.ts',
+  },
+```
+
+and add the `__mocks__/jwks-rsa.ts` file with the following content:
+
+```ts
+// Provide a fake implementation of the secret provider, repeat for other methods that your app imports from jwks-rsa
+export const passportJwtSecret = jest.fn(() => {
+  // return a fake key provider function
+  return (req: any, header: any, cb: any) => {
+    cb(null, 'fake-secret')
+  }
+})
+
+export default {
+  passportJwtSecret,
+}
+```
 
 ## Feedback
 

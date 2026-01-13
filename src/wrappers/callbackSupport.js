@@ -1,4 +1,4 @@
-const { callbackify } = require('util');
+import { callbackify } from 'util';
 
 const callbackSupport = (client) => {
   const getSigningKey = client.getSigningKey.bind(client);
@@ -13,4 +13,4 @@ const callbackSupport = (client) => {
   };
 };
 
-module.exports.default = callbackSupport;
+export default callbackSupport;

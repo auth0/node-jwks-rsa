@@ -1,7 +1,7 @@
-const jose = require('jose');
-const { ArgumentError } = require('../errors');
-const { JwksClient } = require('../JwksClient');
-const supportedAlg = require('./config');
+import * as jose from 'jose';
+import { ArgumentError } from '../errors/index.js';
+import { JwksClient } from '../JwksClient.js';
+import supportedAlg from './config.js';
 
 const handleSigningKeyError = (err, cb) => {
   // If we didn't find a match, can't provide a key.
@@ -15,7 +15,7 @@ const handleSigningKeyError = (err, cb) => {
   }
 };
 
-module.exports.passportJwtSecret = function (options) {
+export function passportJwtSecret(options) {
   if (options === null || options === undefined) {
     throw new ArgumentError('An options object must be provided when initializing passportJwtSecret');
   }
@@ -28,25 +28,37 @@ module.exports.passportJwtSecret = function (options) {
   const onError = options.handleSigningKeyError || handleSigningKeyError;
 
   return function secretProvider(req, rawJwtToken, cb) {
-    let decoded;
+    let header;
     try {
-      decoded = {
-        payload: jose.decodeJwt(rawJwtToken),
-        header: jose.decodeProtectedHeader(rawJwtToken)
-      };
-    } catch (err) {
-      decoded = null;
+      header = jose.decodeProtectedHeader(rawJwtToken);
+    } catch (_) {
+      return cb(new Error('jwt malformed'), null);
     }
 
-    if (!decoded || !supportedAlg.includes(decoded.header.alg)) {
+    if (!header || !supportedAlg.includes(header.alg)) {
       return cb(null, null);
     }
 
-    client.getSigningKey(decoded.header.kid)
-      .then(key => {
-        cb(null, key.publicKey || key.rsaPublicKey);
-      }).catch(err => {
+    client.getSigningKey(header.kid)
+      .then(async key => {
+        const pem = key.publicKey || key.rsaPublicKey;
+        const alg = header.alg;
+        try {
+          // Try to import and verify first (defense in depth). If import fails, fall back to returning PEM (legacy behavior).
+          let verifyKey;
+          try {
+            verifyKey = await jose.importSPKI(pem, alg);
+          } catch (_) {
+            return cb(null, pem);
+          }
+          await jose.jwtVerify(rawJwtToken, verifyKey, { algorithms: [ alg ] });
+          return cb(null, pem);
+        } catch (_) {
+          return cb(new Error('invalid signature'));
+        }
+      })
+      .catch(err => {
         onError(err, (newError) => cb(newError, null));
       });
   };
-};
+}

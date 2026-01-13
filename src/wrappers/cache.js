@@ -1,6 +1,12 @@
-const logger = require('debug')('jwks');
-const memoizer = require('lru-memoizer');
-const { promisify, callbackify } = require('util');
+import createDebug from 'debug';
+import { promisify, callbackify } from 'util';
+
+// CJS import workaround for lru-memoizer
+import { createRequire } from 'module';
+const cjsRequire = createRequire(import.meta.url);
+const memoizer = cjsRequire('lru-memoizer');
+
+const logger = createDebug('jwks');
 
 function cacheWrapper(client, { cacheMaxEntries = 5, cacheMaxAge = 600000 }) {
   logger(`Configured caching of signing keys. Max: ${cacheMaxEntries} / Age: ${cacheMaxAge}`);
@@ -11,5 +17,4 @@ function cacheWrapper(client, { cacheMaxEntries = 5, cacheMaxAge = 600000 }) {
     max: cacheMaxEntries
   }));
 }
-
-module.exports.default = cacheWrapper;
+export default cacheWrapper;

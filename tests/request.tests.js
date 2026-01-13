@@ -1,6 +1,6 @@
-const nock = require('nock');
-const { expect } = require('chai');
-const { request } = require('../src/wrappers');
+import nock from 'nock';
+import { expect } from 'chai';
+import { request } from '../src/wrappers/index.js';
 
 describe('Request wrapper tests', () => {
   const jwksHost = 'http://my-authz-server';

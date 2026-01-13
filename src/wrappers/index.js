@@ -1,7 +1,7 @@
-module.exports = {
-  request: require('./request').default,
-  cacheSigningKey: require('./cache').default,
-  rateLimitSigningKey: require('./rateLimit').default,
-  getKeysInterceptor: require('./interceptor').default,
-  callbackSupport: require('./callbackSupport').default
-};
+import request from './request.js';
+import cacheSigningKey from './cache.js';
+import rateLimitSigningKey from './rateLimit.js';
+import getKeysInterceptor from './interceptor.js';
+import callbackSupport from './callbackSupport.js';
+
+export { request, cacheSigningKey, rateLimitSigningKey, getKeysInterceptor, callbackSupport };

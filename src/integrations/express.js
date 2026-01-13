@@ -1,6 +1,6 @@
-const { ArgumentError } = require('../errors');
-const { JwksClient } = require('../JwksClient');
-const supportedAlg = require('./config');
+import { ArgumentError } from '../errors/index.js';
+import { JwksClient } from '../JwksClient.js';
+import supportedAlg from './config.js';
 
 const handleSigningKeyError = (err, cb) => {
   // If we didn't find a match, can't provide a key.
@@ -14,7 +14,7 @@ const handleSigningKeyError = (err, cb) => {
   }
 };
 
-module.exports.expressJwtSecret = function (options) {
+export function expressJwtSecret(options) {
   if (options === null || options === undefined) {
     throw new ArgumentError('An options object must be provided when initializing expressJwtSecret');
   }
@@ -57,4 +57,4 @@ module.exports.expressJwtSecret = function (options) {
 
     return expressJwt7Provider(req, arguments[1]);
   };
-};
+}

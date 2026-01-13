@@ -1,4 +1,4 @@
-const retrieveSigningKeys = require('../utils').retrieveSigningKeys;
+import { retrieveSigningKeys } from '../utils.js';
 
 /**
  * Uses getKeysInterceptor to allow users to retrieve keys from a file,
@@ -27,4 +27,4 @@ function getKeysInterceptor(client, { getKeysInterceptor }) {
   };
 }
 
-module.exports.default = getKeysInterceptor;
+export default getKeysInterceptor;
