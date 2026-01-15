@@ -1,6 +1,6 @@
 const http = require('http');
 const https = require('https');
-const urlUtil = require('url');
+const ArgumentError = require('../errors/ArgumentError');
 
 module.exports.default =  (options) => {
   if (options.fetcher) {
@@ -8,12 +8,14 @@ module.exports.default =  (options) => {
   }
 
   return new Promise((resolve, reject) => {
-    const {
-      hostname,
-      path,
-      port,
-      protocol
-    } = urlUtil.parse(options.uri);
+    let url;
+    try {
+      url = new URL(options.uri);
+    } catch (err) {
+      throw new ArgumentError('Invalid JWKS URI: The provided URI is not a valid URL.');
+    }
+    const { hostname, port, protocol, pathname, search } = url;
+    const path = pathname + search;
 
     const requestOptions = {
       hostname,
