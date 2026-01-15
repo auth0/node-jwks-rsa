@@ -138,7 +138,7 @@ describe('Request wrapper tests', () => {
       .then(() => done('Should have thrown error'))
       .catch((err) => {
         expect(err.message).to.equal('Invalid JWKS URI: The provided URI is not a valid URL.');
-        done()
+        done();
       });
   });
 });
