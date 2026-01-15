@@ -1,5 +1,15 @@
 # Change Log
 
+## [v3.2.1](https://github.com/auth0/node-jwks-rsa/tree/v3.2.1) (2026-01-15)
+[Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v3.2.0...v3.2.1)
+
+**Added**
+- docs: Add Ask DeepWiki badge to README [\#445](https://github.com/auth0/node-jwks-rsa/pull/445) ([arpit-jn](https://github.com/arpit-jn))
+
+**Fixed**
+- fix: Migrate to WHATWG URL API from node's core url [\#465](https://github.com/auth0/node-jwks-rsa/pull/465) ([cschetan77](https://github.com/cschetan77))
+- fix: Moving @types/express to dev and re generating package lock [\#464](https://github.com/auth0/node-jwks-rsa/pull/464) ([cschetan77](https://github.com/cschetan77))
+
 ## [v3.2.0](https://github.com/auth0/node-jwks-rsa/tree/v3.2.0) (2025-03-18)
 [Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v3.1.0...v3.2.0)
 
