@@ -48,7 +48,7 @@ describe('Request wrapper tests', () => {
       .reply(500, function () { this.req.response.statusMessage = errorMsg; });
       
     request({ uri })
-      .then(() => done('Shoul dhave thrown error'))
+      .then(() => done('Should have thrown error'))
       .catch((err) => { 
         expect(err.errorMsg).to.eql(errorMsg); 
         done();
@@ -130,5 +130,15 @@ describe('Request wrapper tests', () => {
         })
         .catch(done);
     });
+  });
+
+  it('should reject with the ArgumentError message for malformed URI', (done) => {
+    const badUrl = 'not-a-valid-url';
+    request({ uri: badUrl })
+      .then(() => done('Should have thrown error'))
+      .catch((err) => {
+        expect(err.message).to.equal('Invalid JWKS URI: The provided URI is not a valid URL.');
+        done();
+      });
   });
 });
