@@ -48,5 +48,42 @@ describe('JwksClient (cache)', () => {
         expect(scope.isDone()).not.ok;
       });
     });
+    describe('should respect cacheMaxAge', () => {
+      const kid = 'NkFCNEE1NDFDNTQ5RTQ5OTE1QzRBMjYyMzY0NEJCQTJBMjJBQkZCMA';
+      const cacheMaxAge = 100;
+
+      it('should make a new request after cache expires', async () => {
+        const scope = nock(jwksHost)
+          .get('/.well-known/jwks.json')
+          .twice()
+          .reply(200, x5cSingle);
+
+        const client = new JwksClient({
+          cache: true,
+          cacheMaxAge: cacheMaxAge,
+          jwksUri: `${jwksHost}/.well-known/jwks.json`
+        });
+
+        // First request - should cache the key
+        const key1 = await client.getSigningKey(kid);
+        expect(key1.kid).to.equal(kid);
+        expect(scope.isDone()).not.ok; // Only one request should have been made
+
+        // Second request immediately - should use cache
+        const key2 = await client.getSigningKey(kid);
+        expect(key2.kid).to.equal(kid);
+        expect(scope.isDone()).not.ok; // Still no second request
+
+        // Wait for cache to expire
+        await new Promise(resolve => setTimeout(resolve, cacheMaxAge + 10));
+
+        // Third request after expiration - should make a new request
+        const key3 = await client.getSigningKey(kid);
+        expect(key3.kid).to.equal(kid);
+        expect(scope.isDone()).ok; // Now both requests should have been made
+
+        nock.cleanAll();
+      });
+    });
   });
 });
