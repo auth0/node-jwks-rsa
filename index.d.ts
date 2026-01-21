@@ -31,11 +31,6 @@ declare namespace JwksRsa {
     getKeysInterceptor?(): Promise<JSONWebKey[]>;
   }
 
-  /**
-   * When a `fetcher` is provided by the consumer, `jwksUri` becomes optional
-   * because the fetcher can obtain keys from anywhere. When `fetcher` is not
-   * provided, `jwksUri` is required.
-   */
   interface OptionsWithFetcher extends OptionsBase {
     fetcher(jwksUri: string): Promise<{ keys: any }>;
     jwksUri?: string;
@@ -43,7 +38,7 @@ declare namespace JwksRsa {
 
   interface OptionsWithUri extends OptionsBase {
     jwksUri: string;
-    fetcher?: undefined;
+    fetcher?(jwksUri: string): Promise<{ keys: any }>;
   }
 
   type Options = OptionsWithFetcher | OptionsWithUri;
