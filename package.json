@@ -34,7 +34,7 @@
     "express-jwt-v7": "npm:express-jwt@^7.5.0",
     "jose2": "npm:jose@^2.0.6",
     "jsonwebtoken": "^9.0.2",
-    "koa": "^2.14.2",
+    "koa": "^3.0.3",
     "koa-jwt": "^4.0.4",
     "mocha": "^10.2.0",
     "nock": "^13.3.7",
