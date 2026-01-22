@@ -9,26 +9,14 @@ function rateLimitWrapper(client, { jwksRequestsPerMinute = 10 }) {
   const limiter = new RateLimiter(jwksRequestsPerMinute, 'minute', true);
   logger(`Configured rate limiting to JWKS endpoint at ${jwksRequestsPerMinute}/minute`);
 
-  return async (kid) => await new Promise((resolve, reject) => {
-    limiter.removeTokens(1, async (err, remaining) => {
-      if (err) {
-        reject(err);
-      }
-
-      logger('Requests to the JWKS endpoint available for the next minute:', remaining);
-      if (remaining < 0) {
-        logger('Too many requests to the JWKS endpoint');
-        reject(new JwksRateLimitError('Too many requests to the JWKS endpoint'));
-      } else {
-        try {
-          const key = await getSigningKey(kid);
-          resolve(key);
-        } catch (error) {
-          reject(error);
-        }
-      }
-    });
-  });
+  return async (kid) => {
+    logger('Requests to the JWKS endpoint available for the next minute:', limiter.getTokensRemaining());
+    if (limiter.tryRemoveTokens(1)) {
+      return getSigningKey(kid);
+    }
+    logger('Too many requests to the JWKS endpoint');
+    throw new JwksRateLimitError('Too many requests to the JWKS endpoint');
+  };
 }
 
 module.exports.default = rateLimitWrapper;
