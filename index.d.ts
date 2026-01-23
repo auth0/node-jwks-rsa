@@ -18,8 +18,7 @@ declare namespace JwksRsa {
     [key: string]: string;
   }
 
-  interface Options {
-    jwksUri: string;
+  interface OptionsBase {
     rateLimit?: boolean;
     cache?: boolean;
     cacheMaxEntries?: number;
@@ -29,9 +28,20 @@ declare namespace JwksRsa {
     requestHeaders?: Headers;
     timeout?: number;
     requestAgent?: HttpAgent | HttpsAgent;
-    fetcher?(jwksUri: string): Promise<{ keys: any }>;
     getKeysInterceptor?(): Promise<JSONWebKey[]>;
   }
+
+  interface OptionsWithFetcher extends OptionsBase {
+    fetcher(jwksUri: string): Promise<{ keys: any }>;
+    jwksUri?: string;
+  }
+
+  interface OptionsWithUri extends OptionsBase {
+    jwksUri: string;
+    fetcher?(jwksUri: string): Promise<{ keys: any }>;
+  }
+
+  type Options = OptionsWithFetcher | OptionsWithUri;
 
   interface JSONWebKey {
     kid: string,
@@ -76,15 +86,15 @@ declare namespace JwksRsa {
 
   function passportJwtSecret(options: ExpressJwtOptions): SecretCallback;
 
-  interface ExpressJwtOptions extends Options {
+  type ExpressJwtOptions = Options & {
     handleSigningKeyError?: (err: Error | null, cb: (err: Error | null) => void) => void;
-  }
+  };
 
   function hapiJwt2Key(options: HapiJwtOptions): (decodedToken: DecodedToken, cb: HapiCallback) => void;
 
-  interface HapiJwtOptions extends Options {
+  type HapiJwtOptions = Options & {
     handleSigningKeyError?: (err: Error | null, cb: HapiCallback) => void;
-  }
+  };
 
   type HapiCallback = (err: Error | null, publicKey: string, signingKey: SigningKey) => void;
 
@@ -101,9 +111,9 @@ declare namespace JwksRsa {
 
   function koaJwtSecret(options: KoaJwtOptions): (header: TokenHeader) => Promise<string>;
 
-  interface KoaJwtOptions extends Options {
+  type KoaJwtOptions = Options & {
     handleSigningKeyError?(err: Error | null): Promise<void>;
-  }
+  };
 
   class ArgumentError extends Error {
     name: 'ArgumentError';
