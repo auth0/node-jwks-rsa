@@ -1,5 +1,11 @@
 # Change Log
 
+## [v3.2.2](https://github.com/auth0/node-jwks-rsa/tree/v3.2.2) (2026-01-23)
+[Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v3.2.1...v3.2.2)
+
+**Fixed**
+- fix: jwksUri should be optional when custom fetcher is provided [\#477](https://github.com/auth0/node-jwks-rsa/pull/477) ([cschetan77](https://github.com/cschetan77))
+
 ## [v3.2.1](https://github.com/auth0/node-jwks-rsa/tree/v3.2.1) (2026-01-15)
 [Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v3.2.0...v3.2.1)
 
