@@ -74,7 +74,7 @@ jobs:
       - run: npm run test:ci
 
       # only upload coverage on one node version
-      - if: matrix.node == 20
+      - if: startsWith(matrix.node, '^20')
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # pin@5.5.2
 
   lint:
