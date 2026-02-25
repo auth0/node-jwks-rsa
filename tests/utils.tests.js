@@ -16,7 +16,7 @@ describe('utils - retrieveSigningKeys', () => {
     };
 
     const rsa = x5cSingle.keys[0];
-    const jwks = [es256k, rsa];
+    const jwks = [ es256k, rsa ];
     const keys = await retrieveSigningKeys(jwks);
 
     // Unsupported (ES256K) key should be ignored
