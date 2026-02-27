@@ -6,7 +6,6 @@ const allowedSignatureAlg = [
   'PS384',
   'PS512',
   'ES256',
-  'ES256K',
   'ES384',
   'ES512',
   'EdDSA'

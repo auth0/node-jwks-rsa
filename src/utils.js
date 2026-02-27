@@ -14,8 +14,6 @@ function resolveAlg(jwk) {
     switch (jwk.crv) {
       case 'P-256':
         return 'ES256';
-      case 'secp256k1':
-        return 'ES256K';
       case 'P-384':
         return 'ES384';
       case 'P-521':
