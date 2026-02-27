@@ -1,5 +1,12 @@
 # Change Log
 
+## [v4.0.0](https://github.com/auth0/node-jwks-rsa/tree/v4.0.0) (2026-02-27)
+[Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v3.2.2...v4.0.0)
+
+**⚠️ BREAKING CHANGES**
+- feat: upgrade jose dependency to v6 [\#486](https://github.com/auth0/node-jwks-rsa/pull/486) ([cschetan77](https://github.com/cschetan77))
+- chore: upgrade minimum Node.js runtime to 20.19.0 [\#485](https://github.com/auth0/node-jwks-rsa/pull/485) ([cschetan77](https://github.com/cschetan77))
+
 ## [v3.2.2](https://github.com/auth0/node-jwks-rsa/tree/v3.2.2) (2026-01-23)
 [Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v3.2.1...v3.2.2)
 
