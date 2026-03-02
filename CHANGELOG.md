@@ -1,5 +1,11 @@
 # Change Log
 
+## [v4.0.1](https://github.com/auth0/node-jwks-rsa/tree/v4.0.1) (2026-03-02)
+[Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v4.0.0...v4.0.1)
+
+**Changed**
+- chore: update lru-memoizer to v3 [\#476](https://github.com/auth0/node-jwks-rsa/pull/476) ([isidrok](https://github.com/isidrok))
+
 ## [v4.0.0](https://github.com/auth0/node-jwks-rsa/tree/v4.0.0) (2026-02-27)
 [Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v3.2.2...v4.0.0)
 
