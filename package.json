@@ -1,6 +1,6 @@
 {
   "name": "jwks-rsa",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Library to retrieve RSA public keys from a JWKS endpoint",
   "main": "src/index.js",
   "files": [
