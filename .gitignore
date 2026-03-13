@@ -40,7 +40,7 @@ lib
 !src/lib
 ts-output
 
-# Lock files (library — not committed)
+# Lock files
 package-lock.json
 
 # IDE files
