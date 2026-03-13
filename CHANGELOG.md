@@ -12,7 +12,7 @@
 **⚠️ BREAKING CHANGES**
 - Drops support for Node 14, 16, and 18. The minimum supported Node versions are now 20.19.0, 22.12.0, and 23.0.0.
 - Drops support for the ES256K algorithm (secp256k1 curve). Keys using ES256K will be ignored. Users must transition to a supported curve (e.g., ES256/P-256) or handle legacy keys externally.
-- This library relies on Node's native `require(esm)` support. Non-standard module runtimes such as **Jest** (which uses `vm.Script` instead of Node's native loader) cannot load ESM dependencies and will throw `SyntaxError: Unexpected token 'export'`. To work around this, either configure Jest to run in ESM mode via `NODE_OPTIONS=--experimental-vm-modules`, use `transformIgnorePatterns` to transpile `jose` via Babel, or mock the module in tests. See [#493](https://github.com/auth0/node-jwks-rsa/issues/493).
+- Relies on Node's native `require(esm)` support - [Loading ECMAScript modules using require()](https://nodejs.org/api/modules.html#loading-ecmascript-modules-using-require). Non-standard module runtimes such as **Jest** (uses `vm.Script`) that do not support this feature may fail while loading ESM. See [#493](https://github.com/auth0/node-jwks-rsa/issues/493) for details.
 - feat: upgrade jose dependency to v6 [\#486](https://github.com/auth0/node-jwks-rsa/pull/486) ([cschetan77](https://github.com/cschetan77))
 - chore: upgrade minimum Node.js runtime to 20.19.0 [\#485](https://github.com/auth0/node-jwks-rsa/pull/485) ([cschetan77](https://github.com/cschetan77))
 
