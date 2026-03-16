@@ -19,7 +19,7 @@
   "license": "MIT",
   "dependencies": {
     "debug": "^4.3.4",
-    "koa": "^2.14.2",
+    "koa": "^3.1.2",
     "koa-jwt": "^4.0.4",
     "koa-router": "^12.0.0"
   }
