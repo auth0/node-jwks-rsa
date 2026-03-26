@@ -40,6 +40,9 @@ lib
 !src/lib
 ts-output
 
+# Lock files
+package-lock.json
+
 # IDE files
 .idea/
 *.iml

@@ -15,10 +15,10 @@ runs:
       uses: actions/setup-node@v6
       with:
         node-version: ${{ inputs.node }}
-        cache: npm
+        package-manager-cache: false
 
     - name: Install dependencies
       shell: bash
-      run: npm ci
+      run: npm install
       env:
         NODE_ENV: development
