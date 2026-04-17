@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.12.4] - (2026-04-17)
+
+**Security**
+- Bump Axios to ^0.31.0 to incorporate security fixes including ReDoS vulnerability fix, CVE-2023-45857 (XSRF), and updated follow-redirects dependency
+
 ## [1.12.3] - (2021-02-25)
 
 **Added**
