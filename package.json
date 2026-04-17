@@ -1,12 +1,12 @@
 {
   "name": "jwks-rsa",
-  "version": "1.12.3",
+  "version": "1.12.4",
   "description": "Library to retrieve RSA public keys from a JWKS endpoint",
   "main": "lib/index.js",
   "types": "index.d.ts",
   "dependencies": {
     "@types/express-jwt": "0.0.42",
-    "axios": "^0.21.1",
+    "axios": "^0.31.0",
     "debug": "^4.1.0",
     "http-proxy-agent": "^4.0.1",
     "https-proxy-agent": "^5.0.0",
