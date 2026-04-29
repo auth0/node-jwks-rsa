@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.12.5] - (2026-04-29)
+
+**Fixed**
+- Exclude generated `ts-output/` files from the npm tarball
+
 ## [1.12.4] - (2026-04-17)
 
 **Security**

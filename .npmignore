@@ -4,3 +4,4 @@ src/
 examples/
 coverage/
 lib-cov/
+ts-output/
