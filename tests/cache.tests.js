@@ -111,6 +111,33 @@ describe('JwksClient (cache)', () => {
         nock.cleanAll();
       });
 
+      it('should throw for an unknown kid even when cacheMaxAgeFallback is set and within fallback window', async () => {
+        nock(jwksHost)
+          .get('/.well-known/jwks.json')
+          .once()
+          .reply(200, x5cSingle);
+
+        const client = new JwksClient({
+          cache: true,
+          cacheMaxAge,
+          cacheMaxAgeFallback,
+          jwksUri: `${jwksHost}/.well-known/jwks.json`
+        });
+
+        // Populate staleCache for the known kid
+        await client.getSigningKey(kid);
+
+        // AS goes down
+        nock(jwksHost).get('/.well-known/jwks.json').reply(500, 'Service Unavailable');
+
+        await new Promise(resolve => setTimeout(resolve, cacheMaxAge + 10));
+
+        // An unknown kid has no stale entry — fallback cannot help
+        await expect(client.getSigningKey('unknown-kid')).to.eventually.be.rejected;
+
+        nock.cleanAll();
+      });
+
       it('should not serve stale key when cacheMaxAgeFallback is not set', async () => {
         nock(jwksHost)
           .get('/.well-known/jwks.json')
