@@ -1,5 +1,11 @@
 # Change Log
 
+## [v4.1.0](https://github.com/auth0/node-jwks-rsa/tree/v4.1.0) (2026-06-19)
+[Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v4.0.1...v4.1.0)
+
+**Added**
+- feat: add cacheMaxAgeFallback and onStaleCacheFallback for graceful JWKS degradation during outages [\#502](https://github.com/auth0/node-jwks-rsa/pull/502) ([cschetan77](https://github.com/cschetan77))
+
 ## [v4.0.1](https://github.com/auth0/node-jwks-rsa/tree/v4.0.1) (2026-03-02)
 [Full Changelog](https://github.com/auth0/node-jwks-rsa/compare/v4.0.0...v4.0.1)
 
