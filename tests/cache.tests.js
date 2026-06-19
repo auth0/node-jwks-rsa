@@ -84,6 +84,64 @@ describe('JwksClient (cache)', () => {
         nock.cleanAll();
       });
 
+      it('should call onStaleCacheFallback with err, kid and stale key when serving stale key', async () => {
+        nock(jwksHost)
+          .get('/.well-known/jwks.json')
+          .once()
+          .reply(200, x5cSingle);
+
+        let callbackErr, callbackKid, callbackStaleKey;
+        const client = new JwksClient({
+          cache: true,
+          cacheMaxAge,
+          cacheMaxAgeFallback,
+          jwksUri: `${jwksHost}/.well-known/jwks.json`,
+          onStaleCacheFallback: (err, k, staleKey) => {
+            callbackErr = err;
+            callbackKid = k;
+            callbackStaleKey = staleKey;
+          }
+        });
+
+        await client.getSigningKey(kid);
+
+        nock(jwksHost).get('/.well-known/jwks.json').reply(500, 'Service Unavailable');
+
+        await new Promise(resolve => setTimeout(resolve, cacheMaxAge + 10));
+
+        const key = await client.getSigningKey(kid);
+        expect(key.kid).to.equal(kid);
+        expect(callbackErr).to.be.instanceOf(Error);
+        expect(callbackKid).to.equal(kid);
+        expect(callbackStaleKey.kid).to.equal(kid);
+
+        nock.cleanAll();
+      });
+
+      it('should not call onStaleCacheFallback when AS returns a key successfully', async () => {
+        nock(jwksHost)
+          .get('/.well-known/jwks.json')
+          .twice()
+          .reply(200, x5cSingle);
+
+        let callbackCalled = false;
+        const client = new JwksClient({
+          cache: true,
+          cacheMaxAge,
+          cacheMaxAgeFallback,
+          jwksUri: `${jwksHost}/.well-known/jwks.json`,
+          onStaleCacheFallback: () => { callbackCalled = true; }
+        });
+
+        await client.getSigningKey(kid);
+        await new Promise(resolve => setTimeout(resolve, cacheMaxAge + 10));
+        await client.getSigningKey(kid);
+
+        expect(callbackCalled).to.equal(false);
+
+        nock.cleanAll();
+      });
+
       it('should throw when AS is down and fallback window has also expired', async () => {
         nock(jwksHost)
           .get('/.well-known/jwks.json')

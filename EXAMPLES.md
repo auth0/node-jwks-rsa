@@ -31,6 +31,7 @@ This repository holds a number of example integrations found in the [examples](.
 - `getKeysInterceptor`: (_optional_) a promise returning function hook [(details)](#loading-keys-from-local-file-environment-variable-or-other-externals)
 - `cacheMaxAge`: (_optional_) the duration for which to store a cached JWKS in ms (default 600,000 or 10 minutes)
 - `cacheMaxAgeFallback`: (_optional_) additional duration in ms to serve a stale signing key when the JWKS endpoint is unreachable and `cacheMaxAge` has expired. Not set by default — see [(details)](#graceful-degradation-during-jwks-endpoint-downtime)
+- `onStaleCacheFallback`: (_optional_) callback invoked when a stale key is successfully served during a JWKS endpoint outage. Receives `(err, kid, staleKey)` — useful for metrics and alerting
 - `jwksRequestsPerMinute`: (_optional_) max number of requests allowed to the JWKS URI per minute (defaults to 10)
 
 ## Caching
@@ -65,7 +66,10 @@ const client = jwksClient({
   cache: true,
   cacheMaxAge: 600000,          // 10 minutes — normal freshness TTL
   cacheMaxAgeFallback: 3600000, // 1 hour — serve stale key if JWKS endpoint is unreachable
-  jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'
+  jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
+  onStaleCacheFallback: (err, kid, staleKey) => {
+    console.warn(`JWKS endpoint unavailable, serving stale key for kid '${kid}': ${err.message}`);
+  }
 });
 
 const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';

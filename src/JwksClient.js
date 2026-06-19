@@ -45,7 +45,9 @@ class JwksClient {
     } catch (err) {
       const { errorMsg } = err;
       logger('Failure:', errorMsg || err);
-      throw (errorMsg ? new JwksError(errorMsg) : err);
+      const error = errorMsg ? new JwksError(errorMsg) : err;
+      error.isEndpointUnavailable = true;
+      throw error;
     }
   }
 
