@@ -23,6 +23,35 @@ declare namespace JwksRsa {
     cache?: boolean;
     cacheMaxEntries?: number;
     cacheMaxAge?: number;
+    /**
+     * Additional duration in milliseconds to continue serving a stale signing key when
+     * the JWKS endpoint is unreachable and `cacheMaxAge` has expired.
+     *
+     * The fallback window is measured from the last successful fetch:
+     * stale key is served while `Date.now() - lastFetchedAt < cacheMaxAge + cacheMaxAgeFallback`.
+     *
+     * Not set by default — must be opted into explicitly. This is an availability vs. security
+     * tradeoff: a compromised key will continue to be trusted for this window if the endpoint
+     * goes down simultaneously with a key rotation. Set this to your expected endpoint recovery time.
+     *
+     * Has no effect unless `cache` is enabled.
+     */
+    cacheMaxAgeFallback?: number;
+    /**
+     * Callback invoked when a stale signing key is successfully served because the JWKS
+     * endpoint was unreachable and the entry was still within the `cacheMaxAgeFallback` window.
+     *
+     * Use this to emit metrics, trigger alerts, or log warnings so your observability tooling
+     * can detect JWKS endpoint outages even when requests are succeeding via the stale cache.
+     *
+     * @param err   - The endpoint error that caused the fallback (network failure or HTTP error)
+     * @param kid   - The key ID that was requested
+     * @param staleKey - The stale signing key being served
+     *
+     * Only called on successful stale fallback. Not called when the fallback window has expired
+     * or when the kid was never fetched before.
+     */
+    onStaleCacheFallback?(err: Error, kid: string | null | undefined, staleKey: SigningKey): void;
     jwksRequestsPerMinute?: number;
     proxy?: string;
     requestHeaders?: Headers;

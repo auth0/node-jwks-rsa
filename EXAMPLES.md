@@ -3,6 +3,7 @@
 - [Integrations](#integrations)
 - [Configuration](#configuration)
 - [Caching](#caching)
+- [Graceful Degradation during JWKS Endpoint Downtime](#graceful-degradation-during-jwks-endpoint-downtime)
 - [Rate Limiting](#rate-limiting)
 - [Using Request Agent for TLS/SSL Configuration](#using-request-agent-for-tlsssl-configuration)
 - [Proxy Configuration](#proxy-configuration)
@@ -29,6 +30,8 @@ This repository holds a number of example integrations found in the [examples](.
 - `requestAgent`: (_optional_) a Node `http.Agent` to be passed to the http(s) request
 - `getKeysInterceptor`: (_optional_) a promise returning function hook [(details)](#loading-keys-from-local-file-environment-variable-or-other-externals)
 - `cacheMaxAge`: (_optional_) the duration for which to store a cached JWKS in ms (default 600,000 or 10 minutes)
+- `cacheMaxAgeFallback`: (_optional_) additional duration in ms to serve a stale signing key when the JWKS endpoint is unreachable and `cacheMaxAge` has expired. Not set by default — see [(details)](#graceful-degradation-during-jwks-endpoint-downtime)
+- `onStaleCacheFallback`: (_optional_) callback invoked when a stale key is successfully served during a JWKS endpoint outage. Receives `(err, kid, staleKey)` — useful for metrics and alerting
 - `jwksRequestsPerMinute`: (_optional_) max number of requests allowed to the JWKS URI per minute (defaults to 10)
 
 ## Caching
@@ -49,6 +52,32 @@ const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';
 const key = await client.getSigningKey(kid);
 const signingKey = key.getPublicKey();
 ```
+
+## Graceful Degradation during JWKS Endpoint Downtime
+
+By default, when `cacheMaxAge` expires and the JWKS endpoint is unreachable, every `getSigningKey` call will fail until the endpoint recovers. With the default `cacheMaxAge` of 10 minutes, this means a service can tolerate only ~5 minutes of JWKS endpoint downtime on average before all signing key lookups start failing.
+
+Setting `cacheMaxAgeFallback` tells the lib to continue serving the last known good signing key for that additional duration when a refresh attempt fails. Once both `cacheMaxAge` and `cacheMaxAgeFallback` have elapsed since the last successful fetch, the lib stops serving the stale key and throws as normal.
+
+```js
+const jwksClient = require('jwks-rsa');
+
+const client = jwksClient({
+  cache: true,
+  cacheMaxAge: 600000,          // 10 minutes — normal freshness TTL
+  cacheMaxAgeFallback: 3600000, // 1 hour — serve stale key if JWKS endpoint is unreachable
+  jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
+  onStaleCacheFallback: (err, kid, staleKey) => {
+    console.warn(`JWKS endpoint unavailable, serving stale key for kid '${kid}': ${err.message}`);
+  }
+});
+
+const kid = 'RkI5MjI5OUY5ODc1N0Q4QzM0OUYzNkVGMTJDOUEzQkFCOTU3NjE2Rg';
+const key = await client.getSigningKey(kid);
+const signingKey = key.getPublicKey();
+```
+
+> **Note:** This is an availability vs. security tradeoff. If the JWKS endpoint goes down at the same time keys are being rotated due to a compromise, stale keys will continue to be trusted for the duration of the fallback window. Set `cacheMaxAgeFallback` to a value that reflects your expected JWKS endpoint recovery time.
 
 ## Rate Limiting
 
