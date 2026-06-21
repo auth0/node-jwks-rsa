@@ -29,6 +29,11 @@ function resolveAlg(jwk) {
     }
   }
 
+  if (jwk.kty === 'AKP') {
+    // AKP (RFC 9964) requires alg to be set, handled by the early return above.
+    throw new JwksError('AKP JWK missing required "alg" parameter');
+  }
+
   throw new JwksError('Unsupported JWK');
 }
 
@@ -37,7 +42,7 @@ async function retrieveSigningKeys(jwks) {
 
   jwks = jwks
     .filter(({ use }) => use === 'sig' || use === undefined)
-    .filter(({ kty }) => kty === 'RSA' || kty === 'EC' || kty === 'OKP');
+    .filter(({ kty }) => kty === 'RSA' || kty === 'EC' || kty === 'OKP' || kty === 'AKP');
 
   for (const jwk of jwks) {
     try {
