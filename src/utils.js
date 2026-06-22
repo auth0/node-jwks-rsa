@@ -5,7 +5,7 @@ function resolveAlg(jwk) {
   // AKP (RFC 9964) must be validated before the generic alg early-return
   // to enforce that only ML-DSA algorithms are accepted for this key type.
   if (jwk.kty === 'AKP') {
-    const validAKPAlgs = ['ML-DSA-44', 'ML-DSA-65', 'ML-DSA-87'];
+    const validAKPAlgs = [ 'ML-DSA-44', 'ML-DSA-65', 'ML-DSA-87' ];
     if (!jwk.alg || !validAKPAlgs.includes(jwk.alg)) {
       throw new JwksError('AKP JWK requires a valid "alg" parameter (ML-DSA-44, ML-DSA-65, or ML-DSA-87)');
     }
