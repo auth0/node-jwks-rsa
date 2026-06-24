@@ -10,6 +10,7 @@ class JwksClient {
       rateLimit: false,
       cache: true,
       timeout: 30000,
+      followRedirects: false,
       ...options
     };
 
@@ -37,7 +38,8 @@ class JwksClient {
         headers: this.options.requestHeaders,
         agent: this.options.requestAgent,
         timeout: this.options.timeout,
-        fetcher: this.options.fetcher
+        fetcher: this.options.fetcher,
+        followRedirects: this.options.followRedirects
       });
 
       logger('Keys:', res.keys);
