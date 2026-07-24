@@ -57,6 +57,7 @@ declare namespace JwksRsa {
     requestHeaders?: Headers;
     timeout?: number;
     requestAgent?: HttpAgent | HttpsAgent;
+    followRedirects?: boolean;
     getKeysInterceptor?(): Promise<JSONWebKey[]>;
   }
 
