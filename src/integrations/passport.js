@@ -1,6 +1,6 @@
-const jose = require('jose');
 const { ArgumentError } = require('../errors');
 const { JwksClient } = require('../JwksClient');
+const { getJose } = require('../jose');
 const supportedAlg = require('./config');
 
 const handleSigningKeyError = (err, cb) => {
@@ -28,25 +28,30 @@ module.exports.passportJwtSecret = function (options) {
   const onError = options.handleSigningKeyError || handleSigningKeyError;
 
   return function secretProvider(req, rawJwtToken, cb) {
-    let decoded;
-    try {
-      decoded = {
-        payload: jose.decodeJwt(rawJwtToken),
-        header: jose.decodeProtectedHeader(rawJwtToken)
-      };
-    } catch (err) {
-      decoded = null;
-    }
+    getJose()
+      .then(jose => {
+        let decoded;
+        try {
+          decoded = {
+            payload: jose.decodeJwt(rawJwtToken),
+            header: jose.decodeProtectedHeader(rawJwtToken)
+          };
+        } catch (err) {
+          decoded = null;
+        }
 
-    if (!decoded || !supportedAlg.includes(decoded.header.alg)) {
-      return cb(null, null);
-    }
+        if (!decoded || !supportedAlg.includes(decoded.header.alg)) {
+          return cb(null, null);
+        }
 
-    client.getSigningKey(decoded.header.kid)
-      .then(key => {
-        cb(null, key.publicKey || key.rsaPublicKey);
+        client.getSigningKey(decoded.header.kid)
+          .then(key => {
+            cb(null, key.publicKey || key.rsaPublicKey);
+          }).catch(err => {
+            onError(err, (newError) => cb(newError, null));
+          });
       }).catch(err => {
-        onError(err, (newError) => cb(newError, null));
+        cb(err, null);
       });
   };
 };

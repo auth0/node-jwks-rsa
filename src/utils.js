@@ -1,4 +1,4 @@
-const jose = require('jose');
+const { getJose } = require('./jose');
 const JwksError = require('./errors/JwksError');
 
 function resolveAlg(jwk) {
@@ -33,6 +33,7 @@ function resolveAlg(jwk) {
 }
 
 async function retrieveSigningKeys(jwks) {
+  const jose = await getJose();
   const results = [];
 
   jwks = jwks
