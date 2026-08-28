@@ -115,6 +115,71 @@ describe('Request wrapper tests', () => {
     request({ uri, agent });
   });
 
+  describe('when followRedirects is enabled', () => {
+    const redirectHost = 'http://my-redirect-server';
+    const redirectUri = `${redirectHost}/.well-known/jwks.json`;
+
+    it('should follow a 30x redirect and resolve the final response', (done) => {
+      nock(jwksHost)
+        .get('/.well-known/jwks.json')
+        .reply(302, undefined, { Location: redirectUri });
+      nock(redirectHost)
+        .get('/.well-known/jwks.json')
+        .reply(200, jwksJson);
+
+      request({ uri, followRedirects: true })
+        .then((data) => {
+          expect(data).to.deep.equal(jwksJson);
+          done();
+        })
+        .catch(done);
+    });
+
+    it('should follow a relative redirect', (done) => {
+      nock(jwksHost)
+        .get('/.well-known/jwks.json')
+        .reply(301, undefined, { Location: '/keys' });
+      nock(jwksHost)
+        .get('/keys')
+        .reply(200, jwksJson);
+
+      request({ uri, followRedirects: true })
+        .then((data) => {
+          expect(data).to.deep.equal(jwksJson);
+          done();
+        })
+        .catch(done);
+    });
+
+    it('should not follow a redirect when followRedirects is not enabled', (done) => {
+      nock(jwksHost)
+        .get('/.well-known/jwks.json')
+        .reply(302, undefined, { Location: redirectUri });
+
+      request({ uri })
+        .then(() => done('Should have thrown error'))
+        .catch((err) => {
+          expect(err.errorMsg).to.exist;
+          done();
+        });
+    });
+
+    it('should reject when the maximum number of redirects is exceeded', (done) => {
+      nock(jwksHost)
+        .persist()
+        .get('/.well-known/jwks.json')
+        .reply(302, undefined, { Location: uri });
+
+      request({ uri, followRedirects: true })
+        .then(() => done('Should have thrown error'))
+        .catch((err) => {
+          expect(err.errorMsg).to.match(/Maximum number of redirects/);
+          nock.cleanAll();
+          done();
+        });
+    });
+  });
+
   describe('when fetcher is specified', () => {
     it('should use the specified fetcher to make the request', (done) => {
       request({ 

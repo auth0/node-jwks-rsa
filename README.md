@@ -36,7 +36,8 @@ const jwksClient = require('jwks-rsa');
 const client = jwksClient({
   jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
   requestHeaders: {}, // Optional
-  timeout: 30000 // Defaults to 30s
+  timeout: 30000, // Defaults to 30s
+  followRedirects: false // Follow 30x redirects, defaults to false
 });
 ````
 
