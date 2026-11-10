@@ -63,7 +63,7 @@ jobs:
 
       # Install scripts are skipped so dependency code does not run next to the scan credentials.
       - name: Install dependencies
-        run: npm ci --include=dev --ignore-scripts
+        run: npm install --include=dev --ignore-scripts
 
       # Pack into an empty directory and locate the tarball with ls, as npm pack --json
       # output can be polluted by lifecycle hooks.
