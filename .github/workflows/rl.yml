@@ -1,0 +1,104 @@
+name: RL Scan
+run-name: rl-scan
+
+# Reusable malware-scan workflow, called from release.yml before the npm publish.
+# Packs the npm tarball (what gets published) and scans it with ReversingLabs.
+#
+# Required org secrets (configured at org level in auth0/):
+#   RLSECURE_LICENSE            — ReversingLabs license key
+#   RLSECURE_SITE_KEY           — ReversingLabs site key
+#   SIGNAL_HANDLER_TOKEN        — scan-service telemetry auth
+#   SIGNAL_HANDLER_DOMAIN       — scan-service endpoint domain
+#   PRODSEC_TOOLS_ARN           — AWS role ARN for ProdSec tools
+#   PRODSEC_TOOLS_USER          — ProdSec Python tools repo user
+#   PRODSEC_TOOLS_TOKEN         — ProdSec Python tools repo token
+#   PRODSEC_PYTHON_TOOLS_REPO   — ProdSec Python tools repo URL
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: Node version used to install and pack
+        type: string
+        required: true
+    secrets:
+      RLSECURE_LICENSE:
+        required: true
+      RLSECURE_SITE_KEY:
+        required: true
+      SIGNAL_HANDLER_TOKEN:
+        required: true
+      SIGNAL_HANDLER_DOMAIN:
+        required: true
+      PRODSEC_TOOLS_ARN:
+        required: true
+      PRODSEC_TOOLS_USER:
+        required: true
+      PRODSEC_TOOLS_TOKEN:
+        required: true
+      PRODSEC_PYTHON_TOOLS_REPO:
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  rl-scan:
+    name: RL Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # required for AWS OIDC federation (PRODSEC_TOOLS_ARN)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ inputs.node-version }}
+          package-manager-cache: false
+
+      # Install scripts are skipped so dependency code does not run next to the scan credentials.
+      - name: Install dependencies
+        run: npm ci --include=dev --ignore-scripts
+
+      # Pack into an empty directory and locate the tarball with ls, as npm pack --json
+      # output can be polluted by lifecycle hooks.
+      - name: Pack npm tarball
+        id: pack
+        run: |
+          mkdir "$RUNNER_TEMP/pack"
+          npm pack --ignore-scripts --pack-destination "$RUNNER_TEMP/pack"
+          TARBALL="$(ls "$RUNNER_TEMP"/pack/*.tgz)"
+          echo "tarball=$TARBALL" >> "$GITHUB_OUTPUT"
+          echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Run RL malware scan
+        id: rl-scan-conclusion
+        uses: auth0/devsecops-tooling/.github/actions/rl-scan@e29f26478db18ff0bcbe4bc447a8fbd54fbeec9e
+        with:
+          artifact-name: jwks-rsa
+          artifact-path: ${{ steps.pack.outputs.tarball }}
+          version: ${{ steps.pack.outputs.version }}
+          RLSECURE_LICENSE: ${{ secrets.RLSECURE_LICENSE }}
+          RLSECURE_SITE_KEY: ${{ secrets.RLSECURE_SITE_KEY }}
+          SIGNAL_HANDLER_TOKEN: ${{ secrets.SIGNAL_HANDLER_TOKEN }}
+          SIGNAL_HANDLER_DOMAIN: ${{ secrets.SIGNAL_HANDLER_DOMAIN }}
+          PRODSEC_TOOLS_ARN: ${{ secrets.PRODSEC_TOOLS_ARN }}
+          PRODSEC_TOOLS_USER: ${{ secrets.PRODSEC_TOOLS_USER }}
+          PRODSEC_TOOLS_TOKEN: ${{ secrets.PRODSEC_TOOLS_TOKEN }}
+          PRODSEC_PYTHON_TOOLS_REPO: ${{ secrets.PRODSEC_PYTHON_TOOLS_REPO }}
+
+      # The rl-scan action reports a missing artifact through an output and does not fail the step.
+      - name: Gate on scan result
+        if: always()
+        env:
+          SCAN_STATUS: ${{ steps.rl-scan-conclusion.outputs.scan-status }}
+        run: |
+          if [ "$SCAN_STATUS" != "success" ]; then
+            echo "::error title=Malware::RL scan did not pass (status: ${SCAN_STATUS:-none})"
+            exit 1
+          fi
