@@ -1,0 +1,49 @@
+name: Scorecard analysis
+
+# Runs OpenSSF Scorecard supply-chain analysis directly via ossf/scorecard-action.
+# All action refs are SHA-pinned.
+#
+# Scorecard requirements
+# ──────────────────────
+# • Supported triggers (per OSSF) are push and schedule on the default branch.
+#   workflow_dispatch is experimental per OSSF and is available for manual runs only.
+# • The checkout step MUST set persist-credentials: false (required by Scorecard).
+# • publish_results: true publishes to the public Scorecard API and enables the
+#   Scorecard badge. It requires id-token: write on the job. Kept false to keep
+#   results private.
+
+on:
+  push:
+    branches: ['master']
+  workflow_dispatch: {}
+  schedule:
+    - cron: '30 1 * * 6' # weekly, Saturday 01:30 UTC
+
+permissions: read-all
+
+jobs:
+  analysis:
+    name: Scorecard analysis
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write # upload SARIF to Code Scanning
+      contents: read # checkout the repository
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Run analysis
+        uses: ossf/scorecard-action@4eaacf0543bb3f2c246792bd56e8cdeffafb205a # v2.4.3
+        with:
+          results_file: results.sarif
+          results_format: sarif
+          publish_results: false
+
+      - name: Upload to code-scanning
+        uses: github/codeql-action/upload-sarif@99df26d4f13ea111d4ec1a7dddef6063f76b97e9 # v4.37.0
+        with:
+          sarif_file: results.sarif
+          category: scorecard
